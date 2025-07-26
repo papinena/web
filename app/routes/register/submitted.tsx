@@ -19,7 +19,7 @@ export default function AdminIndex() {
             className="bg-green-primary hover:bg-green-primary/90 font-bold"
             asChild
           >
-            <Link to="login">Ir para login</Link>
+            <Link to="/login">Ir para login</Link>
           </Button>
         </Box>
       </Box>

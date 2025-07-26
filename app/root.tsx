@@ -1,4 +1,4 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -8,6 +8,7 @@ import { Text } from "./components/ui/text";
 import { TanstackQueryProvider } from "./query-client";
 import "~/utils/sentry";
 import { SentryErrorBoundary } from "~/utils/sentry";
+import { App } from "./routes/app";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -40,7 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+export default function Root() {
   const { width } = useWindowSize();
 
   if (width > MOBILE_BREAKPOINT) {
@@ -50,7 +51,7 @@ export default function App() {
   return (
     <SentryErrorBoundary>
       <TanstackQueryProvider>
-        <Outlet />
+        <App />
       </TanstackQueryProvider>
     </SentryErrorBoundary>
   );
