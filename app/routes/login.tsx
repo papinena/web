@@ -57,7 +57,7 @@ export default function Login() {
 
   return (
     <Box className="flex-1 h-full w-full">
-      <Box className="flex  flex-1 flex-col">
+      <Box className="flex flex-1 flex-col">
         <Box className="relative items-start w-full z-1">
           <Image className="w-full" src="/Group 55.svg" />
         </Box>

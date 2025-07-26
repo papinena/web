@@ -1,16 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { authUtils, type AuthData } from "~/utils/auth";
 
 export function useAuth() {
-  const [authData, setAuthData] = useState<AuthData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Check for existing auth data on mount
-    const data = authUtils.getAuthData();
-    setAuthData(data);
-    setIsLoading(false);
-  }, []);
+  const [authData, setAuthData] = useState<AuthData | null>(() => {
+    // Initialize with auth data from localStorage
+    return authUtils.getAuthData();
+  });
 
   const login = (data: AuthData) => {
     authUtils.storeAuth(data);
@@ -28,9 +23,8 @@ export function useAuth() {
 
   return {
     authData,
-    isLoading,
     login,
     logout,
     isAuthenticated,
   };
-} 
+}
