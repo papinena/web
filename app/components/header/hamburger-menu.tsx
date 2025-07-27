@@ -41,7 +41,7 @@ export function HamburgerMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-3">
         <DropdownMenuItem>
-          <Image src="public/image 115.svg" />
+          <Image src="/image 115.svg" />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
