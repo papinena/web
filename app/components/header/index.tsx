@@ -14,7 +14,7 @@ export function Header() {
 
       {isAuth && (
         <>
-          <Box className="py-3">
+          <Box className="py-3 mr-3">
             <SearchInput placeholder="Buscar..." />
           </Box>
           <Box className="items-center justify-center">
