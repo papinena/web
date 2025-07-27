@@ -50,6 +50,7 @@ export async function createAdmin(data: CreateAdminType) {
     employee: {
       ...AdminMapper.toAPI(data),
       password: data.employee.password,
+      permission: "ADMIN",
     },
   };
 

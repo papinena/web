@@ -31,7 +31,7 @@ function WidgetTitle({
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { authData, logout } = useAuth();
+  const { authData, logout, isEmployeeAdmin } = useAuth();
 
   const employee = authData?.employee;
 
@@ -56,18 +56,20 @@ export default function Dashboard() {
             do condomínio!
           </Text>
         </Widget>
-        <Widget>
-          <WidgetTitle
-            className=""
-            icon={<Image src="/image 113.svg" className={iconClassName} />}
-          >
-            Cadastro da Administração
-          </WidgetTitle>
-          <Text>
-            Edite, remova ou inclua novas informações sobre a administração do
-            condomínio
-          </Text>
-        </Widget>
+        {isEmployeeAdmin && (
+          <Widget>
+            <WidgetTitle
+              className=""
+              icon={<Image src="/image 113.svg" className={iconClassName} />}
+            >
+              Cadastro da Administração
+            </WidgetTitle>
+            <Text>
+              Edite, remova ou inclua novas informações sobre a administração do
+              condomínio
+            </Text>
+          </Widget>
+        )}
         <Widget>
           <WidgetTitle
             icon={<Image src="/image 113.svg" className={iconClassName} />}

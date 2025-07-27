@@ -21,10 +21,13 @@ export function useAuth() {
     return authUtils.isAuthenticated();
   };
 
+  const isEmployeeAdmin = authData?.employee?.permission === "ADMIN";
+
   return {
     authData,
     login,
     logout,
     isAuthenticated,
+    isEmployeeAdmin,
   };
 }
