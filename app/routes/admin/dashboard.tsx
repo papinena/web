@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
 import { Text } from "~/components/ui/text";
@@ -30,15 +30,9 @@ function WidgetTitle({
 }
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const { authData, logout, isEmployeeAdmin } = useAuth();
+  const { authData, isEmployeeAdmin } = useAuth();
 
   const employee = authData?.employee;
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
 
   const iconClassName = "size-9";
 
@@ -70,14 +64,16 @@ export default function Dashboard() {
             </Text>
           </Widget>
         )}
-        <Widget>
-          <WidgetTitle
-            icon={<Image src="/image 113.svg" className={iconClassName} />}
-          >
-            Gerenciar moradores
-          </WidgetTitle>
-          <Text>Aprove ou remova os moradores do seu condomínio</Text>
-        </Widget>
+        <Link to="/admin/residents">
+          <Widget>
+            <WidgetTitle
+              icon={<Image src="/image 113.svg" className={iconClassName} />}
+            >
+              Gerenciar moradores
+            </WidgetTitle>
+            <Text>Aprove ou remova os moradores do seu condomínio</Text>
+          </Widget>
+        </Link>
         <Widget>
           <WidgetTitle
             icon={<Image src="/image 112.svg" className={iconClassName} />}

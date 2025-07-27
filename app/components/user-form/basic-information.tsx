@@ -18,35 +18,41 @@ export function BasicInformation() {
       <SectionTitle>Informações básicas</SectionTitle>
       <Box className="flex-col gap-3">
         <Item>
+          <>{/* dropdown with condominiums */}</>
+        </Item>
+        <Item>
           <InputWithLabel
             label="Apartamento (ex: 702)"
-            error={errors.telephone?.message}
+            error={errors.telephone?.message as string}
             {...register("telephone")}
           />
           <InputWithLabel
             label="Bloco (se houver)"
             {...register("position")}
-            error={errors.position?.message}
+            error={errors.position?.message as string}
           />
         </Item>
         <Item>
           <InputWithLabel
             label="Data Nasc. (xx/xx/xxxx)"
-            error={errors.email?.message}
+            error={errors.email?.message as string}
             {...register("email")}
           />
           <TelephoneInput
             label="Telefone / Whatsapp"
             {...register("confirmEmail")}
-            error={errors.confirmEmail?.message}
+            error={errors.confirmEmail?.message as string}
           />
         </Item>
         <Item>
-          <EmailInput error={errors.email?.message} {...register("email")} />
+          <EmailInput
+            error={errors.email?.message as string}
+            {...register("email")}
+          />
           <EmailInput
             label="Confirme seu email*"
             {...register("confirmEmail")}
-            error={errors.confirmEmail?.message}
+            error={errors.confirmEmail?.message as string}
           />
         </Item>
         <Item>
@@ -55,12 +61,12 @@ export function BasicInformation() {
               <PasswordInput
                 label="Crie uma senha*"
                 {...register("password")}
-                error={errors.password?.message}
+                error={errors.password?.message as string}
               />
               <PasswordInput
                 label="Confirme sua senha*"
                 {...register("confirmPassword")}
-                error={errors.confirmPassword?.message}
+                error={errors.confirmPassword?.message as string}
               />
             </Item>
             <Box className="flex-col">

@@ -8,7 +8,10 @@ import {
 export default [
   layout("./routes/app.tsx", [
     route("login", "./routes/login.tsx"),
-    route("admin/dashboard", "./routes/admin-dashboard.tsx"),
+    ...prefix("admin", [
+      route("dashboard", "./routes/admin/dashboard.tsx"),
+      route("residents", "./routes/admin/residents.tsx"),
+    ]),
     ...prefix("register", [
       route("user", "./routes/register/user.tsx"),
       route("user/form", "./routes/register/user-form.tsx"),
