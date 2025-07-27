@@ -3,7 +3,10 @@ import { api, apiRequest } from "~/utils/api";
 
 const { BASE_URL } = api();
 
-export async function login(data: LoginType): Promise<{ data?: LoginResponseType; error?: { message: string; code: string } }> {
+export async function login(data: LoginType): Promise<{
+  data?: LoginResponseType & { user?: any; employee?: any };
+  error?: { message: string; code: string };
+}> {
   const url = new URL(BASE_URL + "/auth/login");
 
   const body = {
@@ -11,10 +14,14 @@ export async function login(data: LoginType): Promise<{ data?: LoginResponseType
     password: data.password,
   };
 
-  const res = await apiRequest(url.toString(), {
-    method: "POST",
-    body: JSON.stringify(body),
-  }, false); // Don't include auth for login request
+  const res = await apiRequest(
+    url.toString(),
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    },
+    false // Don't include auth for login request
+  );
 
   if (res.status >= 400 && res.status < 500) {
     const json = (await res.json()) as { status: string; message: string };

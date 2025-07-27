@@ -36,12 +36,13 @@ export default function Login() {
       } else {
         // Store authentication data in localStorage and update state
         authLogin(result.data);
-        
-        console.log("Login successful:", result.data);
-        
+
+        if (result.data.userType === "employee") {
+          navigate("/admin/dashboard");
+        }
+
         // Redirect to dashboard or home page
         // You can change this to the appropriate route
-        navigate("/dashboard");
       }
     },
     onError: (error) => {
@@ -63,11 +64,14 @@ export default function Login() {
         </Box>
         <Box className="p-5 text-center flex-col gap-5 flex rounded-2xl -mt-16 flex-1 z-1 bg-white h-full w-full">
           <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
-          
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full">
+
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-5 w-full"
+          >
             <Box className="flex flex-col gap-1">
-              <Input 
-                placeholder="Email" 
+              <Input
+                placeholder="Email"
                 {...register("email")}
                 className={errors.email ? "border-red-500" : ""}
               />
@@ -77,8 +81,8 @@ export default function Login() {
             </Box>
 
             <Box className="flex flex-col gap-1">
-              <PasswordInput 
-                placeholder="Senha" 
+              <PasswordInput
+                placeholder="Senha"
                 {...register("password")}
                 className={errors.password ? "border-red-500" : ""}
               />
@@ -87,11 +91,9 @@ export default function Login() {
               </ErrorMessage>
             </Box>
 
-            <ErrorMessage show={!!formError}>
-              {formError}
-            </ErrorMessage>
+            <ErrorMessage show={!!formError}>{formError}</ErrorMessage>
 
-            <Button 
+            <Button
               type="submit"
               className="bg-blue-primary max-w-62 mx-auto w-full"
               disabled={loginMutation.isPending}
@@ -110,4 +112,4 @@ export default function Login() {
       </Box>
     </Box>
   );
-} 
+}
