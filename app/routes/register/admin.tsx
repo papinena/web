@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import { Button } from "~/components/register/button";
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";

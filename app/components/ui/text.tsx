@@ -1,10 +1,10 @@
 import { cn } from "~/lib/utils";
 
 const variants = {
-  body: "font-body",
-  default: "font-body",
-  title: "font-title text-2xl font-semibold",
-  subtitle: "font-title text-xl font-semibold",
+  body: "font-body text-primary",
+  default: "font-body text-primary",
+  title: "font-title text-2xl text-primary font-semibold",
+  subtitle: "font-title text-xl font-semibold text-primary",
 };
 
 export function Text({
