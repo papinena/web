@@ -24,23 +24,20 @@ function MenuItemText({ children }: { children: ReactNode }) {
 }
 
 export function HamburgerMenu({
-  onClick,
   className = "",
   ariaLabel = "Open menu",
 }: HamburgerMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <button
-          type="button"
-          onClick={onClick}
+        <Box
           className={`flex flex-col justify-center items-center w-10 h-10 rounded hover:bg-gray-200 transition ${className}`}
           aria-label={ariaLabel}
         >
           <Box className="w-5 h-0.5 bg-[#AEB3B8] mb-1 rounded" />
           <Box className="w-5 h-0.5 bg-[#AEB3B8] mb-1 rounded" />
           <Box className="w-5 h-0.5 bg-[#AEB3B8] rounded" />
-        </button>
+        </Box>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-3">
         <DropdownMenuItem>

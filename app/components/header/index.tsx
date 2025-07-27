@@ -3,23 +3,30 @@ import { Box } from "../ui/box";
 import { Image } from "../ui/image";
 import { Avatar } from "./avatar";
 import { HamburgerMenu } from "./hamburger-menu";
+import { SearchInput } from "./search-input";
 
 export function Header() {
   const { isAuthenticated } = useAuth();
   const isAuth = isAuthenticated();
   return (
-    <Box className="w-full min-h-12 bg-white flex items-center justify-between">
+    <Box className="w-full px-3 min-h-12 bg-white flex items-center justify-between">
       <Image src="/image 2.svg" />
+
       {isAuth && (
-        <Box className="items-center justify-center">
-          <Avatar
-            size={32}
-            className="ml-auto"
-            name="John Doe"
-            email="john.doe@example.com"
-          />
-          <HamburgerMenu />
-        </Box>
+        <>
+          <Box className="py-3">
+            <SearchInput placeholder="Buscar..." />
+          </Box>
+          <Box className="items-center justify-center">
+            <Avatar
+              size={32}
+              className="ml-auto"
+              name="John Doe"
+              email="john.doe@example.com"
+            />
+            <HamburgerMenu />
+          </Box>
+        </>
       )}
     </Box>
   );
