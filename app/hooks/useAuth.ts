@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { authUtils, type AuthData } from "~/utils/auth";
 
 export function useAuth() {
@@ -17,9 +17,10 @@ export function useAuth() {
     setAuthData(null);
   };
 
-  const isAuthenticated = () => {
+  const isAuthenticated = useCallback(() => {
+    if (typeof window === "undefined") return undefined;
     return authUtils.isAuthenticated();
-  };
+  }, []);
 
   const isEmployeeAdmin = authData?.employee?.permission === "ADMIN";
 

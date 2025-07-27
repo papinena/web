@@ -1,12 +1,22 @@
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
 import { Footer } from "~/components/footer";
 import { Box } from "~/components/ui/box";
-import { useAuth } from "~/hooks/useAuth";
 import { Header } from "~/components/header";
+import { authUtils } from "~/utils/auth";
+
+export const clientLoader = async ({ request }: { request: Request }) => {
+  const url = new URL(request.url);
+  const isLoginPage = url.pathname === "/login";
+  const isRegisterPage = url.pathname.startsWith("/register");
+
+  if (!authUtils.isAuthenticated() && !isLoginPage && !isRegisterPage) {
+    return redirect("/login");
+  }
+
+  return null;
+};
 
 export function App() {
-  const { isAuthenticated } = useAuth();
-
   return (
     <>
       <Header />
