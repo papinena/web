@@ -15,31 +15,12 @@ import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
-import { useUserRegister } from "~/hooks/useCondominiums";
+import { useUserRegisterData } from "~/hooks/useUserRegisterData";
 import { Select } from "~/components/ui/select";
 import { Label } from "~/components/ui/label";
 import { BirthDateInput } from "~/components/birth-date-input";
-
-const themes = [
-  "Alimento",
-  "Eletrônico",
-  "Musica",
-  "Artesanato",
-  "Esporte",
-  "Pet",
-  "Aula coletiva",
-  "Festa",
-  "Reciclagem",
-  "Brinquedo",
-  "Imóvel",
-  "Roupa",
-  "Costura",
-  "Infantil",
-  "Serviço",
-  "Decoração",
-  "Livro",
-  "Transporte",
-];
+import type { Condominium } from "~/interfaces/condominium";
+import type { Tag } from "~/interfaces/tag";
 
 function ThemeItem({
   children,
@@ -65,9 +46,12 @@ function ThemeItem({
 
 export default function UserForm() {
   const { methods, onSave, isPending } = useUserForm();
-  const { data: condominiums, isLoading } = useUserRegister();
+  const { data, isLoading } = useUserRegisterData();
   const [preview, setPreview] = useState<string | null>(null);
-  const [selectedTheme, setSelectedTheme] = useState([""]);
+  const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
+
+  const condominiums = data?.condominiums;
+  const tags = data?.tags;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -125,7 +109,7 @@ export default function UserForm() {
                   <Label>Condomínio</Label>
                   <Select {...methods.register("condominiumId")}>
                     {isLoading && <option>Carregando...</option>}
-                    {condominiums?.map((condo: any) => (
+                    {condominiums?.map((condo: Condominium) => (
                       <option
                         className="text-body"
                         key={condo.id}
@@ -188,13 +172,13 @@ export default function UserForm() {
             <SectionContainer>
               <SectionTitle>Selecione temas do seu interesse*:</SectionTitle>
               <Box className="w-full flex flex-wrap gap-2">
-                {themes.map((t) => (
+                {tags?.map((t: Tag) => (
                   <ThemeItem
-                    isSelected={selectedTheme.includes(t)}
-                    setSelectedTheme={() => handleSelectedTheme(t)}
-                    key={t}
+                    isSelected={selectedTheme.includes(String(t.id))}
+                    setSelectedTheme={() => handleSelectedTheme(String(t.id))}
+                    key={t.id}
                   >
-                    {t}
+                    {t.label}
                   </ThemeItem>
                 ))}
                 <Box className="w-full items-center gap-3">
