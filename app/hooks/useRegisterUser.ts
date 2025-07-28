@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createUser } from "~/services/create-user";
 import { useState, type ChangeEvent } from "react";
 import { type z } from "zod";
+import type { Tag } from "~/interfaces/tag";
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
 
@@ -34,7 +35,7 @@ export function useRegisterUser({
     return JSON.parse(storedValues);
   });
 
-  const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
+  const [selectedTheme, setSelectedTheme] = useState<Tag[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -48,11 +49,11 @@ export function useRegisterUser({
     }
   };
 
-  function handleSelectedTheme(t: { id: string; label: string }) {
+  function handleSelectedTheme(t: Tag) {
     setSelectedTheme((s) => {
-      const i = s.findIndex((v) => v === t.id);
-      if (i > -1) return s.filter((v) => v !== t.id);
-      return s.concat([t.id]);
+      const i = s.findIndex((v) => v.id === t.id);
+      if (i > -1) return s.filter((v) => v.id !== t.id);
+      return s.concat([t]);
     });
   }
 
@@ -71,7 +72,10 @@ export function useRegisterUser({
   });
 
   const onSave = methods.handleSubmit((data) => {
-    const dataToSave = { ...data, tags: selectedTheme };
+    const dataToSave = {
+      ...data,
+      tags: selectedTheme.map((t) => String(t.label)),
+    };
     setFields(dataToSave);
     setLocalStorageFields(dataToSave);
     mutate(dataToSave);

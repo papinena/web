@@ -64,6 +64,8 @@ export default function UserForm() {
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
 
+  console.log(methods.formState.errors);
+
   return (
     <FormProvider {...methods}>
       <Box className="flex-1 flex-col w-full">
@@ -164,10 +166,8 @@ export default function UserForm() {
               <Box className="w-full flex flex-wrap gap-2">
                 {tags?.map((t: Tag) => (
                   <ThemeItem
-                    isSelected={selectedTheme.includes(String(t.id))}
-                    setSelectedTheme={() =>
-                      handleSelectedTheme({ ...t, id: String(t.id) })
-                    }
+                    isSelected={selectedTheme.some((st) => st.id === t.id)}
+                    setSelectedTheme={() => handleSelectedTheme(t)}
                     key={t.id}
                   >
                     {t.label}
