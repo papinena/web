@@ -3,16 +3,15 @@ import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { FormProvider } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { NameInput } from "~/components/register/name-input";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { EmailInput } from "~/components/register/email-input";
 import { PasswordInput } from "~/components/register/password-input";
 import { TelephoneInput } from "~/components/register/telephone-input";
-import { useUserForm } from "~/hooks/useUserForm";
+import { useRegisterUser } from "~/hooks/useRegisterUser";
 import { Item } from "~/components/register/item";
 import { cn } from "~/lib/utils";
-import { Input } from "~/components/ui/input";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
 import { useUserRegisterData } from "~/hooks/useUserRegisterData";
@@ -21,6 +20,7 @@ import { Label } from "~/components/ui/label";
 import { BirthDateInput } from "~/components/birth-date-input";
 import type { Condominium } from "~/interfaces/condominium";
 import type { Tag } from "~/interfaces/tag";
+import { useNavigate } from "react-router";
 
 function ThemeItem({
   children,
@@ -45,34 +45,24 @@ function ThemeItem({
 }
 
 export default function UserForm() {
-  const { methods, onSave, isPending } = useUserForm();
+  const navigate = useNavigate();
+  const {
+    methods,
+    onSave,
+    isPending,
+    selectedTheme,
+    handleSelectedTheme,
+    preview,
+    handleFileChange,
+  } = useRegisterUser({
+    onSuccess: () => navigate("/register/user/submitted"),
+  });
   const { data, isLoading } = useUserRegisterData();
-  const [preview, setPreview] = useState<string | null>(null);
-  const [selectedTheme, setSelectedTheme] = useState<string[]>([]);
 
   const condominiums = data?.condominiums;
   const tags = data?.tags;
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
-
-  function handleSelectedTheme(t: string) {
-    setSelectedTheme((s) => {
-      const i = s.findIndex((v) => v === t);
-      if (i > -1) return s.filter((v) => v !== t);
-      return s.concat([t]);
-    });
-  }
 
   return (
     <FormProvider {...methods}>
@@ -175,16 +165,19 @@ export default function UserForm() {
                 {tags?.map((t: Tag) => (
                   <ThemeItem
                     isSelected={selectedTheme.includes(String(t.id))}
-                    setSelectedTheme={() => handleSelectedTheme(String(t.id))}
+                    setSelectedTheme={() =>
+                      handleSelectedTheme({ ...t, id: String(t.id) })
+                    }
                     key={t.id}
                   >
                     {t.label}
                   </ThemeItem>
                 ))}
+                {/*
                 <Box className="w-full items-center gap-3">
                   <Text>Outro</Text>
                   <Input />
-                </Box>
+                </Box>*/}
               </Box>
             </SectionContainer>
             {hasErrors && (
