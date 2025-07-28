@@ -1,51 +1,41 @@
-import type { ReactNode } from "react";
-import { Link, useNavigate } from "react-router";
+import { useState, type ReactNode } from "react";
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Image } from "~/components/ui/image";
 import { Separator } from "~/components/ui/separator";
 import { Text } from "~/components/ui/text";
-import { useAuth } from "~/hooks/useAuth";
 import { cn } from "~/lib/utils";
-
-function Widget({ children }: { children: ReactNode }) {
-  return (
-    <Box className="border-2 rounded-xl gap-2 px-2 pb-5 pt-2 min-h-28 flex-col border-green-primary">
-      {children}
-    </Box>
-  );
-}
-function WidgetTitle({
-  children,
-  className = "",
-  icon,
-}: {
-  className?: string;
-  icon?: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <Box className="gap-1.5 items-center ">
-      {icon} <Text className={cn("text-lg", className)}>{children}</Text>
-    </Box>
-  );
-}
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAdminResidents } from "~/services/get-admin-residents";
+import { Spinner } from "~/components/ui/spinner";
+import { useAuth } from "~/hooks/useAuth";
+import { updateResidentStatus } from "~/services/update-resident-status";
 
 function Resident({
   name,
   block,
   apartment,
   avatar,
+  onSelect,
+  isSelected,
+  is_approved,
 }: {
   avatar?: string;
   name: string;
   block: string;
   apartment: string;
+  onSelect: () => void;
+  isSelected: boolean;
+  is_approved: boolean;
 }) {
   return (
     <Box>
-      <Checkbox className="size-8" />
+      <Checkbox
+        className="size-8"
+        onCheckedChange={onSelect}
+        checked={isSelected}
+      />
       <Image className="size-20" src={avatar} />
       <Box className="flex-col gap-2">
         <Text>{name}</Text>
@@ -62,38 +52,89 @@ function Resident({
             <Text className="text-sm">{apartment}</Text>
           </Box>
         </Box>
+        {is_approved && (
+          <Text className="text-green-primary text-sm">Aprovado</Text>
+        )}
       </Box>
     </Box>
   );
 }
 
-export default function Dashboard() {
+export default function Residents() {
+  const { authData } = useAuth();
+  const condominiumId = authData?.employee?.condominiumId;
+  const [selectedResidents, setSelectedResidents] = useState<string[]>([]);
+  const queryClient = useQueryClient();
+
+  const residentsQuery = useQuery({
+    queryKey: ["admin-residents"],
+    queryFn: () => getAdminResidents(condominiumId as number),
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateResidentStatus,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["admin-residents"],
+      });
+      setSelectedResidents([]);
+    },
+  });
+
+  const handleSelectResident = (id: string) => {
+    setSelectedResidents((prev) =>
+      prev.includes(id) ? prev.filter((resId) => resId !== id) : [...prev, id]
+    );
+  };
+
+  const handleUpdateStatus = (is_approved: boolean) => {
+    mutate({
+      ids: selectedResidents,
+      data: { is_approved },
+    });
+  };
+
+  if (residentsQuery.isLoading) {
+    return <Spinner />;
+  }
+
+  if (residentsQuery.isError) {
+    return <Text>Ocorreu um erro ao buscar os dados</Text>;
+  }
+
+  const condominiumUsers = residentsQuery.data?.condominiumUsers.data;
+
   return (
     <Box className="flex-1">
       <Box className="bg-white w-full gap-5 flex-col p-1.5 rounded-lg">
         <Text className="text-lg font-semibold">
           Gerenciamento de moradores
         </Text>
-        <Box className="flex-col">
-          <Resident name="Pedro Salgado" block="A" apartment="320 A" />
-          <Separator className="my-4" />
-        </Box>
-        <Box className="flex-col">
-          <Resident name="Pedro Salgado" block="A" apartment="320 A" />
-          <Separator className="my-4" />
-        </Box>
-        <Box className="flex-col">
-          <Resident name="Pedro Salgado" block="A" apartment="320 A" />
-          <Separator className="my-4" />
-        </Box>
+        {condominiumUsers?.map((resident) => (
+          <Box className="flex-col" key={resident.id}>
+            <Resident
+              name={`${resident.name} ${resident.last_name}`}
+              block={resident.block}
+              apartment={resident.apartment}
+              onSelect={() => handleSelectResident(resident.id)}
+              isSelected={selectedResidents.includes(resident.id)}
+              is_approved={resident.is_approved}
+            />
+            <Separator className="my-4" />
+          </Box>
+        ))}
         <Box className="w-full gap-12 mt-5 space-between">
           <Button
-            className={cn("flex-1 bg-green-primary hover:bg-green-primary/90")}
+            className={cn("flex-1 bg-red-500 hover:bg-red-500/90")}
+            onClick={() => handleUpdateStatus(false)}
+            disabled={isPending}
           >
-            <Text className="text-white">Excluir</Text>
+            <Text className="text-white">Reprovar</Text>
           </Button>
           <Button
             className={cn("flex-1 bg-green-primary hover:bg-green-primary/90")}
+            onClick={() => handleUpdateStatus(true)}
+            disabled={isPending}
           >
             <Text className="text-white">Aprovar</Text>
           </Button>
