@@ -29,16 +29,24 @@ export default function Login() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: login,
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      const { error, data } = await login(credentials);
+      if (error) throw new Error(error.message);
+      return data;
+    },
     onSuccess: (result: any) => {
       if (result.error) {
         setFormError(result.error.message);
       } else {
         // Store authentication data in localStorage and update state
-        authLogin(result.data);
+        authLogin(result);
 
-        if (result.data.userType === "employee") {
-          navigate("/admin/dashboard");
+        if (result.userType === "employee") {
+          return navigate("/admin/dashboard");
+        }
+
+        if (result.userType === "user") {
+          return navigate("/");
         }
 
         // Redirect to dashboard or home page
@@ -46,8 +54,7 @@ export default function Login() {
       }
     },
     onError: (error) => {
-      setFormError("Erro ao fazer login. Tente novamente.");
-      console.error("Login error:", error);
+      setFormError(error.message);
     },
   });
 

@@ -5,7 +5,7 @@ const { BASE_URL } = api();
 
 export async function login(data: LoginType): Promise<{
   data?: LoginResponseType & { user?: any; employee?: any };
-  error?: { message: string; code: string };
+  error?: { message: string; status: string };
 }> {
   const url = new URL(BASE_URL + "/auth/login");
 
@@ -25,13 +25,8 @@ export async function login(data: LoginType): Promise<{
 
   if (res.status >= 400 && res.status < 500) {
     const json = (await res.json()) as { status: string; message: string };
-    return {
-      error: {
-        message: "Algo deu errado. Entre em contato com o suporte",
-        code: JSON.stringify(json),
-      },
-    };
+    return { error: json };
   }
 
   return { data: await res.json() };
-} 
+}
