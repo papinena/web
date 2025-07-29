@@ -20,13 +20,15 @@ import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { useAdminForm } from "~/hooks/useAdminForm";
 import { useMutation } from "@tanstack/react-query";
 import { createAdmin } from "~/services/create-admin";
-import { ButtonWithSpinner } from "~/components/button-with-spinner";
-import { ErrorMessage } from "~/components/error-message";
-import { useNavigate } from "react-router";
+import { getSasToken } from '~/services/get-sas-token';
+import { uploadImage } from '~/services/upload-image';
+import { ButtonWithSpinner } from '~/components/button-with-spinner';
+import { ErrorMessage } from '~/components/error-message';
+import { useNavigate } from 'react-router';
 
 function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
   const mutation = useMutation({
-    mutationKey: ["CREATE-ADMIN"],
+    mutationKey: ['CREATE-ADMIN'],
     mutationFn: async (data: CreateAdminType) => {
       const res = await createAdmin(data);
 
@@ -46,7 +48,7 @@ export default function AdminForm() {
   const navigate = useNavigate();
   const { mutation } = useRegisterAdmin({
     // Redirect to a success page or dashboard
-    onSuccess: () => navigate("/register/admin/submitted"),
+    onSuccess: () => navigate('/register/admin/submitted'),
   });
   const { fields, setFields } = useAdminForm();
   const methods = useForm({
@@ -57,15 +59,40 @@ export default function AdminForm() {
   });
 
   const [preview, setPreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
+      setIsUploading(true);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      try {
+        const { data: tokenData, error: tokenError } = await getSasToken();
+
+        if (tokenError) {
+          throw new Error(tokenError.message);
+        }
+
+        if (tokenData) {
+          const imageUrl = await uploadImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            file,
+          );
+          methods.setValue('employee.photo', imageUrl);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -93,13 +120,13 @@ export default function AdminForm() {
                 <Box className="flex-col max-w-64 flex-1 gap-3">
                   <NameInput
                     label="Nome"
-                    {...methods.register("employee.name", { required: true })}
+                    {...methods.register('employee.name', { required: true })}
                     error={methods.formState.errors.employee?.name?.message}
                   />
                   <InputWithLabel
                     label="Sobrenome"
                     error={methods.formState.errors.employee?.lastName?.message}
-                    {...methods.register("employee.lastName", {
+                    {...methods.register('employee.lastName', {
                       required: true,
                     })}
                   />
@@ -116,7 +143,7 @@ export default function AdminForm() {
               <Item className="w-full">
                 <Textarea
                   className="min-h-20"
-                  {...methods.register("condominium.usefulInformation")}
+                  {...methods.register('condominium.usefulInformation')}
                 />
               </Item>
             </SectionContainer>
@@ -131,7 +158,7 @@ export default function AdminForm() {
               {mutation.error?.message}
             </ErrorMessage>
             <ButtonWithSpinner
-              loading={mutation.isPending}
+              loading={mutation.isPending || isUploading}
               onClick={methods.handleSubmit(onSave)}
             >
               Enviar
