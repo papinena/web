@@ -1,0 +1,19 @@
+import { useState } from "react";
+
+const STORAGE_KEY = "image-read-token";
+
+export function useImageReadToken() {
+  const [state] = useState<{
+    expiresOn: "";
+    sasToken: "";
+    containerUri: "";
+  }>(() => {
+    const data = localStorage.getItem(STORAGE_KEY);
+
+    if (!data) return { sasToken: "", containerUri: "" };
+
+    return JSON.parse(data);
+  });
+
+  return state;
+}

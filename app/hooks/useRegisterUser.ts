@@ -74,7 +74,7 @@ export function useRegisterUser({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: UserFormType) => {
-      let imageUrl = "";
+      let filename = "";
       let tokenData,
         tokenError: { status: string; message: string } | undefined;
 
@@ -88,7 +88,7 @@ export function useRegisterUser({
         }
 
         if (tokenData) {
-          imageUrl = await uploadImage(
+          filename = await uploadImage(
             tokenData.containerUri,
             tokenData.sasToken,
             file
@@ -98,7 +98,7 @@ export function useRegisterUser({
 
       const dataToSave = {
         ...data,
-        photo: imageUrl,
+        photo: filename,
         tags: selectedTheme.map((t) => String(t.label)),
       };
 
@@ -106,11 +106,11 @@ export function useRegisterUser({
 
       if (res?.status === "error") {
         tokenData &&
-          imageUrl &&
+          filename &&
           (await deleteImage(
             tokenData.containerUri,
             tokenData.sasToken,
-            imageUrl
+            filename
           ));
         throw new Error(res.message);
       }

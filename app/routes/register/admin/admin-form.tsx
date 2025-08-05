@@ -30,7 +30,7 @@ function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
   const mutation = useMutation({
     mutationKey: ["CREATE-ADMIN"],
     mutationFn: async (data: { form: CreateAdminType; file: File | null }) => {
-      let imageUrl = "";
+      let filename = "";
       let tokenData,
         tokenError: { status: string; message: string } | undefined;
 
@@ -42,7 +42,7 @@ function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
         if (tokenError) throw new Error(tokenError.message);
 
         if (tokenData) {
-          imageUrl = await uploadImage(
+          filename = await uploadImage(
             tokenData.containerUri,
             tokenData.sasToken,
             data.file
@@ -54,7 +54,7 @@ function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
         ...data.form,
         employee: {
           ...data.form.employee,
-          photo: imageUrl,
+          photo: filename,
         },
       };
 
@@ -62,11 +62,11 @@ function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
 
       if (res?.error?.status === "error") {
         tokenData &&
-          imageUrl &&
+          filename &&
           (await deleteImage(
             tokenData.containerUri,
             tokenData.sasToken,
-            imageUrl
+            filename
           ));
         throw new Error(res?.error?.message);
       }

@@ -1,19 +1,19 @@
-import { api, apiRequest } from "~/utils/api";
+import { api, apiRequest } from '~/utils/api';
 
 const { BASE_URL } = api();
 
-export async function getSasToken(): Promise<{
+export async function getImageReadToken(): Promise<{
   data?: { sasToken: string; containerUri: string };
   error?: { message: string; status: string };
 }> {
-  const url = new URL(BASE_URL + "/image-read/token/upload");
+  const url = new URL(BASE_URL + '/image-read/token/read');
 
   const res = await apiRequest(
     url.toString(),
     {
-      method: "GET",
+      method: 'GET',
     },
-    true
+    true,
   );
 
   if (res.status >= 400 && res.status < 500) {

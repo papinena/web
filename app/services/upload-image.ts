@@ -1,18 +1,20 @@
-import { BlobServiceClient } from '@azure/storage-blob';
+import { BlobServiceClient } from "@azure/storage-blob";
 
 export async function uploadImage(
   containerUri: string,
   sasToken: string,
-  file: File,
+  file: File
 ) {
-  const blobServiceClient = new BlobServiceClient(`${containerUri}?${sasToken}`);
-  const containerClient = blobServiceClient.getContainerClient('');
-  const blobName = new Date().getTime() + '-' + file.name;
+  const blobServiceClient = new BlobServiceClient(
+    `${containerUri}?${sasToken}`
+  );
+  const containerClient = blobServiceClient.getContainerClient("");
+  const blobName = new Date().getTime() + "-" + file.name;
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
   await blockBlobClient.uploadData(file, {
     blobHTTPHeaders: { blobContentType: file.type },
   });
 
-  return blockBlobClient.url;
+  return blobName;
 }
