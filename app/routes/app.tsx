@@ -17,11 +17,9 @@ export const clientLoader = async ({ request }: { request: Request }) => {
 
   if (!isAuthenticated) return null;
 
-  const imageReadToken = JSON.parse(
-    localStorage.getItem("image-read-token") ?? ""
-  );
+  const storedImageReadToken = localStorage.getItem("image-read-token");
 
-  if (!imageReadToken) {
+  if (!storedImageReadToken) {
     const { data, error } = await getImageReadToken();
 
     if (error || !data) {
@@ -29,7 +27,11 @@ export const clientLoader = async ({ request }: { request: Request }) => {
     }
 
     localStorage.setItem("image-read-token", JSON.stringify(data));
+
+    return null;
   }
+
+  const imageReadToken = JSON.parse(storedImageReadToken);
 
   if (new Date() > new Date(imageReadToken.expiresOn)) {
     const { data, error } = await getImageReadToken();
