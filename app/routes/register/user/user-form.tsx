@@ -64,8 +64,6 @@ export default function UserForm() {
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
 
-  console.log(methods.formState.errors);
-
   return (
     <FormProvider {...methods}>
       <Box className="flex-1 flex-col w-full">

@@ -1,26 +1,23 @@
+import { useAuth } from "~/hooks/useAuth";
 import { AvatarFallback, AvatarImage, Avatar as AvatarUI } from "../ui/avatar";
-import { Box } from "../ui/box";
-import { Text } from "../ui/text";
 
 interface AvatarProps {
-  name?: string;
-  email?: string;
   size?: number; // px
   className?: string;
 }
 
-function getInitial(name?: string, email?: string) {
-  if (name && name.length > 0) return name[0].toUpperCase();
-  if (email && email.length > 0) return email[0].toUpperCase();
-  return "?";
-}
-
-export function Avatar({ name, email, size = 40, className = "" }: AvatarProps) {
-  const initial = getInitial(name, email);
+export function Avatar({ size = 40, className = "" }: AvatarProps) {
+  const { authData } = useAuth();
+  const data =
+    authData?.userType === "user" ? authData.user : authData?.employee;
   return (
-    <AvatarUI className={className} style={{ width: size, height: size }} aria-label={name || email || "Avatar"}>
-  <AvatarImage src="" />
-  <AvatarFallback>U</AvatarFallback>
-</AvatarUI>
+    <AvatarUI
+      className={className}
+      style={{ width: size, height: size }}
+      aria-label={data.name || data.email || "Avatar"}
+    >
+      <AvatarImage src={data.avatar} />
+      <AvatarFallback>{data.email[0]}</AvatarFallback>
+    </AvatarUI>
   );
-} 
+}

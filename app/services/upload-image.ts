@@ -10,7 +10,9 @@ export async function uploadImage(
   const blobName = new Date().getTime() + '-' + file.name;
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  await blockBlobClient.uploadData(file);
+  await blockBlobClient.uploadData(file, {
+    blobHTTPHeaders: { blobContentType: file.type },
+  });
 
   return blockBlobClient.url;
 }

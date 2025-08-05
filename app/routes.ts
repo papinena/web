@@ -1,5 +1,6 @@
 import {
   type RouteConfig,
+  index,
   layout,
   prefix,
   route,
@@ -7,6 +8,7 @@ import {
 
 export default [
   layout("./routes/app.tsx", [
+    index("./routes/index.tsx"),
     route("login", "./routes/login.tsx"),
     ...prefix("admin", [
       route("dashboard", "./routes/admin/dashboard.tsx"),

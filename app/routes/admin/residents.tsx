@@ -113,6 +113,7 @@ export default function Residents() {
         {condominiumUsers?.map((resident) => (
           <Box className="flex-col" key={resident.id}>
             <Resident
+              avatar={resident.avatar}
               name={`${resident.name} ${resident.last_name}`}
               block={resident.block}
               apartment={resident.apartment}

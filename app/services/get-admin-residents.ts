@@ -11,6 +11,7 @@ interface User {
   apartment: string;
   is_approved: boolean;
   active: boolean;
+  avatar?: string;
   condominiumId: number;
   created_at: string;
   updated_at: string;

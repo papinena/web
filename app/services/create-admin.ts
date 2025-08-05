@@ -15,6 +15,7 @@ class AdminMapper {
       block: data.employee.block,
       apartment: data.employee.apartment,
       email: data.employee.email,
+      avatar: data.employee.photo,
     };
   }
 }
@@ -29,6 +30,7 @@ type AdminAPIProps = {
   block?: string;
   apartment?: string;
   email: string;
+  avatar?: string;
 };
 
 export async function createAdmin(data: CreateAdminType) {
@@ -65,10 +67,11 @@ export async function createAdmin(data: CreateAdminType) {
     return {
       error: {
         message: "Algo deu errado. Entre em contato com o suporte",
+        status: "error",
         code: JSON.stringify(json),
       },
     };
   }
 
-  return { data: await res.json() };
+  return { data: await res.json(), error: null };
 }

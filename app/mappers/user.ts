@@ -15,6 +15,7 @@ export const userMapper = {
       apartment: data.apartment,
       password: data.password,
       condominiumId: Number(data.condominiumId),
+      avatar: data.photo,
     };
   },
 };

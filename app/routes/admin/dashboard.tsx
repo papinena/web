@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
 import { Text } from "~/components/ui/text";

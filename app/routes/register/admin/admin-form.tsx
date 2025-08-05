@@ -13,30 +13,63 @@ import {
   type CreateAdminType,
 } from "~/parsers/create-admin";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { NameInput } from "~/components/register/name-input";
 import { Item } from "~/components/register/item";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { useAdminForm } from "~/hooks/useAdminForm";
 import { useMutation } from "@tanstack/react-query";
 import { createAdmin } from "~/services/create-admin";
-import { getSasToken } from '~/services/get-sas-token';
-import { uploadImage } from '~/services/upload-image';
-import { ButtonWithSpinner } from '~/components/button-with-spinner';
-import { ErrorMessage } from '~/components/error-message';
-import { useNavigate } from 'react-router';
+import { getSasToken } from "~/services/get-sas-token";
+import { uploadImage } from "~/services/upload-image";
+import { deleteImage } from "~/services/delete-image";
+import { ButtonWithSpinner } from "~/components/button-with-spinner";
+import { ErrorMessage } from "~/components/error-message";
+import { useNavigate } from "react-router";
 
 function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
   const mutation = useMutation({
-    mutationKey: ['CREATE-ADMIN'],
-    mutationFn: async (data: CreateAdminType) => {
-      const res = await createAdmin(data);
+    mutationKey: ["CREATE-ADMIN"],
+    mutationFn: async (data: { form: CreateAdminType; file: File | null }) => {
+      let imageUrl = "";
+      let tokenData,
+        tokenError: { status: string; message: string } | undefined;
 
-      if (res.error) {
-        throw Error(res.error.message);
+      if (data.file) {
+        const sasTokenData = await getSasToken();
+        tokenData = sasTokenData.data;
+        tokenError = sasTokenData.error;
+
+        if (tokenError) throw new Error(tokenError.message);
+
+        if (tokenData) {
+          imageUrl = await uploadImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            data.file
+          );
+        }
       }
 
-      return res.data;
+      const dataToSave = {
+        ...data.form,
+        employee: {
+          ...data.form.employee,
+          photo: imageUrl,
+        },
+      };
+
+      const res = await createAdmin(dataToSave);
+
+      if (res?.error?.status === "error") {
+        tokenData &&
+          imageUrl &&
+          (await deleteImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            imageUrl
+          ));
+        throw new Error(res?.error?.message);
+      }
     },
     onSuccess,
   });
@@ -47,10 +80,9 @@ function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
 export default function AdminForm() {
   const navigate = useNavigate();
   const { mutation } = useRegisterAdmin({
-    // Redirect to a success page or dashboard
-    onSuccess: () => navigate('/register/admin/submitted'),
+    onSuccess: () => navigate("/register/admin/submitted"),
   });
-  const { fields, setFields } = useAdminForm();
+  const { fields, setFields, preview, file, handleFileChange } = useAdminForm();
   const methods = useForm({
     defaultValues: {
       ...fields,
@@ -58,47 +90,9 @@ export default function AdminForm() {
     resolver: zodResolver(CreateAdminSchema),
   });
 
-  const [preview, setPreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setIsUploading(true);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-
-      try {
-        const { data: tokenData, error: tokenError } = await getSasToken();
-
-        if (tokenError) {
-          throw new Error(tokenError.message);
-        }
-
-        if (tokenData) {
-          const imageUrl = await uploadImage(
-            tokenData.containerUri,
-            tokenData.sasToken,
-            file,
-          );
-          methods.setValue('employee.photo', imageUrl);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsUploading(false);
-      }
-    }
-  };
-
-  const onSave = async (data: typeof fields) => {
+  const onSave = async (data: CreateAdminType) => {
     setFields(data);
-    mutation.mutate(data);
+    mutation.mutate({ form: data, file });
   };
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
@@ -120,13 +114,13 @@ export default function AdminForm() {
                 <Box className="flex-col max-w-64 flex-1 gap-3">
                   <NameInput
                     label="Nome"
-                    {...methods.register('employee.name', { required: true })}
+                    {...methods.register("employee.name", { required: true })}
                     error={methods.formState.errors.employee?.name?.message}
                   />
                   <InputWithLabel
                     label="Sobrenome"
                     error={methods.formState.errors.employee?.lastName?.message}
-                    {...methods.register('employee.lastName', {
+                    {...methods.register("employee.lastName", {
                       required: true,
                     })}
                   />
@@ -143,7 +137,7 @@ export default function AdminForm() {
               <Item className="w-full">
                 <Textarea
                   className="min-h-20"
-                  {...methods.register('condominium.usefulInformation')}
+                  {...methods.register("condominium.usefulInformation")}
                 />
               </Item>
             </SectionContainer>
@@ -155,10 +149,10 @@ export default function AdminForm() {
               </Box>
             )}
             <ErrorMessage className="mx-auto" show={mutation.isError}>
-              {mutation.error?.message}
+              {(mutation.error as Error)?.message}
             </ErrorMessage>
             <ButtonWithSpinner
-              loading={mutation.isPending || isUploading}
+              loading={mutation.isPending}
               onClick={methods.handleSubmit(onSave)}
             >
               Enviar

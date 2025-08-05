@@ -1,37 +1,38 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateUserSchema } from '~/parsers/create-user';
-import { useMutation } from '@tanstack/react-query';
-import { createUser } from '~/services/create-user';
-import { useState, type ChangeEvent } from 'react';
-import { type z } from 'zod';
-import type { Tag } from '~/interfaces/tag';
-import { getSasToken } from '~/services/get-sas-token';
-import { uploadImage } from '~/services/upload-image';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateUserSchema } from "~/parsers/create-user";
+import { useMutation } from "@tanstack/react-query";
+import { createUser } from "~/services/create-user";
+import { useState, type ChangeEvent } from "react";
+import { type z } from "zod";
+import type { Tag } from "~/interfaces/tag";
+import { getSasToken } from "~/services/get-sas-token";
+import { uploadImage } from "~/services/upload-image";
+import { deleteImage } from "~/services/delete-image";
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
 
 const defaultValues: UserFormType = {
-  name: '',
-  lastName: '',
-  apartment: '',
-  telephone: '',
-  email: '',
-  confirmEmail: '',
-  password: '',
-  confirmPassword: '',
-  condominiumId: '',
+  name: "",
+  lastName: "",
+  apartment: "",
+  telephone: "",
+  email: "",
+  confirmEmail: "",
+  password: "",
+  confirmPassword: "",
+  condominiumId: "",
   tags: [],
-  photo: '',
+  photo: "",
 };
 
-const STORAGE_KEY = 'user-form-fields';
+const STORAGE_KEY = "user-form-fields";
 
 export function useRegisterUser({
   onSuccess,
 }: { onSuccess?: () => void } = {}) {
   const [fields, setFields] = useState<UserFormType>(() => {
-    if (typeof window === 'undefined') return defaultValues;
+    if (typeof window === "undefined") return defaultValues;
     const storedValues = localStorage.getItem(STORAGE_KEY);
     if (!storedValues) return defaultValues;
 
@@ -40,45 +41,24 @@ export function useRegisterUser({
 
   const [selectedTheme, setSelectedTheme] = useState<Tag[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setIsUploading(true);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
-
-      try {
-        const { data: tokenData, error: tokenError } = await getSasToken();
-
-        if (tokenError) {
-          throw new Error(tokenError.message);
-        }
-
-        if (tokenData) {
-          const imageUrl = await uploadImage(
-            tokenData.containerUri,
-            tokenData.sasToken,
-            file,
-          );
-          methods.setValue('photo', imageUrl);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsUploading(false);
-      }
+      setFile(file);
     }
   };
 
   function handleSelectedTheme(t: Tag) {
-    setSelectedTheme(s => {
-      const i = s.findIndex(v => v.id === t.id);
-      if (i > -1) return s.filter(v => v.id !== t.id);
+    setSelectedTheme((s) => {
+      const i = s.findIndex((v) => v.id === t.id);
+      if (i > -1) return s.filter((v) => v.id !== t.id);
       return s.concat([t]);
     });
   }
@@ -93,14 +73,55 @@ export function useRegisterUser({
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: createUser,
+    mutationFn: async (data: UserFormType) => {
+      let imageUrl = "";
+      let tokenData,
+        tokenError: { status: string; message: string } | undefined;
+
+      if (file) {
+        const { data, error } = await getSasToken();
+        tokenData = data;
+        tokenError = error;
+
+        if (tokenError) {
+          throw new Error(tokenError.message);
+        }
+
+        if (tokenData) {
+          imageUrl = await uploadImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            file
+          );
+        }
+      }
+
+      const dataToSave = {
+        ...data,
+        photo: imageUrl,
+        tags: selectedTheme.map((t) => String(t.label)),
+      };
+
+      const res = await createUser(dataToSave);
+
+      if (res?.status === "error") {
+        tokenData &&
+          imageUrl &&
+          (await deleteImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            imageUrl
+          ));
+        throw new Error(res.message);
+      }
+    },
     onSuccess,
   });
 
-  const onSave = methods.handleSubmit(data => {
+  const onSave = methods.handleSubmit((data) => {
     const dataToSave = {
       ...data,
-      tags: selectedTheme.map(t => String(t.label)),
+      tags: selectedTheme.map((t) => String(t.label)),
     };
     setFields(dataToSave);
     setLocalStorageFields(dataToSave);
@@ -110,7 +131,7 @@ export function useRegisterUser({
   return {
     methods,
     onSave,
-    isPending: isPending || isUploading,
+    isPending,
     selectedTheme,
     handleSelectedTheme,
     preview,
