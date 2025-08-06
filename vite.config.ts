@@ -5,12 +5,16 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tailwindcss(), reactRouter(), tsconfigPaths(), sentryVitePlugin({
-    org: "matheus-oliveira-uw",
-    project: "vizis"
-  })],
-
+  plugins: [
+    tailwindcss(),
+    reactRouter(),
+    tsconfigPaths(),
+    sentryVitePlugin({
+      org: "matheus-oliveira-uw",
+      project: "vizis",
+    }),
+  ],
   build: {
-    sourcemap: true
-  }
+    sourcemap: true,
+  },
 });

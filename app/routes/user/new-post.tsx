@@ -8,8 +8,8 @@ import { useAuth } from "~/hooks/useAuth";
 import type { ReactNode } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import { InstagramIcon, List, ListOrderedIcon } from "lucide-react";
 import { Checkbox } from "~/components/ui/checkbox";
+import { MarkdownEditor } from "~/components/markdown-editor";
 
 export function ExpireDateInput({
   onChange,
@@ -91,41 +91,6 @@ function UploadPhotosInput({
   );
 }
 
-function TextBoxButton({
-  className,
-  children,
-}: {
-  children: string;
-  className: string;
-}) {
-  return (
-    <Button variant={"ghost"} className="size-8">
-      <Text className={className}>{children}</Text>
-    </Button>
-  );
-}
-
-function TextBox() {
-  return (
-    <Box className="w-full border flex-col border-gray-300">
-      <Box className="border-b border-gray-300 w-full">
-        <TextBoxButton className="font-bold">B</TextBoxButton>
-        <TextBoxButton className="italic">I</TextBoxButton>
-        <TextBoxButton className="underline">U</TextBoxButton>
-        <Button variant={"ghost"} className="size-8">
-          <ListOrderedIcon />
-        </Button>
-        <Button variant={"ghost"} className="size-8">
-          <List />
-        </Button>
-      </Box>
-      <Box className="min-h-40 w-full">
-        {/* TODO TEXTAREA WITH TEXT FORMAT OPTIONS IN MARKDOWN STYLE*/}
-      </Box>
-    </Box>
-  );
-}
-
 export default function NewPost() {
   const { authData } = useAuth();
 
@@ -152,7 +117,7 @@ export default function NewPost() {
         </Item>
         <Item>
           <ItemLabel>Mais detalhes da publicação </ItemLabel>
-          <TextBox />
+          <MarkdownEditor />
         </Item>
         <Item>
           <Text className="text-lg font-bold">Prazo de validade*</Text>
