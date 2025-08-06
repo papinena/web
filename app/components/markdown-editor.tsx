@@ -12,7 +12,6 @@ import { useState } from "react";
 
 export function MarkdownEditor() {
   const [markdown, setMarkdown] = useState("");
-  console.log(markdown);
   return (
     <MDXEditor
       contentEditableClassName="prose"

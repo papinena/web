@@ -91,8 +91,45 @@ function UploadPhotosInput({
   );
 }
 
+import { useUserNewPost } from "~/hooks/useUserNewPost";
+import { ThemeItem } from "~/components/theme-item";
+import { useState } from "react";
+
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface PostType {
+  name: string;
+  id: number;
+}
+
 export default function NewPost() {
   const { authData } = useAuth();
+  const { categories, postTypes, isLoading } = useUserNewPost();
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedPostTypes, setSelectedPostTypes] = useState<PostType[]>([]);
+
+  const handleSelectedCategory = (category: Category) => {
+    setSelectedCategories((prev) => {
+      const isSelected = prev.some((t) => t.id === category.id);
+      if (isSelected) {
+        return prev.filter((t) => t.id !== category.id);
+      }
+      return [...prev, category];
+    });
+  };
+
+  const handleSelectedPostType = (postType: PostType) => {
+    setSelectedPostTypes((prev) => {
+      const isSelected = prev.some((pt) => pt.id === postType.id);
+      if (isSelected) {
+        return prev.filter((pt) => pt.id !== postType.id);
+      }
+      return [...prev, postType];
+    });
+  };
 
   return (
     <Box className="bg-white flex-1 rounded-xl pt-3 px-3 pb-10 flex-col">
@@ -118,6 +155,42 @@ export default function NewPost() {
         <Item>
           <ItemLabel>Mais detalhes da publicação </ItemLabel>
           <MarkdownEditor />
+        </Item>
+        <Item>
+          <ItemLabel className="text-lg font-bold">
+            Selecione a(s) categoria(s)*
+          </ItemLabel>
+          <Box className="flex-wrap gap-2">
+            {isLoading && <Text>Carregando categories...</Text>}
+            {categories.map((category) => (
+              <ThemeItem
+                key={category.id}
+                isSelected={selectedCategories.some(
+                  (t) => t.id === category.id
+                )}
+                onClick={() => handleSelectedCategory(category)}
+              >
+                {category.name}
+              </ThemeItem>
+            ))}
+          </Box>
+        </Item>
+        <Item>
+          <ItemLabel className="text-lg font-bold">Selecione o tipo*</ItemLabel>
+          <Box className="flex-wrap gap-2">
+            {isLoading && <Text>Carregando tipos...</Text>}
+            {postTypes.map((postType) => (
+              <ThemeItem
+                key={postType.id}
+                isSelected={selectedPostTypes.some(
+                  (pt) => pt.id === postType.id
+                )}
+                onClick={() => handleSelectedPostType(postType)}
+              >
+                {postType.name}
+              </ThemeItem>
+            ))}
+          </Box>
         </Item>
         <Item>
           <Text className="text-lg font-bold">Prazo de validade*</Text>

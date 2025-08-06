@@ -18,12 +18,7 @@ export function Header() {
             <SearchInput placeholder="Buscar..." />
           </Box>
           <Box className="items-center justify-center">
-            <Avatar
-              size={32}
-              className="ml-auto"
-              name="John Doe"
-              email="john.doe@example.com"
-            />
+            <Avatar size={32} className="ml-auto" />
             <HamburgerMenu />
           </Box>
         </>

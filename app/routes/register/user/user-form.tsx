@@ -3,7 +3,6 @@ import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { FormProvider } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
-import { type ReactNode } from "react";
 import { NameInput } from "~/components/register/name-input";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { EmailInput } from "~/components/register/email-input";
@@ -11,7 +10,6 @@ import { PasswordInput } from "~/components/register/password-input";
 import { TelephoneInput } from "~/components/register/telephone-input";
 import { useRegisterUser } from "~/hooks/useRegisterUser";
 import { Item } from "~/components/register/item";
-import { cn } from "~/lib/utils";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
 import { useUserRegisterData } from "~/hooks/useUserRegisterData";
@@ -20,29 +18,8 @@ import { Label } from "~/components/ui/label";
 import { BirthDateInput } from "~/components/birth-date-input";
 import type { Condominium } from "~/interfaces/condominium";
 import type { Tag } from "~/interfaces/tag";
+import { ThemeItem } from "~/components/theme-item";
 import { useNavigate } from "react-router";
-
-function ThemeItem({
-  children,
-  setSelectedTheme,
-  isSelected,
-}: {
-  isSelected: boolean;
-  setSelectedTheme(): void;
-  children: ReactNode;
-}) {
-  return (
-    <Box
-      onClick={setSelectedTheme}
-      className={cn(
-        "border cursor-pointer justify-center basis-[calc((100%-1rem)/3)] p-2 text-center border-gray-200 rounded-lg",
-        isSelected ? "bg-gray-300" : ""
-      )}
-    >
-      <Text>{children}</Text>
-    </Box>
-  );
-}
 
 export default function UserForm() {
   const navigate = useNavigate();
@@ -165,7 +142,7 @@ export default function UserForm() {
                 {tags?.map((t: Tag) => (
                   <ThemeItem
                     isSelected={selectedTheme.some((st) => st.id === t.id)}
-                    setSelectedTheme={() => handleSelectedTheme(t)}
+                    onClick={() => handleSelectedTheme(t)}
                     key={t.id}
                   >
                     {t.label}
