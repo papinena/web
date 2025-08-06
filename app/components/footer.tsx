@@ -10,23 +10,23 @@ export function Footer({ className }: { className?: string }) {
   const { isAuthenticated } = useAuth();
   const isAuth = isAuthenticated();
 
-  console.log(isAuth);
   return (
-    <Box className={cn("relative w-full flex justify-center", className)}>
-      <Button
-        variant={"outline"}
-        className="absolute size-18 rounded-full bottom-6"
-      >
-        <PlusIcon color={"#94C56F"} className="size-14" />
-      </Button>
-      <Box className="flex-col justify-center ml-auto items-center">
-        <Text className="font-medium text-sm text-gray-400">Dúvida?</Text>
-        <Box className="flex flex-row gap-1">
-          <Text className="text-sm">Fale com o </Text>
-          <Text className="text-sm font-medium text-gray-400">vizis?</Text>
+    <Box
+      className={cn(
+        "relative w-full mt-auto flex flex-col justify-center",
+        className
+      )}
+    >
+      <Box>
+        <Box className="flex-col justify-center ml-auto items-center">
+          <Text className="font-medium text-sm text-gray-400">Dúvida?</Text>
+          <Box className="flex flex-row gap-1">
+            <Text className="text-sm">Fale com o </Text>
+            <Text className="text-sm font-medium text-gray-400">Vizis?</Text>
+          </Box>
         </Box>
+        <Image className="w-10 h-10" src="/footer-logo.svg" />
       </Box>
-      <Image className="w-10 h-10" src="/footer-logo.svg" />
     </Box>
   );
 }
