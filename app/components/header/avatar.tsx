@@ -9,11 +9,10 @@ interface AvatarProps {
 
 export function Avatar({ size = 40, className = "" }: AvatarProps) {
   const { authData } = useAuth();
-  const { containerUri, sasToken } = useImageReadToken();
+  const { buildUrl } = useImageReadToken();
 
   const data =
     authData?.userType === "user" ? authData.user : authData?.employee;
-  const src = `${containerUri}/${data?.avatar}?${sasToken}`;
 
   return (
     <AvatarUI
@@ -21,7 +20,7 @@ export function Avatar({ size = 40, className = "" }: AvatarProps) {
       style={{ width: size, height: size }}
       aria-label={data.name || data.email || "Avatar"}
     >
-      <AvatarImage src={src} />
+      <AvatarImage src={buildUrl(data.avatar)} />
       <AvatarFallback>{data.email[0]}</AvatarFallback>
     </AvatarUI>
   );

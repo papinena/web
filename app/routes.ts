@@ -9,6 +9,7 @@ import {
 export default [
   layout("./routes/app.tsx", [
     index("./routes/index.tsx"),
+    route("/post/:postId", "./routes/post/index.tsx"),
     ...prefix("user", [route("/new-post", "./routes/user/new-post.tsx")]),
     route("login", "./routes/login.tsx"),
     ...prefix("admin", [
