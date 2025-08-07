@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import "@mdxeditor/editor/style.css";
 import { getPost } from "~/services/get-post";
 import type { Route } from "../+types";
 import { Box } from "~/components/ui/box";
@@ -59,6 +60,7 @@ export default function Post({ params }: Route.ComponentProps) {
           plugins={[headingsPlugin(), listsPlugin()]}
           markdown={post.description}
           readOnly
+          contentEditableClassName="prose"
         />
       )}
       <Text className="font-bold">
