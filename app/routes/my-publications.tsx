@@ -37,7 +37,7 @@ function Post({ post }: { post: PostAPIProps }) {
         </Box>
         <Box className="ml-auto items-center">
           <Button variant={"link"}>
-            <Link to={`/post/${post.id}`}>Editar</Link>
+            <Link to={`/post/update/${post.id}`}>Editar</Link>
           </Button>
           -
           <Button

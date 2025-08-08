@@ -10,6 +10,7 @@ export default [
   layout("./routes/app.tsx", [
     index("./routes/index.tsx"),
     route("/post/:postId", "./routes/post/index.tsx"),
+    route("/post/update/:postId", "./routes/user/update-post.tsx"),
     route("/my-publications", "./routes/my-publications.tsx"),
     ...prefix("user", [
       route("/new-post", "./routes/user/new-post.tsx"),
