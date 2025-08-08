@@ -8,10 +8,15 @@ import { Text } from "~/components/ui/text";
 import { Spinner } from "~/components/ui/spinner";
 import { Button } from "~/components/ui/button";
 import { PostImage } from "~/components/ui/post-image";
+import { usePost } from "~/hooks/usePost";
 
 function Post({ post }: { post: PostAPIProps }) {
+  const { deletePostMutation } = usePost();
   const hasImage = post.media.length > 0;
-  function onPostDelete(id: string) {}
+
+  const onPostDelete = (id: string) => {
+    deletePostMutation.mutate(id);
+  };
 
   return (
     <Box className="flex-col py-5 px-5">
@@ -39,8 +44,9 @@ function Post({ post }: { post: PostAPIProps }) {
             className="cursor-pointer"
             onClick={() => onPostDelete(post.id)}
             variant={"link"}
+            disabled={deletePostMutation.isPending}
           >
-            Excluir
+            {deletePostMutation.isPending ? "Excluindo..." : "Excluir"}
           </Button>
         </Box>
       </Box>
