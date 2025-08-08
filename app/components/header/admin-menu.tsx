@@ -1,6 +1,4 @@
-import type { ReactNode } from "react";
-import { useNavigate } from "react-router";
-import { Box } from "../ui/box";
+import { useHamburguerMenu } from "~/hooks/useHamburguerMenu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Image } from "../ui/image";
-import { Text } from "../ui/text";
-import { useAuth } from "~/hooks/useAuth";
+import { MenuItemText } from "./menu-item-text";
+import { HamburguerMenuIcon } from "./hamburguer-menu-icon";
+import { LogoImage } from "./logo-image";
+import { TextMenuItem } from "./text-menu-item";
+import { IconMenuItem } from "./icon-menu-item";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -19,74 +20,56 @@ interface HamburgerMenuProps {
   ariaLabel?: string;
 }
 
-function MenuItemText({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return (
-    <Text className={`text-lg text-primary font-semibold ${className}`}>{children}</Text>
-  );
-}
-
-export function HamburgerMenu({
+export function AdminHamburguerMenu({
   className = "",
   ariaLabel = "Open menu",
 }: HamburgerMenuProps) {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const { handleLogout } = useHamburguerMenu();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Box
-          className={`flex flex-col justify-center items-center w-10 h-10 rounded hover:bg-gray-200 transition ${className}`}
-          aria-label={ariaLabel}
-        >
-          <Box className="w-5 h-0.5 bg-[#AEB3B8] mb-1 rounded" />
-          <Box className="w-5 h-0.5 bg-[#AEB3B8] mb-1 rounded" />
-          <Box className="w-5 h-0.5 bg-[#AEB3B8] rounded" />
-        </Box>
+        <HamburguerMenuIcon className={className} ariaLabel={ariaLabel} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="p-3">
         <DropdownMenuItem>
-          <Image src="/image 115.svg" />
+          <LogoImage />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Image src="/image 120.svg" />
-          <MenuItemText>Home</MenuItemText>
+          <IconMenuItem to="/home" iconSrc="/image 120.svg">
+            Home
+          </IconMenuItem>
         </DropdownMenuItem>
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Image src="/image 118.svg" />
-            <MenuItemText>Meu painel</MenuItemText>
+            <IconMenuItem to="/my-panel" iconSrc="/image 118.svg">
+              Meu painel
+            </IconMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Text>Meu cadastro</Text>
+            <TextMenuItem to="/my-register">Meu Cadastro</TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Text>Minhas publicações</Text>
+            <TextMenuItem to="/my-publications">
+              Minhas publicações
+            </TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Text>Meu condomínio</Text>
+            <TextMenuItem to="/my-condominium">Meu condomínio</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuItem>
-          <Image src="/image 119.svg" />
-          <MenuItemText>Mural do condomínio</MenuItemText>
-        </DropdownMenuItem>
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Image src="/image 129.svg" />
-            <MenuItemText>Ajuda</MenuItemText>
+            <IconMenuItem to="/help" iconSrc="/image 129.svg">
+              Ajudar
+            </IconMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Text>FAQ</Text>
+            <TextMenuItem to="/faq">FAQ</TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Text>Fale com o Vizis</Text>
+            <TextMenuItem to="/contact">Fale com o Vizis</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -95,7 +78,10 @@ export function HamburgerMenu({
           <MenuItemText>Gestão do condomínio</MenuItemText>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:bg-red-50">
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className="text-red-600 focus:bg-red-50"
+        >
           <svg
             width="20"
             height="20"

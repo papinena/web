@@ -15,7 +15,8 @@ export function useImageReadToken() {
     return JSON.parse(data);
   });
 
-  function buildUrl(filename: string) {
+  function buildUrl(filename?: string) {
+    if (!filename) return "#";
     return `${state.containerUri}/${filename}?${state.sasToken}`;
   }
 

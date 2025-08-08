@@ -16,14 +16,10 @@ import { ThemeItem } from "~/components/theme-item";
 import { useState } from "react";
 import { ErrorMessage } from "~/components/error-message";
 import { XIcon } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
-import { createNewPost } from "~/services/create-new-post";
-import { getSasToken } from "~/services/get-sas-token";
-import { uploadImage } from "~/services/upload-image";
-import { deleteImage } from "~/services/delete-image";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
+import { useNewPostStore } from "~/stores/new-post";
 
 interface Category {
   id: number;
@@ -33,61 +29,6 @@ interface Category {
 interface PostType {
   id: number;
   name: string;
-}
-
-function useCreateNewPost({
-  onSuccess,
-}: {
-  onSuccess?: (postId: string) => void;
-}) {
-  const mutation = useMutation({
-    mutationKey: ["CREATE_NEW_POST"],
-    mutationFn: async (data: { form: CreatePostType; files: File[] }) => {
-      let filenames: { filename: string; type: "IMAGE" | "VIDEO" }[] = [];
-      let tokenData: { containerUri: string; sasToken: string } | undefined,
-        tokenError: { status: string; message: string } | undefined;
-
-      if (data.files.length > 0) {
-        const sasTokenData = await getSasToken();
-        tokenData = sasTokenData.data;
-        tokenError = sasTokenData.error;
-
-        if (tokenError) throw new Error(tokenError.message);
-        if (!tokenData) throw new Error("Token data is undefined");
-
-        const uploadPromises = data.files.map((file) =>
-          uploadImage(tokenData.containerUri, tokenData.sasToken, file)
-        );
-        const uploadedFilenames = await Promise.all(uploadPromises);
-        filenames = uploadedFilenames.map((filename) => ({
-          filename,
-          type: "IMAGE",
-        }));
-      }
-
-      const res = await createNewPost({
-        ...data.form,
-        description: data.form.description ?? null,
-        media: filenames,
-        social: `${data.form.instagram};${data.form.facebook}`,
-      });
-
-      if (res.status === "success") {
-        return res.data?.id ?? "";
-      }
-
-      if (tokenData && filenames.length > 0) {
-        const deletePromises = filenames.map(({ filename }) =>
-          deleteImage(tokenData.containerUri, tokenData.sasToken, filename)
-        );
-        await Promise.all(deletePromises);
-      }
-      throw new Error(res.message + res.status);
-    },
-    onSuccess,
-  });
-
-  return { mutation };
 }
 
 export function ExpireDateInput({
@@ -194,16 +135,16 @@ function UploadPhotosInput({
 
 export default function NewPost() {
   const navigate = useNavigate();
+  const { setPost, post } = useNewPostStore();
   const { categories, postTypes, isLoading } = useUserNewPost();
   const [previews, setPreviews] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-  const [selectedExpire, setSelectedExpire] = useState<string | null>(null);
+  const [selectedExpire, setSelectedExpire] = useState<string | null>(``);
 
   const methods = useForm<CreatePostType>({
     resolver: zodResolver(CreatePostSchema),
     defaultValues: {
-      categories: [],
-      postTypes: [],
+      ...post,
     },
   });
 
@@ -215,10 +156,6 @@ export default function NewPost() {
     watch,
     setValue,
   } = methods;
-
-  const { mutation } = useCreateNewPost({
-    onSuccess: (postId: string) => navigate(`/post/${postId}`),
-  });
 
   const selectedCategories = watch("categories");
   const selectedPostTypes = watch("postTypes");
@@ -283,7 +220,8 @@ export default function NewPost() {
   };
 
   const onSave = (data: CreatePostType) => {
-    mutation.mutate({ form: data, files });
+    setPost(data, files);
+    navigate("/user/new-post/preview");
   };
 
   return (
@@ -323,7 +261,13 @@ export default function NewPost() {
             <Controller
               name="description"
               control={control}
-              render={({ field }) => <MarkdownEditor {...field} />}
+              render={({ field }) => (
+                <MarkdownEditor
+                  markdown={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
             />
           </Item>
           <Item>
@@ -408,11 +352,7 @@ export default function NewPost() {
               </Box>
             </Box>
           </Item>
-          <ErrorMessage show={mutation.isError}>
-            {(mutation.error as Error)?.message}
-          </ErrorMessage>
           <ButtonWithSpinner
-            loading={mutation.isPending}
             type="submit"
             className="mx-20 mt-8 bg-blue-primary"
           >

@@ -32,7 +32,7 @@ export function ButtonWithSpinner({
   return (
     <Button
       className={cn(
-        "mx-20 bg-green-primary hover:bg-green-primary/90",
+        "mx-20 cursor-pointer bg-green-primary hover:bg-green-primary/90",
         className
       )}
       size={size ?? "lg"}

@@ -21,7 +21,7 @@ type PostTypeProps = {
   is_default: boolean;
 };
 
-type PostAuthorProps = {
+export type PostAuthorProps = {
   name: string;
   avatar: string | null;
   apartment: string;
@@ -49,7 +49,14 @@ export type PostAPIProps = {
 interface ApiResponse {
   status: "success" | "error";
   message: string;
-  data?: PostAPIProps;
+  data?: {
+    post: { status: "success" | "error"; message: string; data: PostAPIProps };
+    recommendedPosts: {
+      status: "success" | "error";
+      message: string;
+      data: PostAPIProps[];
+    };
+  };
 }
 
 export async function getPost(postId: string) {

@@ -22,6 +22,8 @@ export function useAuth() {
     return authUtils.isAuthenticated();
   }, []);
 
+  const isUser = authData?.userType === "user";
+
   const isEmployeeAdmin = authData?.employee?.permission === "ADMIN";
 
   return {
@@ -30,5 +32,6 @@ export function useAuth() {
     logout,
     isAuthenticated,
     isEmployeeAdmin,
+    isUser,
   };
 }

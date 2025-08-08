@@ -2,12 +2,14 @@ import { useAuth } from "~/hooks/useAuth";
 import { Box } from "../ui/box";
 import { Image } from "../ui/image";
 import { Avatar } from "./avatar";
-import { HamburgerMenu } from "./hamburger-menu";
 import { SearchInput } from "./search-input";
+import { AdminHamburguerMenu } from "./admin-menu";
+import { UserHamburguerMenu } from "./user-menu";
 
 export function Header() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isUser } = useAuth();
   const isAuth = isAuthenticated();
+
   return (
     <Box className="w-full px-3 min-h-12 bg-white flex items-center justify-between">
       <Image src="/image 2.svg" />
@@ -19,7 +21,7 @@ export function Header() {
           </Box>
           <Box className="items-center justify-center">
             <Avatar size={32} className="ml-auto" />
-            <HamburgerMenu />
+            {isUser ? <UserHamburguerMenu /> : <AdminHamburguerMenu />}
           </Box>
         </>
       )}

@@ -11,35 +11,40 @@ import "@mdxeditor/editor/style.css";
 import { forwardRef } from "react";
 
 interface MarkdownEditorProps {
-  value?: string;
+  markdown?: string;
   onChange?: (markdown: string) => void;
   onBlur?: () => void;
   name?: string;
+  readOnly?: boolean;
 }
 
 export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
-  ({ value, onChange, onBlur, name }, ref) => {
+  ({ markdown, onChange, onBlur, readOnly = false }, ref) => {
+    const plugins = [headingsPlugin(), listsPlugin()];
+
+    if (!readOnly) {
+      plugins.push(
+        toolbarPlugin({
+          toolbarClassName: "my-classname",
+          toolbarContents: () => (
+            <>
+              <BoldItalicUnderlineToggles />
+              <ListsToggle />
+            </>
+          ),
+        })
+      );
+    }
+
     return (
       <MDXEditor
         ref={ref}
-        markdown={value || ""}
+        markdown={markdown || ""}
         onChange={onChange}
         onBlur={onBlur}
-        name={name}
+        readOnly={readOnly}
         contentEditableClassName="prose"
-        plugins={[
-          headingsPlugin(),
-          listsPlugin(),
-          toolbarPlugin({
-            toolbarClassName: "my-classname",
-            toolbarContents: () => (
-              <>
-                <BoldItalicUnderlineToggles />
-                <ListsToggle />
-              </>
-            ),
-          }),
-        ]}
+        plugins={plugins}
       />
     );
   }
