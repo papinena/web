@@ -7,8 +7,8 @@ import { MOBILE_BREAKPOINT } from "./utils/constants";
 import { Text } from "./components/ui/text";
 import { TanstackQueryProvider } from "./query-client";
 import "~/utils/sentry";
-import { SentryErrorBoundary } from "~/utils/sentry";
 import { App } from "./routes/app";
+export { ErrorBoundary } from "./components/sentry-error-boundary";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -49,10 +49,8 @@ export default function Root() {
   }
 
   return (
-    <SentryErrorBoundary>
-      <TanstackQueryProvider>
-        <App />
-      </TanstackQueryProvider>
-    </SentryErrorBoundary>
+    <TanstackQueryProvider>
+      <App />
+    </TanstackQueryProvider>
   );
 }
