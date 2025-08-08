@@ -9,7 +9,7 @@ export default function NewPost() {
 
   const onSave = (data: CreatePostType, files: File[]) => {
     setPost(data, files);
-    navigate("/user/new-post/preview");
+    navigate("/post/create/preview");
   };
 
   return <PostForm onSave={onSave} initialValues={post} />;

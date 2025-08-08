@@ -43,15 +43,15 @@ export function AdminHamburguerMenu({
         </DropdownMenuItem>
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <IconMenuItem to="/my-panel" iconSrc="/image 118.svg">
+            <IconMenuItem to="/admin/dashboard" iconSrc="/image 118.svg">
               Meu painel
             </IconMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <TextMenuItem to="/my-register">Meu Cadastro</TextMenuItem>
+            <TextMenuItem to="/register/user/form">Meu Cadastro</TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <TextMenuItem to="/my-publications">
+            <TextMenuItem to="/post/my-publications">
               Minhas publicações
             </TextMenuItem>
           </DropdownMenuItem>

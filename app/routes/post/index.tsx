@@ -12,14 +12,18 @@ import { PostAuthor } from "~/components/post-author";
 import { Separator } from "~/components/ui/separator";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
+import { PostImage } from "~/components/ui/post-image";
 
 function RecommendedPost({ post }: { post: PostAPIProps }) {
-  const { buildUrl } = useImageReadToken();
   return (
     <Link to={`/post/${post.id}`}>
       <Box className="w-full flex-col">
         <Box className="px-5 py-10 gap-3">
-          <Image src={buildUrl(post.media[0].filename)} />
+          <PostImage
+            className="size-20"
+            alt={"first photo"}
+            filename={post.media[0]?.filename}
+          />
           <Text>{post.title}</Text>
         </Box>
         <Separator className="py-[1px] bg-gray-300 w-full" />

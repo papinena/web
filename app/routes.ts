@@ -9,12 +9,13 @@ import {
 export default [
   layout("./routes/app.tsx", [
     index("./routes/index.tsx"),
-    route("/post/:postId", "./routes/post/index.tsx"),
-    route("/post/update/:postId", "./routes/user/update-post.tsx"),
-    route("/my-publications", "./routes/my-publications.tsx"),
-    ...prefix("user", [
-      route("/new-post", "./routes/user/new-post.tsx"),
-      route("/new-post/preview", "./routes/user/preview.tsx"),
+    ...prefix("/post", [
+      route("/:postId", "./routes/post/index.tsx"),
+      route("/create", "./routes/post/new-post.tsx"),
+      route("/create/preview", "./routes/post/preview.tsx"),
+      route("/update/:postId", "./routes/post/update-post.tsx"),
+      route("/update/:postId/preview", "./routes/post/update-post-preview.tsx"),
+      route("/my-publications", "./routes/post/my-publications.tsx"),
     ]),
     route("login", "./routes/login.tsx"),
     ...prefix("admin", [

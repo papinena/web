@@ -367,7 +367,6 @@ export function PostForm({
           <ButtonWithSpinner
             type="submit"
             className="mx-20 mt-8 bg-blue-primary"
-            isLoading={isLoading}
           >
             Visualizar
           </ButtonWithSpinner>

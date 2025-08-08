@@ -16,19 +16,16 @@ export default function UpdatePost() {
   const { setPost } = useNewPostStore();
   const { updatePostMutation } = usePost();
   const { buildUrl } = useImageReadToken();
-  const {
-    data: post,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["post", postId],
     queryFn: () => getPost(postId as string),
     enabled: !!postId,
   });
+  const post = data?.post;
 
   if (isLoading) {
     return (
-      <Box className="flex items-center justify-center h-full">
+      <Box className="flex flex-1 items-center justify-center h-full">
         <Spinner />
       </Box>
     );
@@ -42,26 +39,32 @@ export default function UpdatePost() {
     );
   }
 
+  if (!post) {
+    return (
+      <Box className="flex items-center justify-center h-full">
+        <Text>Dados do post não foram encontrados</Text>
+      </Box>
+    );
+  }
+
   const onSave = (data: CreatePostType, files: File[]) => {
     setPost(data, files);
-    navigate(`/user/new-post/preview`);
+    navigate(`/post/update/${postId}/preview`);
   };
 
-  const initialValues = post
-    ? {
-        title: post.post.data.title,
-        resume: post.post.data.resume,
-        description: post.post.data.description,
-        categories: post.post.data.categories.map((c) => c.id),
-        postTypes: post.post.data.types.map((t) => t.id),
-        expiresOn: new Date(post.post.data.expiresOn),
-        instagram: post.post.data.social.split(";")[0],
-        facebook: post.post.data.social.split(";")[1],
-      }
-    : {};
+  const initialValues = {
+    title: post.data.title ?? "",
+    resume: post.data.resume,
+    description: post.data.description ?? "",
+    categories: post.data.categories.map((c) => c.id),
+    postTypes: post.data.types.map((t) => t.id),
+    expiresOn: new Date(post.data.expiresOn),
+    instagram: post.data.social.split(";")[0],
+    facebook: post.data.social.split(";")[1],
+  };
 
   const previews = post
-    ? post.post.data.media.map((media) => buildUrl(media.filename))
+    ? post.data.media.map((media) => buildUrl(media.filename))
     : [];
 
   return (

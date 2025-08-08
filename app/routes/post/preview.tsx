@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { ErrorMessage } from "~/components/error-message";
 import { useNewPostStore } from "~/stores/new-post";
-import { useCreateNewPost } from "~/hooks/useCreateNewPost"; // Assuming you extract the hook
+import { usePost } from "~/hooks/usePost"; // Assuming you extract the hook
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { useAuth } from "~/hooks/useAuth";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
@@ -37,16 +37,25 @@ export default function NewPostPreview() {
   const { authData } = useAuth();
   const { buildUrl } = useImageReadToken();
 
-  const { mutation } = useCreateNewPost({
-    onSuccess: (postId) => {
-      clear();
-      navigate(`/post/${postId}`);
-    },
-  });
+  const { createPostMutation } = usePost();
+
+  const { mutate, isPending, isError, error } = createPostMutation;
 
   if (!post) {
     return <div>No post data found.</div>;
   }
+
+  const onPublish = () => {
+    mutate(
+      { form: post, files },
+      {
+        onSuccess: (postId) => {
+          clear();
+          navigate(`/post/${postId}`);
+        },
+      }
+    );
+  };
 
   const media = files.map((file) => ({
     id: file.name,

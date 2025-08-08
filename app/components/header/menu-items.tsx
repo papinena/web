@@ -12,15 +12,15 @@ export function MenuItems() {
       </DropdownMenuItem>
       <DropdownMenuGroup>
         <DropdownMenuItem>
-          <IconMenuItem to="/my-panel" iconSrc="/image 118.svg">
+          <IconMenuItem to="/" iconSrc="/image 118.svg">
             Meu painel
           </IconMenuItem>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <TextMenuItem to="/my-register">Meu Cadastro</TextMenuItem>
+          <TextMenuItem to="/register/user/form">Meu Cadastro</TextMenuItem>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <TextMenuItem to="/my-publications">Minhas publicações</TextMenuItem>
+          <TextMenuItem to="/post/my-publications">Minhas publicações</TextMenuItem>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <TextMenuItem to="/my-condominium">Meu condomínio</TextMenuItem>

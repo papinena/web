@@ -14,6 +14,8 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   const isRegisterPage = url.pathname.startsWith("/register");
   const isAuthenticated = authUtils.isAuthenticated();
 
+  throw new Error("asda");
+
   if (!isAuthenticated && !isLoginPage && !isRegisterPage) {
     return redirect("/login");
   }
