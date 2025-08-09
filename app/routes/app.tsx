@@ -56,9 +56,9 @@ export function App() {
   const to = isEmployee ? "/admin/new-post" : "/post/create";
 
   return (
-    <>
+    <Box className="min-h-dvh w-full h-full flex-col">
       <Header />
-      <Box className="bg-gray-200 min-h-dvh flex h-full w-full p-3 flex-col px-5 py-3 gap-3">
+      <Box className="bg-gray-200 flex-1 flex h-full w-full p-3 flex-col px-5 py-3 gap-3">
         <Outlet />
         <Footer className="ml-auto" />
       </Box>
@@ -77,6 +77,6 @@ export function App() {
           )}
         </Box>
       </Box>
-    </>
+    </Box>
   );
 }
