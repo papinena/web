@@ -21,10 +21,12 @@ export function ErrorBoundary() {
     error instanceof Error ? error.message : "Um erro inesperado aconteceu.";
 
   return (
-    <Box className="flex flex-1 min-h-dvh flex-col items-center justify-center h-full p-4 bg-red-50 text-red-700">
+    <Box className="flex w-full flex-1 min-h-dvh flex-col items-center justify-center h-full p-4 bg-red-50 text-red-700">
       <Text variant="title">Algo deu errado</Text>
       <Text>Nós já fomos notificados do erro.</Text>
-      <pre className="mt-4 p-2 bg-red-100 rounded">{errorMessage}</pre>
+      <pre className="mt-4 text-center p-2 bg-red-100 rounded text-wrap break-words">
+        {errorMessage}
+      </pre>
       <Button asChild variant="destructive" className="mt-4">
         <Link to="/login" onClick={handleGoToLogin}>
           Ir para o Login
