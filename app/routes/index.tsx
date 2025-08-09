@@ -35,7 +35,7 @@ export default function Home() {
               <Box className="px-5 py-10 gap-3">
                 {post.media.length > 0 && (
                   <PostImage
-                    className="rounded-lg size-40"
+                    className="rounded-lg size-32"
                     filename={post.media[0].filename}
                     alt={post.title}
                   />
