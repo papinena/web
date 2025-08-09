@@ -83,7 +83,13 @@ export default function Post({ params }: Route.ComponentProps) {
           Se interessou? Entre em contato direto com o seu vizinho.
         </Text>
         <Box className="flex-col">
-          <PostAuthor author={author} />
+          <PostAuthor>
+            <PostAuthor.Avatar author={author} />
+            <Box className="flex-col">
+              <PostAuthor.Name author={author} />
+              <PostAuthor.Block author={author} />
+            </Box>
+          </PostAuthor>
           <PostNetworks social={post?.social} />
           <Box className="flex items-center gap-1.5">
             <Image src="/wpp-icon.svg" className="size-5" />
