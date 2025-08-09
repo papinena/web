@@ -53,7 +53,7 @@ export function App() {
   const { isAuthenticated, authData } = useAuth();
   const isAuth = isAuthenticated();
   const isEmployee = authData?.userType === "employee";
-  const to = isEmployee ? "/admin/new-post" : "/user/new-post";
+  const to = isEmployee ? "/admin/new-post" : "/post/create";
 
   return (
     <>
