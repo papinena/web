@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import { deletePost } from "~/services/delete-post";
 import { updatePost } from "~/services/update-post";
 import { createNewPost } from "~/services/create-new-post";
@@ -11,10 +15,20 @@ import { deleteImage } from "~/services/delete-image";
 export function usePost() {
   const queryClient = useQueryClient();
 
-  const useListPosts = (params?: Record<string, any>) => {
-    return useQuery({
+  const useListPosts = (params?: { limit?: number }) => {
+    return useInfiniteQuery({
       queryKey: ["posts", params],
-      queryFn: () => getHomePosts(params),
+      queryFn: ({ pageParam }) =>
+        getHomePosts({ pageParam, limit: params?.limit }),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) => {
+        // If the last page has no data, there are no more pages
+        if (lastPage.userPosts.data.length === 0) {
+          return undefined;
+        }
+        // Otherwise, increment the page number
+        return allPages.length + 1;
+      },
     });
   };
 

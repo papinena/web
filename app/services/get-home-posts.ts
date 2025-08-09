@@ -11,17 +11,14 @@ interface ApiResponse {
   };
 }
 
-export async function getHomePosts(params?: Record<string, any>) {
+export async function getHomePosts({ pageParam = 1, limit = 10 }) {
   try {
     const { BASE_URL } = api();
     const url = new URL(`${BASE_URL}/home`);
 
-    // Append query parameters if they exist
-    if (params) {
-      Object.keys(params).forEach((key) =>
-        url.searchParams.append(key, params[key])
-      );
-    }
+    // Append query parameters
+    url.searchParams.append("page", String(pageParam));
+    url.searchParams.append("limit", String(limit));
 
     const response = await apiRequest(url.toString());
     const responseData: ApiResponse = await response.json();
@@ -30,7 +27,6 @@ export async function getHomePosts(params?: Record<string, any>) {
       throw new Error(responseData.message || "Failed to fetch home posts");
     }
 
-    console.log(responseData);
     return responseData;
   } catch (error) {
     console.error("Error fetching home posts:", error);

@@ -5,14 +5,23 @@ import { Spinner } from "~/components/ui/spinner";
 import { PostImage } from "~/components/ui/post-image";
 import { PostAuthor } from "~/components/post-author";
 import { Post } from "~/components/post";
+import { Button } from "~/components/ui/button";
+import type { PostAPIProps } from "~/services/get-post";
 
 export default function Home() {
   const { useListPosts } = usePost();
-  const { data: posts, isLoading, error } = useListPosts();
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useListPosts();
 
   if (isLoading) {
     return (
-      <Box className="flex items-center justify-center h-full">
+      <Box className="flex flex-1 items-center justify-center h-full">
         <Spinner />
       </Box>
     );
@@ -20,16 +29,19 @@ export default function Home() {
 
   if (error) {
     return (
-      <Box className="flex items-center justify-center h-full">
+      <Box className="flex flex-1 items-center justify-center h-full">
         <Text>Ocorreu um erro ao buscar as publicações.</Text>
       </Box>
     );
   }
 
+  const pages = data?.pages.flatMap((page) => page) ?? [];
+  const posts = pages.flatMap((p) => p.userPosts.data);
+
   return (
-    <Box className="flex-1  p-3 flex-col gap-3">
+    <Box className="flex-1 p-3 flex-col gap-3">
       <Box className="gap-4 flex-col">
-        {posts?.userPosts.data?.map((post: any) => (
+        {posts.map((post: PostAPIProps) => (
           <Post className="bg-white rounded-4xl" key={post.id} post={post}>
             <Box className="w-full flex-col">
               <Box className="px-5 py-10 gap-3">
@@ -68,6 +80,11 @@ export default function Home() {
           </Post>
         ))}
       </Box>
+      {hasNextPage && (
+        <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+          {isFetchingNextPage ? "Carregando..." : "Carregar mais"}
+        </Button>
+      )}
     </Box>
   );
 }
