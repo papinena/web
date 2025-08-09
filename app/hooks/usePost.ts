@@ -1,7 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "~/services/delete-post";
 import { updatePost } from "~/services/update-post";
 import { createNewPost } from "~/services/create-new-post";
+import { getHomePosts } from "~/services/get-home-posts";
 import type { CreatePostType } from "~/parsers/create-post";
 import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
@@ -10,10 +11,18 @@ import { deleteImage } from "~/services/delete-image";
 export function usePost() {
   const queryClient = useQueryClient();
 
+  const useListPosts = (params?: Record<string, any>) => {
+    return useQuery({
+      queryKey: ["posts", params],
+      queryFn: () => getHomePosts(params),
+    });
+  };
+
   const deletePostMutation = useMutation({
     mutationFn: (postId: string) => deletePost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-publications"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
@@ -71,6 +80,7 @@ export function usePost() {
     onSuccess: (_, { postId }) => {
       queryClient.invalidateQueries({ queryKey: ["my-publications"] });
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
@@ -120,8 +130,14 @@ export function usePost() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["my-publications"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
-  return { deletePostMutation, updatePostMutation, createPostMutation };
+  return {
+    useListPosts,
+    deletePostMutation,
+    updatePostMutation,
+    createPostMutation,
+  };
 }
