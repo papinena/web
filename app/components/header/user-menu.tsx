@@ -39,7 +39,7 @@ export function UserHamburguerMenu({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <IconMenuItem to="/home" iconSrc="/image 120.svg">
+          <IconMenuItem to="/" iconSrc="/image 120.svg">
             Home
           </IconMenuItem>
         </DropdownMenuItem>

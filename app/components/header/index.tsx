@@ -8,20 +8,19 @@ import { UserHamburguerMenu } from "./user-menu";
 
 export function Header() {
   const { isAuthenticated, isUser } = useAuth();
-  const isAuth = isAuthenticated();
 
   return (
     <Box className="w-full px-3 min-h-12 bg-white flex items-center justify-between">
       <Image src="/image 2.svg" />
 
-      {isAuth && (
+      {isAuthenticated() && (
         <>
           <Box className="py-3 mr-3">
             <SearchInput placeholder="Buscar..." />
           </Box>
           <Box className="items-center justify-center">
             <Avatar size={32} className="ml-auto" />
-            {isUser ? <UserHamburguerMenu /> : <AdminHamburguerMenu />}
+            {isUser() ? <UserHamburguerMenu /> : <AdminHamburguerMenu />}
           </Box>
         </>
       )}
