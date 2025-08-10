@@ -50,7 +50,7 @@ export function UserHamburguerMenu({
             </IconMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <TextMenuItem to="/register/user/form">Meu Cadastro</TextMenuItem>
+            <TextMenuItem to="/user/edit">Meu Cadastro</TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <TextMenuItem to="/post/my-publications">
