@@ -45,7 +45,7 @@ export function UserHamburguerMenu({
         </DropdownMenuItem>
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <IconMenuItem to="/" iconSrc="/image 118.svg">
+            <IconMenuItem to="/user/dashboard" iconSrc="/image 118.svg">
               Meu painel
             </IconMenuItem>
           </DropdownMenuItem>

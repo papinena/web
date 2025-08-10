@@ -1,33 +1,9 @@
-import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
 import { Text } from "~/components/ui/text";
 import { useAuth } from "~/hooks/useAuth";
-import { cn } from "~/lib/utils";
-
-function Widget({ children }: { children: ReactNode }) {
-  return (
-    <Box className="border-2 rounded-xl gap-2 px-2 pb-5 pt-2 min-h-28 flex-col border-green-primary">
-      {children}
-    </Box>
-  );
-}
-function WidgetTitle({
-  children,
-  className = "",
-  icon,
-}: {
-  className?: string;
-  icon?: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <Box className="gap-1.5 items-center ">
-      {icon} <Text className={cn("text-lg", className)}>{children}</Text>
-    </Box>
-  );
-}
+import { Widget } from "~/components/ui/widget";
 
 export default function Dashboard() {
   const { authData, isEmployeeAdmin } = useAuth();
@@ -39,10 +15,10 @@ export default function Dashboard() {
   return (
     <Box className="flex-1">
       <Box className="flex-col gap-5">
-        <Widget>
-          <WidgetTitle className="font-bold">
+        <Widget className="border-green-primary">
+          <Widget.Title className="font-bold">
             Painel de controle da Administração
-          </WidgetTitle>
+          </Widget.Title>
           <Text>
             Olá,
             <strong className="text-blue-primary">@{employee?.name}</strong>,
@@ -51,13 +27,13 @@ export default function Dashboard() {
           </Text>
         </Widget>
         {isEmployeeAdmin && (
-          <Widget>
-            <WidgetTitle
+          <Widget className="border-green-primary">
+            <Widget.Title
               className=""
               icon={<Image src="/image 113.svg" className={iconClassName} />}
             >
               Cadastro da Administração
-            </WidgetTitle>
+            </Widget.Title>
             <Text>
               Edite, remova ou inclua novas informações sobre a administração do
               condomínio
@@ -65,21 +41,21 @@ export default function Dashboard() {
           </Widget>
         )}
         <Link to="/admin/residents">
-          <Widget>
-            <WidgetTitle
+          <Widget className="border-green-primary">
+            <Widget.Title
               icon={<Image src="/image 113.svg" className={iconClassName} />}
             >
               Gerenciar moradores
-            </WidgetTitle>
+            </Widget.Title>
             <Text>Aprove ou remova os moradores do seu condomínio</Text>
           </Widget>
         </Link>
-        <Widget>
-          <WidgetTitle
+        <Widget className="border-green-primary">
+          <Widget.Title
             icon={<Image src="/image 112.svg" className={iconClassName} />}
           >
             Postagens do Condomínio
-          </WidgetTitle>
+          </Widget.Title>
           <Text>Visualize, altere ou remova as postagens.</Text>
         </Widget>
       </Box>

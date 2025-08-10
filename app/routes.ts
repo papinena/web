@@ -18,6 +18,10 @@ export default [
       route("/my-publications", "./routes/post/my-publications.tsx"),
     ]),
     route("login", "./routes/login.tsx"),
+    ...prefix("user", [
+      route("dashboard", "./routes/user/dashboard.tsx"),
+      route("edit", "./routes/user/edit.tsx"),
+    ]),
     ...prefix("admin", [
       route("dashboard", "./routes/admin/dashboard.tsx"),
       route("residents", "./routes/admin/residents.tsx"),

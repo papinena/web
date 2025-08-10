@@ -3,12 +3,17 @@ import { Input } from "~/components/ui/input";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 
-interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface PasswordInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   className?: string;
 }
 
-export function PasswordInput({ placeholder, className, ...props }: PasswordInputProps) {
+export function PasswordInput({
+  placeholder,
+  className,
+  ...props
+}: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -29,4 +34,4 @@ export function PasswordInput({ placeholder, className, ...props }: PasswordInpu
       </Box>
     </Box>
   );
-} 
+}

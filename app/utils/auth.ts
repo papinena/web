@@ -50,6 +50,14 @@ export const authUtils = {
   },
 
   /**
+   * Store just the user info in localStorage
+   */
+  storeUser: (user: any): void => {
+    if (!authUtils.isClient()) return;
+    localStorage.setItem(AUTH_KEYS.USER, JSON.stringify(user));
+  },
+
+  /**
    * Get authentication token from localStorage
    */
   getToken: (): string | null => {

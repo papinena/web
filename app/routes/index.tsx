@@ -5,8 +5,9 @@ import { Spinner } from "~/components/ui/spinner";
 import { PostImage } from "~/components/ui/post-image";
 import { PostAuthor } from "~/components/post-author";
 import { Post } from "~/components/post";
-import { Button } from "~/components/ui/button";
 import type { PostAPIProps } from "~/services/get-post";
+import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
+import { useEffect } from "react";
 
 export default function Home() {
   const { useListPosts } = usePost();
@@ -18,6 +19,14 @@ export default function Home() {
     isFetchingNextPage,
     isLoading,
   } = useListPosts();
+
+  const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0.1 });
+
+  useEffect(() => {
+    if (isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [isIntersecting, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isLoading) {
     return (
@@ -80,11 +89,9 @@ export default function Home() {
           </Post>
         ))}
       </Box>
-      {hasNextPage && (
-        <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? "Carregando..." : "Carregar mais"}
-        </Button>
-      )}
+      {/* Trigger element for infinite scroll */}
+      <Box ref={ref} className="h-10" />
+      {isFetchingNextPage && <Spinner />}
     </Box>
   );
 }

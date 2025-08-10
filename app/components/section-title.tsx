@@ -10,6 +10,8 @@ export function SectionTitle({
   children: ReactNode;
 }) {
   return (
-    <Text className={cn("text-[#4B4C4D] flex-1", className)}>{children}</Text>
+    <Text className={cn("text-[#4B4C4D] text-lg font-bold flex-1", className)}>
+      {children}
+    </Text>
   );
 }

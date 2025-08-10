@@ -1,37 +1,23 @@
-import { useCallback, useState } from "react";
-import { authUtils, type AuthData } from "~/utils/auth";
+import { useAuthStore } from "~/stores/auth";
 
 export function useAuth() {
-  const [authData, setAuthData] = useState<AuthData | null>(() => {
-    // Initialize with auth data from localStorage
-    return authUtils.getAuthData();
-  });
-
-  const login = (data: AuthData) => {
-    authUtils.storeAuth(data);
-    setAuthData(data);
-  };
-
-  const logout = () => {
-    authUtils.clearAuth();
-    setAuthData(null);
-  };
-
-  const isAuthenticated = useCallback(() => {
-    if (typeof window === "undefined") return undefined;
-    return authUtils.isAuthenticated();
-  }, []);
-
-  const isUser = authData?.userType === "user";
-
-  const isEmployeeAdmin = authData?.employee?.permission === "ADMIN";
-
-  return {
+  const {
     authData,
     login,
     logout,
     isAuthenticated,
-    isEmployeeAdmin,
     isUser,
+    isEmployeeAdmin,
+    setAuthUserData,
+  } = useAuthStore();
+
+  return {
+    authData,
+    setAuthUserData,
+    login,
+    logout,
+    isAuthenticated,
+    isUser,
+    isEmployeeAdmin,
   };
 }
