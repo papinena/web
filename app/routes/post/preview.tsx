@@ -39,14 +39,12 @@ export default function NewPostPreview() {
 
   const { createPostMutation } = usePost();
 
-  const { mutate, isPending, isError, error } = createPostMutation;
-
   if (!post) {
     return <div>No post data found.</div>;
   }
 
   const onPublish = () => {
-    mutate(
+    createPostMutation.mutate(
       { form: post, files },
       {
         onSuccess: (postId) => {
@@ -112,14 +110,14 @@ export default function NewPostPreview() {
         </Button>
         <ButtonWithSpinner
           className="mx-0 hover:bg-black/90 flex-1 bg-blue-primary"
-          loading={mutation.isPending}
-          onClick={() => mutation.mutate({ form: post, files })}
+          loading={createPostMutation.isPending}
+          onClick={onPublish}
         >
           Publicar
         </ButtonWithSpinner>
       </Box>
-      <ErrorMessage show={mutation.isError}>
-        {(mutation.error as Error)?.message}
+      <ErrorMessage show={createPostMutation.isError}>
+        {(createPostMutation.error as Error)?.message}
       </ErrorMessage>
     </Box>
   );
