@@ -1,6 +1,9 @@
 // firebase.ts
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { saveFcmToken } from "~/services/save-fcm-token";
+
+const FCM_TOKEN_KEY = "fcm_token";
 
 export const setupFirebaseMessaging = async () => {
   if (typeof window === "undefined") {
@@ -46,8 +49,21 @@ export const setupFirebaseMessaging = async () => {
         "BDdQAP6cPUpoZJPAhwcSOuUnPM_-OoTJjh7tAAeHxfUHbhvOX-FN7YgyAb_biTFI_z0u46PfjrZ6hPGQNnR5NiE",
     });
 
-    if (token) {
-      console.log("FCM Token:", token);
+    const storedToken = localStorage.getItem(FCM_TOKEN_KEY);
+
+    if (!storedToken) {
+      const { error } = await saveFcmToken(token);
+      if (!error) {
+        localStorage.setItem(FCM_TOKEN_KEY, token);
+      }
+    }
+
+    // Only send the token to the server if it's new or has changed
+    if (token !== storedToken) {
+      const { error } = await saveFcmToken(token);
+      if (!error) {
+        localStorage.setItem(FCM_TOKEN_KEY, token);
+      }
 
       // Listen for foreground messages
       onMessage(messaging, (payload) => {
