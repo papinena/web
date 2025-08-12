@@ -91,10 +91,15 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      setFile(e.target.files[0]);
+      const newFile = e.target.files[0];
+      setFile(newFile);
     } else {
       setFile(null);
     }
+  };
+
+  const handleRemoveImage = () => {
+    setFile(null);
   };
 
   const handleSelectedTheme = (theme: Tag) => {
@@ -111,7 +116,9 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
     selectedTheme,
     handleSelectedTheme,
     file,
+    setFile,
     handleFileChange,
+    handleRemoveImage,
     useUserEditInfo,
     updateUserForm,
     setSelectedTheme,

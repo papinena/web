@@ -2,41 +2,26 @@ import { api, apiRequest } from "~/utils/api";
 import type { UserAPIProps } from "~/interfaces/user";
 import type { Tag } from "~/interfaces/tag";
 import { UserMapper } from "~/mappers/user";
+import type { ApiResponse } from "~/interfaces/api-response";
+import type { CondominiumAPIProps } from "~/interfaces/condominium";
 
-interface UserData {
-  status: string;
-  message: string;
-  data: UserAPIProps;
-}
+type UserData = ApiResponse<UserAPIProps>;
+type UserTagsData = ApiResponse<Tag[]>;
+type TagsData = ApiResponse<Tag[]>;
 
-interface UserTagsData {
-  status: string;
-  message: string;
-  data: Tag[];
-}
-
-interface TagsData {
-  status: string;
-  message: string;
-  data: Tag[];
-}
-
-interface ApiResponse {
-  status: "success" | "error";
-  message: string;
-  data: {
-    user: UserData;
-    userTags: UserTagsData;
-    tags: TagsData;
-  };
-}
+type GetUserEditInfoResponse = ApiResponse<{
+  userTags: UserTagsData;
+  tags: TagsData;
+  user: UserData;
+  condominium: CondominiumAPIProps;
+}>;
 
 export async function getUserEditInfo() {
   try {
     const { BASE_URL } = api();
     const url = new URL(`${BASE_URL}/user/edit`);
     const response = await apiRequest(url.toString());
-    const responseData: ApiResponse = await response.json();
+    const responseData: GetUserEditInfoResponse = await response.json();
 
     if (responseData.status === "error" || !response.ok) {
       throw new Error(responseData.message || "Failed to fetch user info");
@@ -44,12 +29,14 @@ export async function getUserEditInfo() {
 
     const tags = responseData.data.tags.data;
     const userTags = responseData.data.userTags.data;
+    const condominium = responseData.data.condominium.data;
     const user = UserMapper.toUI(responseData.data.user.data);
 
     return {
       user,
       tags,
       userTags,
+      condominium,
     };
   } catch (error) {
     console.error("Error fetching user info:", error);

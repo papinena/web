@@ -1,5 +1,4 @@
 import type { UserAPIProps, UserUIProps } from "~/interfaces/user";
-import type { CreateUserType } from "~/parsers/create-user";
 
 export class UserMapper {
   /**
@@ -34,14 +33,22 @@ export class UserMapper {
    * @returns The user data formatted for the API.
    */
   static toAPI(
-    user: CreateUserType
+    user: Partial<Omit<UserUIProps, "birthDate">> & {
+      birthDate?: string | Date;
+      password?: string;
+      photo?: string;
+      avatar?: string;
+    }
   ): Partial<UserAPIProps & { password: string }> {
+    const birth_date =
+      typeof user.birthDate === "string"
+        ? new Date(user.birthDate).toISOString()
+        : user.birthDate?.toISOString();
+
     return {
       name: user.name,
       last_name: user.lastName,
-      birth_date: user.birthDate
-        ? new Date(user.birthDate).toISOString()
-        : undefined,
+      birth_date,
       telephone: user.telephone,
       email: user.email,
       block: user.block,

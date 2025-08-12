@@ -3,8 +3,7 @@ import { Box } from "~/components/ui/box";
 import { FormProvider } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
 import { NameInput } from "~/components/register/name-input";
-import { UploadPhotoInput } from "~/components/register/upload-photo-input";
-import { EmailInput } from "~/components/register/email-input";
+
 import { TelephoneInput } from "~/components/register/telephone-input";
 import { Item } from "~/components/register/item";
 import { SectionTitle } from "~/components/section-title";
@@ -16,14 +15,15 @@ import { useUser } from "~/hooks/useUser";
 import { Spinner } from "~/components/ui/spinner";
 import { useEffect } from "react";
 import { DateFormatter } from "~/utils/date-formatter";
-import { PasswordInput } from "~/components/register/password-input";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
+import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 
 export default function EditUser() {
   const { buildUrl } = useImageReadToken();
   const {
     handleFileChange,
+    handleRemoveImage,
     file,
     selectedTheme,
     setSelectedTheme,
@@ -43,7 +43,6 @@ export default function EditUser() {
     if (query.isSuccess) {
       methods.reset({
         ...query.data.user,
-        confirmEmail: query.data.user.email,
         birthDate: DateFormatter.format(query.data.user.birthDate),
       });
       setSelectedTheme(query.data.userTags);
@@ -69,9 +68,8 @@ export default function EditUser() {
 
   const tags = query.data?.tags;
   const user = query.data?.user;
-  const preview = file
-    ? URL.createObjectURL(file)
-    : buildUrl(user?.avatar) ?? "";
+  const condominium = query.data?.condominium;
+  const preview = buildUrl(user?.avatar) ?? null;
 
   return (
     <FormProvider {...methods}>
@@ -83,9 +81,21 @@ export default function EditUser() {
               <Box className="gap-5">
                 <Box className="flex-col rounded-2xl">
                   <UploadPhotoInput
-                    preview={preview ?? user?.avatar ?? ""}
+                    preview={preview}
                     handleFileChange={handleFileChange}
+                    handleRemoveImage={handleRemoveImage}
                   />
+                </Box>
+                <Box className="flex-col">
+                  <Text className="text-2xl font-bold">{user?.name}</Text>
+                  <Text className="text-blue-primary">
+                    Condomínio {condominium?.name}
+                  </Text>
+                  <Box>
+                    <Text className="text-blue-primary">
+                      Bloco {user?.block}, Apartamento {user?.apartment}
+                    </Text>
+                  </Box>
                 </Box>
               </Box>
             </Box>
@@ -128,7 +138,7 @@ export default function EditUser() {
                     error={methods.formState.errors.telephone?.message}
                   />
                 </Item>
-                <Item>
+                {/* <Item>
                   <EmailInput
                     error={methods.formState.errors.email?.message}
                     {...methods.register("email")}
@@ -150,7 +160,7 @@ export default function EditUser() {
                     {...methods.register("confirmPassword")}
                     error={methods.formState.errors.confirmPassword?.message}
                   />
-                </Item>
+                </Item> */}
               </Box>
             </SectionContainer>
             <SectionContainer>
