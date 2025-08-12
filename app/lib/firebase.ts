@@ -1,9 +1,7 @@
-// firebase.ts
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { saveFcmToken } from "~/services/save-fcm-token";
-
-const FCM_TOKEN_KEY = "fcm_token";
+import { STORAGE_KEYS } from "~/utils/constants";
 
 export const setupFirebaseMessaging = async () => {
   if (typeof window === "undefined") {
@@ -49,12 +47,12 @@ export const setupFirebaseMessaging = async () => {
         "BDdQAP6cPUpoZJPAhwcSOuUnPM_-OoTJjh7tAAeHxfUHbhvOX-FN7YgyAb_biTFI_z0u46PfjrZ6hPGQNnR5NiE",
     });
 
-    const storedToken = localStorage.getItem(FCM_TOKEN_KEY);
+    const storedToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
 
     if (!storedToken) {
       const { error } = await saveFcmToken(token);
       if (!error) {
-        localStorage.setItem(FCM_TOKEN_KEY, token);
+        localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, token);
       }
     }
 
@@ -62,7 +60,7 @@ export const setupFirebaseMessaging = async () => {
     if (token !== storedToken) {
       const { error } = await saveFcmToken(token);
       if (!error) {
-        localStorage.setItem(FCM_TOKEN_KEY, token);
+        localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, token);
       }
 
       // Listen for foreground messages

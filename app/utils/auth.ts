@@ -1,5 +1,6 @@
 import type z from "zod";
 import type { EmployeeSchema } from "~/parsers/login";
+import { STORAGE_KEYS } from "./constants";
 
 export interface AuthData {
   token: string;
@@ -8,14 +9,6 @@ export interface AuthData {
   user?: any;
   employee?: z.infer<typeof EmployeeSchema>;
 }
-
-export const AUTH_KEYS = {
-  TOKEN: "authToken",
-  TOKEN_ID: "tokenId",
-  USER_TYPE: "userType",
-  USER: "userInfo",
-  EMPLOYEE: "employeeInfo",
-} as const;
 
 export const authUtils = {
   /**
@@ -31,21 +24,21 @@ export const authUtils = {
   storeAuth: (authData: AuthData): void => {
     if (!authUtils.isClient()) return;
 
-    localStorage.setItem(AUTH_KEYS.TOKEN, authData.token);
-    localStorage.setItem(AUTH_KEYS.TOKEN_ID, authData.tokenId);
-    localStorage.setItem(AUTH_KEYS.USER_TYPE, authData.userType);
+    localStorage.setItem(STORAGE_KEYS.TOKEN, authData.token);
+    localStorage.setItem(STORAGE_KEYS.TOKEN_ID, authData.tokenId);
+    localStorage.setItem(STORAGE_KEYS.USER_TYPE, authData.userType);
     if (authData.user) {
-      localStorage.setItem(AUTH_KEYS.USER, JSON.stringify(authData.user));
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(authData.user));
     } else {
-      localStorage.removeItem(AUTH_KEYS.USER);
+      localStorage.removeItem(STORAGE_KEYS.USER);
     }
     if (authData.employee) {
       localStorage.setItem(
-        AUTH_KEYS.EMPLOYEE,
+        STORAGE_KEYS.EMPLOYEE,
         JSON.stringify(authData.employee)
       );
     } else {
-      localStorage.removeItem(AUTH_KEYS.EMPLOYEE);
+      localStorage.removeItem(STORAGE_KEYS.EMPLOYEE);
     }
   },
 
@@ -54,7 +47,7 @@ export const authUtils = {
    */
   storeUser: (user: any): void => {
     if (!authUtils.isClient()) return;
-    localStorage.setItem(AUTH_KEYS.USER, JSON.stringify(user));
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
   },
 
   /**
@@ -63,7 +56,7 @@ export const authUtils = {
   getToken: (): string | null => {
     if (!authUtils.isClient()) return null;
 
-    return localStorage.getItem(AUTH_KEYS.TOKEN);
+    return localStorage.getItem(STORAGE_KEYS.TOKEN);
   },
 
   /**
@@ -72,7 +65,7 @@ export const authUtils = {
   getTokenId: (): string | null => {
     if (!authUtils.isClient()) return null;
 
-    return localStorage.getItem(AUTH_KEYS.TOKEN_ID);
+    return localStorage.getItem(STORAGE_KEYS.TOKEN_ID);
   },
 
   /**
@@ -81,7 +74,7 @@ export const authUtils = {
   getUserType: (): "user" | "employee" | null => {
     if (!authUtils.isClient()) return null;
 
-    const userType = localStorage.getItem(AUTH_KEYS.USER_TYPE);
+    const userType = localStorage.getItem(STORAGE_KEYS.USER_TYPE);
     return userType as "user" | "employee" | null;
   },
 
@@ -90,7 +83,7 @@ export const authUtils = {
    */
   getUser: (): any | null => {
     if (!authUtils.isClient()) return null;
-    const user = localStorage.getItem(AUTH_KEYS.USER);
+    const user = localStorage.getItem(STORAGE_KEYS.USER);
     return user ? JSON.parse(user) : null;
   },
 
@@ -99,7 +92,7 @@ export const authUtils = {
    */
   getEmployee: (): any | null => {
     if (!authUtils.isClient()) return null;
-    const employee = localStorage.getItem(AUTH_KEYS.EMPLOYEE);
+    const employee = localStorage.getItem(STORAGE_KEYS.EMPLOYEE);
     return employee ? JSON.parse(employee) : null;
   },
 
@@ -143,11 +136,12 @@ export const authUtils = {
   clearAuth: (): void => {
     if (!authUtils.isClient()) return;
 
-    localStorage.removeItem(AUTH_KEYS.TOKEN);
-    localStorage.removeItem(AUTH_KEYS.TOKEN_ID);
-    localStorage.removeItem(AUTH_KEYS.USER_TYPE);
-    localStorage.removeItem(AUTH_KEYS.USER);
-    localStorage.removeItem(AUTH_KEYS.EMPLOYEE);
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.TOKEN_ID);
+    localStorage.removeItem(STORAGE_KEYS.USER_TYPE);
+    localStorage.removeItem(STORAGE_KEYS.USER);
+    localStorage.removeItem(STORAGE_KEYS.EMPLOYEE);
+    localStorage.removeItem(STORAGE_KEYS.FCM_TOKEN);
   },
 
   /**

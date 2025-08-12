@@ -10,6 +10,7 @@ import "~/utils/sentry";
 import { App } from "./routes/app";
 import { useEffect } from "react";
 import { setupFirebaseMessaging } from "./lib/firebase";
+import { useAuth } from "./hooks/useAuth";
 export { ErrorBoundary } from "./components/sentry-error-boundary";
 
 export const links: Route.LinksFunction = () => [
@@ -46,10 +47,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function Root() {
   const { width } = useWindowSize();
+  const { isAuthenticated } = useAuth();
+  const isAuth = isAuthenticated();
 
   useEffect(() => {
-    setupFirebaseMessaging();
-  }, []);
+    if (isAuth) setupFirebaseMessaging();
+  }, [isAuth]);
 
   if (width > MOBILE_BREAKPOINT) {
     return <Text>Works better in mobile screens</Text>;
