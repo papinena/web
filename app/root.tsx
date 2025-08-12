@@ -8,6 +8,8 @@ import { Text } from "./components/ui/text";
 import { TanstackQueryProvider } from "./query-client";
 import "~/utils/sentry";
 import { App } from "./routes/app";
+import { useEffect } from "react";
+import { setupFirebaseMessaging } from "./lib/firebase";
 export { ErrorBoundary } from "./components/sentry-error-boundary";
 
 export const links: Route.LinksFunction = () => [
@@ -44,6 +46,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function Root() {
   const { width } = useWindowSize();
+
+  useEffect(() => {
+    setupFirebaseMessaging();
+  }, []);
 
   if (width > MOBILE_BREAKPOINT) {
     return <Text>Works better in mobile screens</Text>;
