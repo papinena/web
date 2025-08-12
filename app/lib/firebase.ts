@@ -1,4 +1,7 @@
-// simple-firebase.ts
+// firebase.ts
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+
 export const setupFirebaseMessaging = async () => {
   if (typeof window === "undefined") {
     return null;
@@ -16,12 +19,6 @@ export const setupFirebaseMessaging = async () => {
       await navigator.serviceWorker.ready;
       console.log("Service Worker ready");
     }
-
-    // Now setup Firebase
-    const { initializeApp } = await import("firebase/app");
-    const { getMessaging, getToken, onMessage } = await import(
-      "firebase/messaging"
-    );
 
     const firebaseConfig = {
       apiKey: "AIzaSyCI34gVPB1yf9FIchsSNtI3KrukB3l03M0",
@@ -46,7 +43,7 @@ export const setupFirebaseMessaging = async () => {
     // Get token
     const token = await getToken(messaging, {
       vapidKey:
-        "BDdQAP6cPUpoZJPAhwcSOuUnPM_-OoTJjh7tAAeHxfUHbhvOX-FN7YgyAb_biTFI_z0u46PfjrZ6hPGQNnR5NiE", // Replace with your VAPID key
+        "BDdQAP6cPUpoZJPAhwcSOuUnPM_-OoTJjh7tAAeHxfUHbhvOX-FN7YgyAb_biTFI_z0u46PfjrZ6hPGQNnR5NiE",
     });
 
     if (token) {
