@@ -10,6 +10,8 @@ import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { DateFormatter } from "~/utils/date-formatter";
+import { Firebase, setupFirebaseMessaging } from "~/lib/firebase";
+import { saveUnauthenticatedFcmToken } from "~/services/save-unauthenticated-fcm-token";
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
 
@@ -116,8 +118,24 @@ export function useRegisterUser({
           ));
         throw new Error(res.message);
       }
+      return res.data;
     },
-    onSuccess,
+    onSuccess: async (data) => {
+      if (data?.email) {
+        try {
+          const fcmToken = await Firebase.setup();
+          if (fcmToken) {
+            await saveUnauthenticatedFcmToken(fcmToken, data.email);
+          }
+        } catch (error) {
+          console.error(
+            "Failed to setup or save FCM token on registration:",
+            error
+          );
+        }
+      }
+      onSuccess?.();
+    },
   });
 
   const onSave = methods.handleSubmit((data) => {

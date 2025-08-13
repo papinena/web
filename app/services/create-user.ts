@@ -1,6 +1,8 @@
 import { apiRequest, api } from "~/utils/api";
 import type { CreateUserType } from "~/parsers/create-user";
 import { UserMapper } from "~/mappers/user";
+import type { ApiResponse } from "~/interfaces/api-response";
+import type { UserAPIProps } from "~/interfaces/user";
 
 export async function createUser(
   data: Omit<CreateUserType, "birthDate"> & { birthDate: Date }
@@ -14,14 +16,14 @@ export async function createUser(
     })),
   });
 
-  const response = await apiRequest(`${BASE_URL}/register/user`, {
-    method: "POST",
-    body,
-  });
-  return (await response.json()) as
-    | {
-        status: "error" | "success";
-        message: string;
-      }
-    | undefined;
+  const response = await apiRequest(
+    `${BASE_URL}/register/user`,
+    {
+      method: "POST",
+      body,
+    },
+    false
+  );
+
+  return (await response.json()) as ApiResponse<UserAPIProps>;
 }

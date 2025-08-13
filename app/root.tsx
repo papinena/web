@@ -9,7 +9,7 @@ import { TanstackQueryProvider } from "./query-client";
 import "~/utils/sentry";
 import { App } from "./routes/app";
 import { useEffect } from "react";
-import { setupFirebaseMessaging } from "./lib/firebase";
+import { Firebase, setupFirebaseMessaging } from "./lib/firebase";
 import { useAuth } from "./hooks/useAuth";
 export { ErrorBoundary } from "./components/sentry-error-boundary";
 
@@ -49,7 +49,10 @@ export default function Root() {
   const { width } = useWindowSize();
 
   useEffect(() => {
-    setupFirebaseMessaging();
+    async function setup() {
+      await Firebase.setup();
+    }
+    setup();
   }, []);
 
   if (width > MOBILE_BREAKPOINT) {
