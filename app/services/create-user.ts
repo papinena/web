@@ -1,14 +1,16 @@
 import { apiRequest, api } from "~/utils/api";
-import type { CreateUserSchema } from "~/parsers/create-user";
-import type { z } from "zod";
+import type { CreateUserType } from "~/parsers/create-user";
 import { UserMapper } from "~/mappers/user";
 
-export async function createUser(data: z.infer<typeof CreateUserSchema>) {
+export async function createUser(
+  data: Omit<CreateUserType, "birthDate"> & { birthDate: Date }
+) {
   const { BASE_URL } = api();
   const body = JSON.stringify({
     user: UserMapper.toAPI(data),
     tags: data.tags?.map((t) => ({
-      label: t,
+      id: t.id,
+      label: t.label,
     })),
   });
 

@@ -34,21 +34,16 @@ export class UserMapper {
    */
   static toAPI(
     user: Partial<Omit<UserUIProps, "birthDate">> & {
-      birthDate?: string | Date;
+      birthDate?: Date;
       password?: string;
       photo?: string;
       avatar?: string;
     }
   ): Partial<UserAPIProps & { password: string }> {
-    const birth_date =
-      typeof user.birthDate === "string"
-        ? new Date(user.birthDate).toISOString()
-        : user.birthDate?.toISOString();
-
     return {
       name: user.name,
       last_name: user.lastName,
-      birth_date,
+      birth_date: (user.birthDate ?? new Date()).toISOString(),
       telephone: user.telephone,
       email: user.email,
       block: user.block,

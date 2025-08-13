@@ -64,11 +64,12 @@ export const setupFirebaseMessaging = async () => {
       }
 
       // Listen for foreground messages
-      onMessage(messaging, (payload) => {
-        console.log("Foreground message:", payload);
-        // Handle foreground messages here
-      });
     }
+
+    onMessage(messaging, (payload) => {
+      console.log("Foreground message:", payload);
+      // Handle foreground messages here
+    });
 
     return token;
   } catch (error) {

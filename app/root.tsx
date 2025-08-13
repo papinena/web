@@ -47,12 +47,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function Root() {
   const { width } = useWindowSize();
-  const { isAuthenticated } = useAuth();
-  const isAuth = isAuthenticated();
 
   useEffect(() => {
-    if (isAuth) setupFirebaseMessaging();
-  }, [isAuth]);
+    setupFirebaseMessaging();
+  }, []);
 
   if (width > MOBILE_BREAKPOINT) {
     return <Text>Works better in mobile screens</Text>;

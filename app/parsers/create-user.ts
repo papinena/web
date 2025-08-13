@@ -14,7 +14,7 @@ export const CreateUserSchema = z
     password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
     confirmPassword: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
     condominiumId: z.string().min(1, "Condomínio é obrigatório"),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.object({ id: z.number(), label: z.string() })).optional(),
   })
   .refine((data) => data.email === data.confirmEmail, {
     message: "Emails não conferem",

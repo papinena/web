@@ -1,6 +1,7 @@
 import {
   format as formatFns,
   formatDistanceToNow as formatDistanceToNowFns,
+  parse as parseFns,
   parseISO,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -24,6 +25,20 @@ export class DateFormatter {
   ): string {
     const dateObj = typeof date === "string" ? parseISO(date) : date;
     return formatFns(dateObj, formatStr, { locale: ptBR });
+  }
+
+  /**
+   * Parses a date string using a specified format.
+   * Defaults to the "dd/MM/yyyy" format.
+   * @param dateString - The date string to parse.
+   * @param formatStr - The format of the date string.
+   * @returns The parsed Date object.
+   */
+  static parse(
+    dateString: string,
+    formatStr: string = "dd/MM/yyyy"
+  ): Date {
+    return parseFns(dateString, formatStr, new Date(), { locale: ptBR });
   }
 
   /**

@@ -9,6 +9,7 @@ import type { Tag } from "~/interfaces/tag";
 import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
+import { DateFormatter } from "~/utils/date-formatter";
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
 
@@ -72,7 +73,7 @@ export function useRegisterUser({
     resolver: zodResolver(CreateUserSchema),
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, error, isPending } = useMutation({
     mutationFn: async (data: UserFormType) => {
       let filename = "";
       let tokenData,
@@ -98,8 +99,9 @@ export function useRegisterUser({
 
       const dataToSave = {
         ...data,
+        birthDate: DateFormatter.parse(data.birthDate ?? ""),
         photo: filename,
-        tags: selectedTheme.map((t) => String(t.label)),
+        tags: selectedTheme,
       };
 
       const res = await createUser(dataToSave);
@@ -121,7 +123,7 @@ export function useRegisterUser({
   const onSave = methods.handleSubmit((data) => {
     const dataToSave = {
       ...data,
-      tags: selectedTheme.map((t) => String(t.label)),
+      tags: selectedTheme,
     };
     setFields(dataToSave);
     setLocalStorageFields(dataToSave);
