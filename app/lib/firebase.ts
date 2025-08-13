@@ -7,6 +7,7 @@ import {
 } from "firebase/messaging";
 import { STORAGE_KEYS } from "~/utils/constants";
 import { saveFcmToken } from "~/services/save-fcm-token";
+import { useToastStore } from "~/stores/toast";
 
 class FirebaseService {
   private static readonly VAPID_KEY =
@@ -77,8 +78,14 @@ class FirebaseService {
   private listenForForegroundMessages(): void {
     if (!this.messaging) return;
     onMessage(this.messaging, (payload) => {
-      console.log("Foreground message received:", payload);
-      // Here you could display a toast notification, for example
+      console.log("Foreground message received");
+      const { notification } = payload;
+      if (notification) {
+        useToastStore.getState().addToast({
+          title: notification.title || "New Notification",
+          description: notification.body || "",
+        });
+      }
     });
   }
 
@@ -95,6 +102,7 @@ class FirebaseService {
       const token = await this.getFirebaseToken();
       if (token) {
         this.saveTokenToLocalStorage(token);
+        this.listenForForegroundMessages();
       }
       return token;
     } catch (error) {
@@ -116,7 +124,6 @@ class FirebaseService {
       const token = await this.getFirebaseToken();
       if (token) {
         await this.saveTokenToServer(token);
-        this.saveTokenToLocalStorage(token);
         this.listenForForegroundMessages();
       }
 

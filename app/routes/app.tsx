@@ -1,5 +1,4 @@
 import { Link, Outlet, redirect } from "react-router";
-import { useEffect } from "react";
 import { Footer } from "~/components/footer";
 import { Box } from "~/components/ui/box";
 import { Header } from "~/components/header";
@@ -16,6 +15,8 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   const isRegisterPage = url.pathname.startsWith("/register");
   const isAuthenticated = authUtils.isAuthenticated();
 
+  await firebaseService.setupForUnauthenticatedUser();
+
   if (!isAuthenticated && !isLoginPage && !isRegisterPage) {
     return redirect("/login");
   }
@@ -23,6 +24,7 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   if (!isAuthenticated) return null;
 
   await firebaseService.setup();
+
   const storedImageReadToken = localStorage.getItem("image-read-token");
 
   if (!storedImageReadToken) {

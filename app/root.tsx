@@ -1,5 +1,4 @@
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
-
 import type { Route } from "./+types/root";
 import "./app.css";
 import useWindowSize from "./hooks/useWindowsSize";
@@ -8,8 +7,7 @@ import { Text } from "./components/ui/text";
 import { TanstackQueryProvider } from "./query-client";
 import "~/utils/sentry";
 import { App } from "./routes/app";
-import { useEffect } from "react";
-import { firebaseService } from "./lib/firebase";
+import { ToastManager } from "./components/toast-manager";
 export { ErrorBoundary } from "./components/sentry-error-boundary";
 
 export const links: Route.LinksFunction = () => [
@@ -54,6 +52,7 @@ export default function Root() {
   return (
     <TanstackQueryProvider>
       <App />
+      <ToastManager />
     </TanstackQueryProvider>
   );
 }
