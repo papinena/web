@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { Image } from "~/components/ui/image";
@@ -14,6 +14,7 @@ import { PasswordInput } from "~/components/password-input";
 import { login } from "~/services/login";
 import { LoginSchema, type LoginType } from "~/parsers/login";
 import { useAuth } from "~/hooks/useAuth";
+import { Separator } from "~/components/ui/separator";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ export default function Login() {
 
             <Button
               type="submit"
-              className="bg-blue-primary max-w-62 mx-auto w-full"
+              className="bg-blue-primary max-w-72 mx-auto w-full"
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? (
@@ -115,6 +116,24 @@ export default function Login() {
               )}
             </Button>
           </form>
+          <Box className="w-full flex-1 items-center gap-3 max-w-76 mx-auto">
+            <Separator className="flex-1" />
+            <Text>ou</Text>
+            <Separator className="flex-1" />
+          </Box>
+
+          <Button
+            asChild
+            variant={"outline"}
+            className="max-w-72 mx-auto py-8 border-blue-primary cursor-pointer"
+          >
+            <Link to="/register/user">
+              <Text className="text-wrap text-blue-primary">
+                Quer um condomínio mais eficiente? Saiba como o Vizis facilita a
+                sua vida!
+              </Text>
+            </Link>
+          </Button>
         </Box>
       </Box>
     </Box>
