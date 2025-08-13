@@ -15,6 +15,8 @@ import { login } from "~/services/login";
 import { LoginSchema, type LoginType } from "~/parsers/login";
 import { useAuth } from "~/hooks/useAuth";
 import { Separator } from "~/components/ui/separator";
+import { firebaseService } from "~/lib/firebase";
+import { saveFcmToken } from "~/services/save-fcm-token";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,12 +37,17 @@ export default function Login() {
       if (error) throw new Error(error.message);
       return data;
     },
-    onSuccess: (result: any) => {
+    onSuccess: async (result: any) => {
       if (result.error) {
         setFormError(result.error.message);
       } else {
         // Store authentication data in localStorage and update state
         authLogin(result);
+        const token = await firebaseService.setup();
+
+        if (token) {
+          await saveFcmToken(token);
+        }
 
         if (result.userType === "employee") {
           return navigate("/admin/dashboard");

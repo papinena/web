@@ -10,7 +10,7 @@ import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { DateFormatter } from "~/utils/date-formatter";
-import { Firebase, setupFirebaseMessaging } from "~/lib/firebase";
+import { firebaseService } from "~/lib/firebase";
 import { saveUnauthenticatedFcmToken } from "~/services/save-unauthenticated-fcm-token";
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
@@ -123,7 +123,7 @@ export function useRegisterUser({
     onSuccess: async (data) => {
       if (data?.email) {
         try {
-          const fcmToken = await Firebase.setup();
+          const fcmToken = await firebaseService.setupForUnauthenticatedUser();
           if (fcmToken) {
             await saveUnauthenticatedFcmToken(fcmToken, data.email);
           }

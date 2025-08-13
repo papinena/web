@@ -1,4 +1,5 @@
 import { Link, Outlet, redirect } from "react-router";
+import { useEffect } from "react";
 import { Footer } from "~/components/footer";
 import { Box } from "~/components/ui/box";
 import { Header } from "~/components/header";
@@ -7,6 +8,7 @@ import { getImageReadToken } from "~/services/get-image-read-token";
 import { Button } from "~/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useAuth } from "~/hooks/useAuth";
+import { firebaseService } from "~/lib/firebase";
 
 export const clientLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -20,6 +22,7 @@ export const clientLoader = async ({ request }: { request: Request }) => {
 
   if (!isAuthenticated) return null;
 
+  await firebaseService.setup();
   const storedImageReadToken = localStorage.getItem("image-read-token");
 
   if (!storedImageReadToken) {
