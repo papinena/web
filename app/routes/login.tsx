@@ -122,6 +122,17 @@ export default function Login() {
                 "Entrar"
               )}
             </Button>
+            <Button
+              asChild
+              variant={"link"}
+              className="mx-auto border-blue-primary cursor-pointer"
+            >
+              <Link to="/password/forgot">
+                <Text className="text-wrap text-gray-400">
+                  Esqueci minha senha
+                </Text>
+              </Link>
+            </Button>
           </form>
           <Box className="w-full flex-1 items-center gap-3 max-w-76 mx-auto">
             <Separator className="flex-1" />

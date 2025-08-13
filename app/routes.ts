@@ -7,6 +7,10 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
+  ...prefix("password", [
+    route("forgot", "./routes/password/forgot.tsx"),
+    route("reset", "./routes/password/reset.tsx"),
+  ]),
   layout("./routes/app.tsx", [
     index("./routes/index.tsx"),
     ...prefix("/post", [
