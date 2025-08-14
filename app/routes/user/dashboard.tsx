@@ -45,20 +45,22 @@ export default function Dashboard() {
             </Widget.Title>
             <Text>Visualize, altere ou remova as postagens.</Text>
           </Widget>
+        </Link>{" "}
+        <Link to="/user/condominium">
+          <Widget>
+            <Widget.Title
+              icon={
+                <Image
+                  src="/dashboard-my-condominium.svg"
+                  className={iconClassName}
+                />
+              }
+            >
+              Meu condomínio
+            </Widget.Title>
+            <Text>Conheca seu condomínio</Text>
+          </Widget>
         </Link>
-        <Widget>
-          <Widget.Title
-            icon={
-              <Image
-                src="/dashboard-my-condominium.svg"
-                className={iconClassName}
-              />
-            }
-          >
-            Meu condomínio
-          </Widget.Title>
-          <Text>Conheca seu condomínio</Text>
-        </Widget>
       </Box>
     </Box>
   );
