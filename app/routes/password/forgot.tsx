@@ -13,9 +13,11 @@ import { ErrorMessage } from "~/components/error-message";
 import { forgotPassword } from "~/services/forgot-password";
 
 const ForgotPasswordSchema = z.object({
-  email: z.email({
-    message: "Por favor, insira um endereço de e-mail válido.",
-  }),
+  email: z
+    .email({
+      message: "Por favor, insira um endereço de e-mail válido.",
+    })
+    .transform((val) => val.toLowerCase()),
 });
 
 type ForgotPasswordType = z.infer<typeof ForgotPasswordSchema>;

@@ -4,7 +4,7 @@ export const EmployeeSchema = z.object({
   id: z.string(),
   name: z.string(),
   last_name: z.string(),
-  email: z.email(),
+  email: z.email().transform(val => val.toLowerCase()),
   telephone: z.string(),
   position: z.string(),
   is_resident: z.boolean(),
@@ -20,7 +20,7 @@ export const EmployeeSchema = z.object({
 });
 
 export const LoginSchema = z.object({
-  email: z.email({ message: "O e-mail é obrigatório" }),
+  email: z.email({ message: "O e-mail é obrigatório" }).transform(val => val.toLowerCase()),
   password: z
     .string({ message: "A senha é obrigatória" })
     .min(1, "A senha é obrigatória"),

@@ -15,7 +15,9 @@ import { resetPassword } from "~/services/reset-password";
 
 export const ResetPasswordSchema = z
   .object({
-    email: z.email({ message: "Por favor, insira um e-mail válido." }),
+    email: z
+      .email({ message: "Por favor, insira um e-mail válido." })
+      .transform((val) => val.toLowerCase()),
     password: z
       .string()
       .min(6, { message: "A senha deve ter pelo menos 6 caracteres." }),

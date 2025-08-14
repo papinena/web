@@ -17,8 +17,8 @@ export const CreateAdminSchema = z
       isResident: z.boolean({ error: 'Obrigatório' }).or(z.undefined()),
       block: z.string().optional(),
       apartment: z.string().optional(),
-      email: z.email({ error: 'Email inválido' }),
-      confirmEmail: z.email({ error: 'Email inválido' }),
+      email: z.email({ error: 'Email inválido' }).transform(val => val.toLowerCase()),
+confirmEmail: z.email({ error: 'Email inválido' }).transform(val => val.toLowerCase()),
       password: z
         .string()
         .min(8, { error: 'A senha deve ter no mínimo 8 caracteres' })
@@ -44,7 +44,7 @@ export const CreateAdminSchema = z
       address: z.string().optional(),
       telephone: z.string().optional(),
       counsil: z.string().optional(),
-      email: z.email("Email inválido").optional().or(z.literal("")),
+      email: z.email("Email inválido").transform(val => val.toLowerCase()).optional().or(z.literal("")),
       doorKeeperChief: z.string().optional(),
       receptionTelephone: z.string().optional(),
     }),
@@ -52,7 +52,7 @@ export const CreateAdminSchema = z
       .array(
         z.object({
           name: z.string().min(2, { error: "Mínimo de 2 caracters" }),
-          email: z.email(),
+          email: z.email().transform(val => val.toLowerCase()),
         })
       )
       .min(1, { error: "Mínimo de um funcionário" }),
