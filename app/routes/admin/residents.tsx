@@ -1,8 +1,7 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
-import { Image } from "~/components/ui/image";
 import { Separator } from "~/components/ui/separator";
 import { Text } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
@@ -11,6 +10,8 @@ import { getAdminResidents } from "~/services/get-admin-residents";
 import { Spinner } from "~/components/ui/spinner";
 import { useAuth } from "~/hooks/useAuth";
 import { updateResidentStatus } from "~/services/update-resident-status";
+
+import { UserAvatar } from "~/components/user-avatar";
 
 function Resident({
   name,
@@ -30,14 +31,25 @@ function Resident({
   is_approved: boolean;
 }) {
   return (
-    <Box>
+    <Box className="flex items-center gap-4">
       <Checkbox
         className="size-8"
         onCheckedChange={onSelect}
         checked={isSelected}
       />
-      <Image className="size-20" src={avatar} />
-      <Box className="flex-col gap-2">
+      <UserAvatar
+        avatarUrl={avatar}
+        fallbackText={name}
+        fallbackProps={{ className: "rounded-lg" }}
+        containerClassName="rounded-lg size-20"
+        imageClassName={is_approved ? "" : "grayscale"}
+      />
+      <Box className="flex-col gap-1.5">
+        {is_approved ? (
+          <Text className="text-green-primary text-sm font-bold">Aprovado</Text>
+        ) : (
+          <Text className="text-sm">Reprovado</Text>
+        )}
         <Text>{name}</Text>
         <Box className="text-center gap-2">
           <Box className="gap-1.5">
@@ -52,9 +64,6 @@ function Resident({
             <Text className="text-sm">{apartment}</Text>
           </Box>
         </Box>
-        {is_approved && (
-          <Text className="text-green-primary text-sm">Aprovado</Text>
-        )}
       </Box>
     </Box>
   );
@@ -106,7 +115,7 @@ export default function Residents() {
 
   return (
     <Box className="flex-1">
-      <Box className="bg-white w-full gap-5 flex-col p-1.5 rounded-lg">
+      <Box className="bg-white w-full gap-5 flex-col px-1.5 pt-1.5 pb-14 rounded-lg">
         <Text className="text-lg font-semibold">
           Gerenciamento de moradores
         </Text>
@@ -124,9 +133,9 @@ export default function Residents() {
             <Separator className="my-4" />
           </Box>
         ))}
-        <Box className="w-full gap-12 mt-5 space-between">
+        <Box className="w-full gap-12 mt-3 space-between">
           <Button
-            className={cn("flex-1 bg-red-500 hover:bg-red-500/90")}
+            className={cn("flex-1 bg-green-primary hover:bg-green-primary/90")}
             onClick={() => handleUpdateStatus(false)}
             disabled={isPending}
           >

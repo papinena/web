@@ -12,6 +12,7 @@ import { UserMapper } from "~/mappers/user";
 import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
+import { DateFormatter } from "~/utils/date-formatter";
 
 export function useUser({ onSuccess }: { onSuccess?: () => void }) {
   const { authData, setAuthUserData } = useAuth();
@@ -60,7 +61,10 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
 
       const payload = {
         user: {
-          ...UserMapper.toAPI(data),
+          ...UserMapper.toAPI({
+            ...data,
+            birthDate: DateFormatter.parse(data.birthDate),
+          }),
           avatar: avatarFilename,
         },
         tags: selectedTheme.map((t) => t.id),
@@ -86,6 +90,9 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
 
       queryClient.invalidateQueries({ queryKey: ["user-edit-info"] });
       onSuccess?.();
+    },
+    onError: (err) => {
+      console.log(err);
     },
   });
 
