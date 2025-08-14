@@ -25,6 +25,7 @@ export default [
     ...prefix("user", [
       route("dashboard", "./routes/user/dashboard.tsx"),
       route("edit", "./routes/user/edit.tsx"),
+      route("condominium", "./routes/user/condominium.tsx"),
     ]),
     ...prefix("admin", [
       route("dashboard", "./routes/admin/dashboard.tsx"),

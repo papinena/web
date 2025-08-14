@@ -58,7 +58,7 @@ export function UserHamburguerMenu({
             </TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <TextMenuItem to="/my-condominium">Meu condomínio</TextMenuItem>
+            <TextMenuItem to="/user/condominium">Meu condomínio</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
