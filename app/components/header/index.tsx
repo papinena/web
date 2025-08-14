@@ -5,13 +5,16 @@ import { Avatar } from "./avatar";
 import { SearchInput } from "./search-input";
 import { AdminHamburguerMenu } from "./admin-menu";
 import { UserHamburguerMenu } from "./user-menu";
+import { Link } from "react-router";
 
 export function Header() {
   const { isAuthenticated, isUser } = useAuth();
 
   return (
     <Box className="w-full px-3 min-h-12 bg-white flex items-center justify-between">
-      <Image src="/image 2.svg" />
+      <Link to="/">
+        <Image src="/image 2.svg" />
+      </Link>
 
       {isAuthenticated() && (
         <>
