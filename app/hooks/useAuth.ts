@@ -9,11 +9,13 @@ export function useAuth() {
     isUser,
     isEmployeeAdmin,
     setAuthUserData,
+    setAuthEmployeeData,
   } = useAuthStore();
 
   return {
     authData,
     setAuthUserData,
+    setAuthEmployeeData,
     login,
     logout,
     isAuthenticated,

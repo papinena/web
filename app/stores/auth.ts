@@ -7,6 +7,7 @@ interface AuthState {
   logout: () => void;
   setAuthData: (data: AuthData | null) => void;
   setAuthUserData: (userData: any) => void;
+  setAuthEmployeeData: (employeeData: any) => void;
   isAuthenticated: () => boolean;
   isUser: () => boolean;
   isEmployeeAdmin: () => boolean;
@@ -30,6 +31,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (currentAuth) {
       const newAuthData = { ...currentAuth, user: userData };
       authUtils.storeUser(userData);
+      set({ authData: newAuthData });
+    }
+  },
+  setAuthEmployeeData: (employeeData: any) => {
+    const currentAuth = get().authData;
+    if (currentAuth) {
+      const newAuthData = { ...currentAuth, employee: employeeData };
+      authUtils.storeEmployee(employeeData);
       set({ authData: newAuthData });
     }
   },

@@ -14,6 +14,8 @@ export function Avatar({ size = 40, className = "" }: AvatarProps) {
   const data =
     authData?.userType === "user" ? authData.user : authData?.employee;
 
+  console.log(data);
+
   return (
     <AvatarUI
       className={className}

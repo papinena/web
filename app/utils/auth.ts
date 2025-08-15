@@ -51,6 +51,14 @@ export const authUtils = {
   },
 
   /**
+   * Store just the employee info in localStorage
+   */
+  storeEmployee: (employee: any): void => {
+    if (!authUtils.isClient()) return;
+    localStorage.setItem(STORAGE_KEYS.EMPLOYEE, JSON.stringify(employee));
+  },
+
+  /**
    * Get authentication token from localStorage
    */
   getToken: (): string | null => {

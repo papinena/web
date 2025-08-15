@@ -28,7 +28,10 @@ import { deleteImage } from "~/services/delete-image";
 import { DateFormatter } from "~/utils/date-formatter";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
 
+import { useAuth } from "~/hooks/useAuth";
+
 function useAdminEdit() {
+  const { setAuthEmployeeData } = useAuth();
   const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: ["admin-edit-info"],
@@ -99,8 +102,10 @@ function useAdminEdit() {
         throw error;
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data.data.employee.data);
       queryClient.invalidateQueries({ queryKey: ["admin-edit-info"] });
+      setAuthEmployeeData(data.data.employee.data);
     },
   });
 
@@ -182,7 +187,7 @@ export default function EditAdmin() {
   const condominium = query.data?.condominium;
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
   const isSyndic = employee?.permission === "ADMIN";
-  const preview = buildUrl(employee?.avatar) ?? null;
+  const preview = buildUrl(employee?.avatar ?? "");
 
   return (
     <FormProvider {...methods}>
