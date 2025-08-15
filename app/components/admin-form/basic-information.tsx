@@ -12,7 +12,11 @@ import { IsResidentCheckbox } from "~/components/is-resident-checkbox";
 import { BirthDateInput } from "~/components/birth-date-input";
 import { type CreateAdminType } from "~/parsers/create-admin";
 
-export function BasicInformation() {
+export function BasicInformation({
+  isEditing = false,
+}: {
+  isEditing?: boolean;
+}) {
   const { register, control, watch, formState } =
     useFormContext<CreateAdminType>();
   const errors = formState.errors;
@@ -71,42 +75,46 @@ export function BasicInformation() {
             />
           </Item>
         )}
-        <Item>
-          <EmailInput
-            error={errors.employee?.email?.message}
-            {...register("employee.email")}
-          />
-          <EmailInput
-            label="Confirme seu email*"
-            {...register("employee.confirmEmail")}
-            error={errors.employee?.confirmEmail?.message}
-          />
-        </Item>
-        <Item>
-          <Box className="flex-col w-full gap-3">
-            <Item>
-              <PasswordInput
-                label="Crie uma senha*"
-                {...register("employee.password")}
-                error={errors.employee?.password?.message}
-              />
-              <PasswordInput
-                label="Confirme sua senha*"
-                {...register("employee.confirmPassword")}
-                error={errors.employee?.confirmPassword?.message}
-              />
-            </Item>
-            <Box className="flex-col">
-              <Text className="text-sm text-gray-400">8 caracteres</Text>
-              <Text className="text-sm text-gray-400">
-                Pelo menos 1 caracter especial
-              </Text>
-              <Text className="text-sm text-gray-400">
-                Pelo menos 1 numeral
-              </Text>
+        {!isEditing && (
+          <Item>
+            <EmailInput
+              error={errors.employee?.email?.message}
+              {...register("employee.email")}
+            />
+            <EmailInput
+              label="Confirme seu email*"
+              {...register("employee.confirmEmail")}
+              error={errors.employee?.confirmEmail?.message}
+            />
+          </Item>
+        )}
+        {!isEditing && (
+          <Item>
+            <Box className="flex-col w-full gap-3">
+              <Item>
+                <PasswordInput
+                  label="Crie uma senha*"
+                  {...register("employee.password")}
+                  error={errors.employee?.password?.message}
+                />
+                <PasswordInput
+                  label="Confirme sua senha*"
+                  {...register("employee.confirmPassword")}
+                  error={errors.employee?.confirmPassword?.message}
+                />
+              </Item>
+              <Box className="flex-col">
+                <Text className="text-sm text-gray-400">8 caracteres</Text>
+                <Text className="text-sm text-gray-400">
+                  Pelo menos 1 caracter especial
+                </Text>
+                <Text className="text-sm text-gray-400">
+                  Pelo menos 1 numeral
+                </Text>
+              </Box>
             </Box>
-          </Box>
-        </Item>
+          </Item>
+        )}
       </Box>
     </SectionContainer>
   );

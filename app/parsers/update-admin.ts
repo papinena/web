@@ -5,7 +5,7 @@ export const UpdateAdminSchema = z.object({
     name: z.string().min(4, "Mínimo de 4 caracteres"),
     lastName: z.string().min(4, "Mínimo de 4 caracteres"),
     birthDate: z.string().optional(),
-    photo: z.string().optional(),
+    photo: z.string().nullable().optional(),
     telephone: z
       .string()
       .regex(
@@ -16,6 +16,7 @@ export const UpdateAdminSchema = z.object({
     isResident: z.boolean({ error: "Obrigatório" }).or(z.undefined()),
     block: z.string().optional(),
     apartment: z.string().optional(),
+    email: z.email({ message: "Email inválido" }).optional(),
   }),
   condominium: z.object({
     name: z.string().min(2, { message: "Mínimo de 2 caracteres" }),

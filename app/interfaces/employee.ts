@@ -24,8 +24,8 @@ export interface EmployeeUIProps {
   telephone: string;
   position: string;
   isResident: boolean;
-  block: string | null;
-  apartment: string | null;
+  block: string;
+  apartment: string;
   email: string;
   isRegisterCompleted: boolean;
   active: boolean;

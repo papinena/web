@@ -2,12 +2,13 @@ import { api, apiRequest } from "~/utils/api";
 import type { ApiResponse } from "~/interfaces/api-response";
 import type { CondominiumAPIProps } from "~/interfaces/condominium";
 import type { EmployeeAPIProps } from "~/interfaces/employee";
-import type { CondominiumAdministrator } from "~/interfaces/condominium-administrator";
+import { CondominiumAdministratorMapper } from "~/mappers/condominium-administrator";
+import type { CondominiumAdministratorAPIProps } from "~/interfaces/condominium-administrator";
 
 type GetAdminEditInfoResponse = ApiResponse<{
   employee: ApiResponse<EmployeeAPIProps>;
   condominium: ApiResponse<CondominiumAPIProps>;
-  condominiumAdministrator: ApiResponse<CondominiumAdministrator>;
+  condominiumAdministrator: ApiResponse<CondominiumAdministratorAPIProps>;
   employees: ApiResponse<EmployeeAPIProps[]>;
 }>;
 
@@ -26,8 +27,9 @@ export async function getAdminEditInfo() {
 
     const employee = EmployeeMapper.toUI(responseData.data.employee.data);
     const condominium = responseData.data.condominium.data;
-    const condominiumAdministrator =
-      responseData.data.condominiumAdministrator.data;
+    const condominiumAdministrator = CondominiumAdministratorMapper.toUI(
+      responseData.data.condominiumAdministrator.data
+    );
     const employees = responseData.data.employees.data.map(EmployeeMapper.toUI);
 
     return {

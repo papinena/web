@@ -1,5 +1,3 @@
-import { Text } from "~/components/ui/text";
-import { Box } from "~/components/ui/box";
 import { FormProvider, useForm } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
 import { NameInput } from "~/components/register/name-input";
@@ -23,6 +21,8 @@ import {
 } from "~/parsers/update-admin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "~/components/error-message";
+import { Box } from "~/components/ui/box";
+import { Text } from "~/components/ui/text";
 
 function useAdminEdit() {
   const query = useQuery({
@@ -41,7 +41,6 @@ function useAdminEdit() {
 }
 
 export default function EditAdmin() {
-  const { buildUrl } = useImageReadToken();
   const { query, mutation } = useAdminEdit();
   const [file, setFile] = useState<File | null>(null);
   const methods = useForm<UpdateAdminType>({
@@ -60,7 +59,9 @@ export default function EditAdmin() {
           position: employee.position,
           isResident: employee.isResident,
           email: employee.email,
-          photo: employee.avatar ?? "",
+          photo: employee.avatar,
+          block: employee.block,
+          apartment: employee.apartment,
         },
         condominium: {
           name: condominium.name,
@@ -70,12 +71,17 @@ export default function EditAdmin() {
           contact: condominiumAdministrator.contact,
           address: condominiumAdministrator.address,
           telephone: condominiumAdministrator.telephone,
+          counsil: condominiumAdministrator.counsil,
+          doorKeeperChief: condominiumAdministrator.doorKeeperChief,
+          receptionTelephone: condominiumAdministrator.receptionTelephone,
           email: condominiumAdministrator.email,
         },
-        employees: employees.map((e) => ({
-          name: e.name,
-          email: e.email,
-        })),
+        employees: employees
+          .filter((e) => e.id !== employee.id)
+          .map((e) => ({
+            name: e.name,
+            email: e.email,
+          })),
       });
     }
   }, [query.isSuccess, methods.reset, query.data]);
@@ -103,53 +109,54 @@ export default function EditAdmin() {
   }
 
   const employee = query.data?.employee;
-  const preview = buildUrl(employee?.avatar) ?? null;
+  const condominium = query.data?.condominium;
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
+  const isSyndic = employee?.permission === "ADMIN";
 
   return (
     <FormProvider {...methods}>
       <Box className="flex-1 flex-col w-full">
-        <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-blue-primary border-2">
+        <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-green-primary border-2">
           <Box className="flex-col gap-5 mx-auto">
             <Box className="flex-col gap-5">
-              <Text variant="title">Editar Cadastro</Text>
+              <Text variant="title">Cadastro Administração</Text>
               <Box className="gap-5">
                 <Box className="flex-col rounded-2xl">
                   <UploadPhotoInput
-                    preview={preview}
+                    preview={employee?.avatar ?? null}
                     handleFileChange={handleFileChange}
                   />
                 </Box>
-                <Box className="flex-col max-w-64 flex-1 gap-3">
-                  <NameInput
-                    label="Nome"
-                    {...methods.register("employee.name", { required: true })}
-                    error={methods.formState.errors.employee?.name?.message}
-                  />
-                  <InputWithLabel
-                    label="Sobrenome"
-                    error={methods.formState.errors.employee?.lastName?.message}
-                    {...methods.register("employee.lastName", {
-                      required: true,
-                    })}
-                  />
+                <Box className="flex-col max-w-64 flex-1">
+                  <Text className="text-2xl font-bold">{employee?.name}</Text>
+                  {isSyndic ? (
+                    <Text className="text-green-primary">
+                      Síndico com Condomínio {condominium?.name}
+                    </Text>
+                  ) : (
+                    <Text className="text-green-primary">
+                      Condomínio {condominium?.name}
+                    </Text>
+                  )}
                 </Box>
               </Box>
             </Box>
-            <BasicInformation />
-            <CondominiumInformation />
-            <EmployeesInformation />
-            <SectionContainer>
-              <SectionTitle>
-                Inclua informações úteis para o condomínio
-              </SectionTitle>
-              <Item className="w-full">
-                <Textarea
-                  className="min-h-20"
-                  {...methods.register("condominium.usefulInformation")}
-                />
-              </Item>
-            </SectionContainer>
+            <BasicInformation isEditing />
+            {isSyndic && <CondominiumInformation />}
+            {isSyndic && <EmployeesInformation />}
+            {isSyndic && (
+              <SectionContainer>
+                <SectionTitle>
+                  Inclua informações úteis para o condomínio
+                </SectionTitle>
+                <Item className="w-full">
+                  <Textarea
+                    className="min-h-20"
+                    {...methods.register("condominium.usefulInformation")}
+                  />
+                </Item>
+              </SectionContainer>
+            )}
             {hasErrors && (
               <Box className="border-red-400 text-center p-3 border rounded-lg">
                 <Text className="text-red-400">

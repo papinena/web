@@ -14,8 +14,8 @@ export class EmployeeMapper {
       telephone: employee.telephone,
       position: employee.position,
       isResident: employee.is_resident,
-      block: employee.block,
-      apartment: employee.apartment,
+      block: employee.block ?? "",
+      apartment: employee.apartment ?? "",
       email: employee.email,
       isRegisterCompleted: employee.is_register_completed,
       active: employee.active,
@@ -33,9 +33,7 @@ export class EmployeeMapper {
    * @param employee - The employee data from the form.
    * @returns The employee data formatted for the API.
    */
-  static toAPI(
-    employee: Partial<EmployeeUIProps>
-  ): Partial<EmployeeAPIProps> {
+  static toAPI(employee: Partial<EmployeeUIProps>): Partial<EmployeeAPIProps> {
     return {
       name: employee.name,
       last_name: employee.lastName,
