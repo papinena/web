@@ -1,18 +1,14 @@
 import { FormProvider, useForm } from "react-hook-form";
-import { InputWithLabel } from "~/components/input-with-label";
-import { NameInput } from "~/components/register/name-input";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
-import { useImageReadToken } from "~/hooks/useImageReadToken";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAdminEditInfo } from "~/services/get-admin-edit-info";
 import { useEffect, useState } from "react";
 import { Spinner } from "~/components/ui/spinner";
 import { BasicInformation } from "~/components/admin-form/basic-information";
 import { CondominiumInformation } from "~/components/admin-form/condominium-information";
-import { EmployeesInformation } from "~/components/admin-form/employees-information";
 import { Item } from "~/components/register/item";
 import { Textarea } from "~/components/text-area";
 import {
@@ -23,8 +19,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "~/components/error-message";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
+import { updateAdmin, type UpdateAdminPayload } from "~/services/update-admin";
+import { EmployeeMapper } from "~/mappers/employee";
+import { CondominiumAdministratorMapper } from "~/mappers/condominium-administrator";
+import { getSasToken } from "~/services/get-sas-token";
+import { uploadImage } from "~/services/upload-image";
+import { deleteImage } from "~/services/delete-image";
+import { DateFormatter } from "~/utils/date-formatter";
+import { useImageReadToken } from "~/hooks/useImageReadToken";
 
 function useAdminEdit() {
+  const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: ["admin-edit-info"],
     queryFn: getAdminEditInfo,
@@ -32,6 +37,71 @@ function useAdminEdit() {
 
   const mutation = useMutation({
     mutationKey: ["UPDATE_ADMIN"],
+    mutationFn: async ({
+      form,
+      file,
+    }: {
+      form: UpdateAdminType;
+      file: File | null;
+    }) => {
+      let avatarFilename: string | undefined | null = undefined;
+      let tokenData: { containerUri: string; sasToken: string } | undefined,
+        tokenError: { status: string; message: string } | undefined;
+
+      try {
+        if (file) {
+          const sasTokenData = await getSasToken();
+          tokenData = sasTokenData.data;
+          tokenError = sasTokenData.error;
+
+          if (tokenError) throw new Error(tokenError.message);
+          if (!tokenData) throw new Error("Token data is undefined");
+
+          avatarFilename = await uploadImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            file
+          );
+        } else if (form.employee.photo === null) {
+          avatarFilename = null;
+        }
+
+        const payload: UpdateAdminPayload = {
+          employee: EmployeeMapper.toAPI({
+            ...form.employee,
+            avatar: avatarFilename,
+            birthDate: DateFormatter.parse(form.employee.birthDate),
+          }),
+        };
+
+        if (form.condominium) {
+          payload.condominium = form.condominium;
+        }
+
+        if (form.condominiumAdministrator) {
+          payload.condominiumAdministrator =
+            CondominiumAdministratorMapper.toAPI(form.condominiumAdministrator);
+        }
+        /*
+        if (form.employees) {
+          payload.employees = form.employees;
+        }*/
+
+        return await updateAdmin(payload);
+      } catch (error) {
+        if (tokenData && avatarFilename) {
+          await deleteImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            avatarFilename
+          );
+        }
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-edit-info"] });
+    },
   });
 
   return {
@@ -42,6 +112,7 @@ function useAdminEdit() {
 
 export default function EditAdmin() {
   const { query, mutation } = useAdminEdit();
+  const { buildUrl } = useImageReadToken();
   const [file, setFile] = useState<File | null>(null);
   const methods = useForm<UpdateAdminType>({
     resolver: zodResolver(UpdateAdminSchema),
@@ -49,8 +120,7 @@ export default function EditAdmin() {
 
   useEffect(() => {
     if (query.isSuccess) {
-      const { employee, condominium, condominiumAdministrator, employees } =
-        query.data;
+      const { employee, condominium, condominiumAdministrator } = query.data;
       methods.reset({
         employee: {
           name: employee.name,
@@ -62,6 +132,7 @@ export default function EditAdmin() {
           photo: employee.avatar,
           block: employee.block,
           apartment: employee.apartment,
+          birthDate: DateFormatter.format(employee.birthDate),
         },
         condominium: {
           name: condominium?.name,
@@ -75,13 +146,13 @@ export default function EditAdmin() {
           doorKeeperChief: condominiumAdministrator?.doorKeeperChief,
           receptionTelephone: condominiumAdministrator?.receptionTelephone,
           email: condominiumAdministrator?.email,
-        },
+        } /*
         employees: employees
           ?.filter((e) => e.id !== employee.id)
           .map((e) => ({
             name: e.name,
             email: e.email,
-          })),
+          })),*/,
       });
     }
   }, [query.isSuccess, methods.reset, query.data]);
@@ -96,8 +167,7 @@ export default function EditAdmin() {
   };
 
   const onSave = (data: UpdateAdminType) => {
-    console.log(data);
-    // mutation.mutate(data);
+    mutation.mutate({ form: data, file });
   };
 
   if (query.isLoading) {
@@ -112,6 +182,7 @@ export default function EditAdmin() {
   const condominium = query.data?.condominium;
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
   const isSyndic = employee?.permission === "ADMIN";
+  const preview = buildUrl(employee?.avatar) ?? null;
 
   return (
     <FormProvider {...methods}>
@@ -123,7 +194,7 @@ export default function EditAdmin() {
               <Box className="gap-5">
                 <Box className="flex-col rounded-2xl">
                   <UploadPhotoInput
-                    preview={employee?.avatar ?? null}
+                    preview={preview}
                     handleFileChange={handleFileChange}
                   />
                 </Box>
@@ -145,7 +216,6 @@ export default function EditAdmin() {
             {isSyndic && (
               <>
                 <CondominiumInformation />
-                <EmployeesInformation />
                 <SectionContainer>
                   <SectionTitle>
                     Inclua informações úteis para o condomínio

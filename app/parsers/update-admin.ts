@@ -4,7 +4,7 @@ export const UpdateAdminSchema = z.object({
   employee: z.object({
     name: z.string().min(4, "Mínimo de 4 caracteres"),
     lastName: z.string().min(4, "Mínimo de 4 caracteres"),
-    birthDate: z.string().optional(),
+    birthDate: z.string(),
     photo: z.string().nullable().optional(),
     telephone: z
       .string()
@@ -36,6 +36,7 @@ export const UpdateAdminSchema = z.object({
       receptionTelephone: z.string().optional(),
     })
     .optional(),
+  /*
   employees: z
     .array(
       z.object({
@@ -44,7 +45,7 @@ export const UpdateAdminSchema = z.object({
       })
     )
     .min(1, { message: "Mínimo de um funcionário" })
-    .optional(),
+    .optional(),*/
 });
 
 export type UpdateAdminType = z.infer<typeof UpdateAdminSchema>;

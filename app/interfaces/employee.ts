@@ -3,6 +3,7 @@ export interface EmployeeAPIProps {
   name: string;
   last_name: string;
   telephone: string;
+  birth_date: string;
   position: string;
   is_resident: boolean;
   block: string | null;
@@ -20,6 +21,7 @@ export interface EmployeeAPIProps {
 export interface EmployeeUIProps {
   id: string;
   name: string;
+  birthDate: Date;
   lastName: string;
   telephone: string;
   position: string;

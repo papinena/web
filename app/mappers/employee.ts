@@ -14,6 +14,7 @@ export class EmployeeMapper {
       telephone: employee.telephone,
       position: employee.position,
       isResident: employee.is_resident,
+      birthDate: new Date(employee.birth_date),
       block: employee.block ?? "",
       apartment: employee.apartment ?? "",
       email: employee.email,
@@ -43,6 +44,8 @@ export class EmployeeMapper {
       block: employee.block,
       apartment: employee.apartment,
       email: employee.email,
+      birth_date: employee.birthDate?.toString(),
+      avatar: employee.avatar,
     };
   }
 }
