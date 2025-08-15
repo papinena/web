@@ -64,20 +64,20 @@ export default function EditAdmin() {
           apartment: employee.apartment,
         },
         condominium: {
-          name: condominium.name,
+          name: condominium?.name,
         },
         condominiumAdministrator: {
-          name: condominiumAdministrator.name,
-          contact: condominiumAdministrator.contact,
-          address: condominiumAdministrator.address,
-          telephone: condominiumAdministrator.telephone,
-          counsil: condominiumAdministrator.counsil,
-          doorKeeperChief: condominiumAdministrator.doorKeeperChief,
-          receptionTelephone: condominiumAdministrator.receptionTelephone,
-          email: condominiumAdministrator.email,
+          name: condominiumAdministrator?.name,
+          contact: condominiumAdministrator?.contact,
+          address: condominiumAdministrator?.address,
+          telephone: condominiumAdministrator?.telephone,
+          counsil: condominiumAdministrator?.counsil,
+          doorKeeperChief: condominiumAdministrator?.doorKeeperChief,
+          receptionTelephone: condominiumAdministrator?.receptionTelephone,
+          email: condominiumAdministrator?.email,
         },
         employees: employees
-          .filter((e) => e.id !== employee.id)
+          ?.filter((e) => e.id !== employee.id)
           .map((e) => ({
             name: e.name,
             email: e.email,
@@ -142,20 +142,22 @@ export default function EditAdmin() {
               </Box>
             </Box>
             <BasicInformation isEditing />
-            {isSyndic && <CondominiumInformation />}
-            {isSyndic && <EmployeesInformation />}
             {isSyndic && (
-              <SectionContainer>
-                <SectionTitle>
-                  Inclua informações úteis para o condomínio
-                </SectionTitle>
-                <Item className="w-full">
-                  <Textarea
-                    className="min-h-20"
-                    {...methods.register("condominium.usefulInformation")}
-                  />
-                </Item>
-              </SectionContainer>
+              <>
+                <CondominiumInformation />
+                <EmployeesInformation />
+                <SectionContainer>
+                  <SectionTitle>
+                    Inclua informações úteis para o condomínio
+                  </SectionTitle>
+                  <Item className="w-full">
+                    <Textarea
+                      className="min-h-20"
+                      {...methods.register("condominium.usefulInformation")}
+                    />
+                  </Item>
+                </SectionContainer>
+              </>
             )}
             {hasErrors && (
               <Box className="border-red-400 text-center p-3 border rounded-lg">

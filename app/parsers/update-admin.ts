@@ -18,20 +18,24 @@ export const UpdateAdminSchema = z.object({
     apartment: z.string().optional(),
     email: z.email({ message: "Email inválido" }).optional(),
   }),
-  condominium: z.object({
-    name: z.string().min(2, { message: "Mínimo de 2 caracteres" }),
-    usefulInformation: z.string().optional(),
-  }),
-  condominiumAdministrator: z.object({
-    name: z.string().min(2, { message: "Mínimo de 2 caracteres" }),
-    contact: z.string().optional(),
-    address: z.string().optional(),
-    telephone: z.string().optional(),
-    counsil: z.string().optional(),
-    email: z.email("Email inválido").optional().or(z.literal("")),
-    doorKeeperChief: z.string().optional(),
-    receptionTelephone: z.string().optional(),
-  }),
+  condominium: z
+    .object({
+      name: z.string().min(2, { message: "Mínimo de 2 caracteres" }),
+      usefulInformation: z.string().optional(),
+    })
+    .optional(),
+  condominiumAdministrator: z
+    .object({
+      name: z.string().min(2, { message: "Mínimo de 2 caracteres" }),
+      contact: z.string().optional(),
+      address: z.string().optional(),
+      telephone: z.string().optional(),
+      counsil: z.string().optional(),
+      email: z.email("Email inválido").optional().or(z.literal("")),
+      doorKeeperChief: z.string().optional(),
+      receptionTelephone: z.string().optional(),
+    })
+    .optional(),
   employees: z
     .array(
       z.object({
@@ -39,7 +43,8 @@ export const UpdateAdminSchema = z.object({
         email: z.email(),
       })
     )
-    .min(1, { message: "Mínimo de um funcionário" }),
+    .min(1, { message: "Mínimo de um funcionário" })
+    .optional(),
 });
 
 export type UpdateAdminType = z.infer<typeof UpdateAdminSchema>;
