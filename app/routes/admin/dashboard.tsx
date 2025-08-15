@@ -26,20 +26,22 @@ export default function Dashboard() {
             do condomínio!
           </Text>
         </Widget>
-        {isEmployeeAdmin && (
-          <Widget className="border-green-primary">
-            <Widget.Title
-              className=""
-              icon={<Image src="/image 113.svg" className={iconClassName} />}
-            >
-              Cadastro da Administração
-            </Widget.Title>
-            <Text>
-              Edite, remova ou inclua novas informações sobre a administração do
-              condomínio
-            </Text>
-          </Widget>
-        )}
+        {
+          <Link to="/admin/edit">
+            <Widget className="border-green-primary">
+              <Widget.Title
+                className=""
+                icon={<Image src="/image 113.svg" className={iconClassName} />}
+              >
+                Cadastro da Administração
+              </Widget.Title>
+              <Text>
+                Edite, remova ou inclua novas informações sobre a administração
+                do condomínio
+              </Text>
+            </Widget>
+          </Link>
+        }
         <Link to="/admin/residents">
           <Widget className="border-green-primary">
             <Widget.Title

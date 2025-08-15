@@ -29,6 +29,7 @@ export default [
     ]),
     ...prefix("admin", [
       route("dashboard", "./routes/admin/dashboard.tsx"),
+      route("edit", "./routes/admin/edit.tsx"),
       route("residents", "./routes/admin/residents.tsx"),
     ]),
     ...prefix("register", [
