@@ -8,12 +8,13 @@ import type { CondominiumAPIProps } from "~/interfaces/condominium";
 type UserData = ApiResponse<UserAPIProps>;
 type UserTagsData = ApiResponse<Tag[]>;
 type TagsData = ApiResponse<Tag[]>;
+type CondominiumData = ApiResponse<CondominiumAPIProps>;
 
 type GetUserEditInfoResponse = ApiResponse<{
   userTags: UserTagsData;
   tags: TagsData;
   user: UserData;
-  condominium: CondominiumAPIProps;
+  condominium: CondominiumData;
 }>;
 
 export async function getUserEditInfo() {
@@ -31,6 +32,8 @@ export async function getUserEditInfo() {
     const userTags = responseData.data.userTags.data;
     const condominium = responseData.data.condominium.data;
     const user = UserMapper.toUI(responseData.data.user.data);
+
+    console.log(condominium);
 
     return {
       user,
