@@ -20,6 +20,10 @@ export default [
       route("/update/:postId", "./routes/post/update-post.tsx"),
       route("/update/:postId/preview", "./routes/post/update-post-preview.tsx"),
       route("/my-publications", "./routes/post/my-publications.tsx"),
+      ...prefix("admin", [
+        route("create", "./routes/post/admin/new-post.tsx"),
+        route("preview", "./routes/post/admin/preview.tsx"),
+      ]),
     ]),
     route("login", "./routes/login.tsx"),
     ...prefix("user", [

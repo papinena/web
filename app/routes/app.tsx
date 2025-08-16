@@ -58,7 +58,7 @@ export function App() {
   const { isAuthenticated, authData } = useAuth();
   const isAuth = isAuthenticated();
   const isEmployee = authData?.userType === "employee";
-  const to = isEmployee ? "/admin/new-post" : "/post/create";
+  const to = isEmployee ? "/post/admin/create" : "/post/create";
 
   return (
     <Box className="min-h-dvh w-full h-full flex-col">

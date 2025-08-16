@@ -19,6 +19,10 @@ import { XIcon } from "lucide-react";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { Button } from "~/components/ui/button";
 
+import { Item } from "~/components/post/item";
+import { ItemLabel } from "~/components/post/item-label";
+import { UploadPhotosInput } from "~/components/post/upload-photos-input";
+
 interface Category {
   id: number;
   name: string;
@@ -50,84 +54,6 @@ export function ExpireDateInput({
       />
       <Label>{label}</Label>
     </Box>
-  );
-}
-
-export function Item({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <Box className={cn("gap-2 w-full flex-col", className)}>{children}</Box>
-  );
-}
-export function ItemLabel({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return <Text className={cn("text-sm", className)}>{children}</Text>;
-}
-
-function UploadPhotosInput({
-  previews,
-  handleFileChange,
-  handleRemoveImage,
-}: {
-  previews: string[];
-  handleFileChange(e: ChangeEvent<HTMLInputElement>): void;
-  handleRemoveImage(index: number): void;
-}) {
-  return (
-    <>
-      <Label
-        htmlFor="photo-upload-input"
-        className="h-40 w-full rounded-2xl border border-gray-300 cursor-pointer flex flex-wrap justify-center items-center gap-2 p-2"
-      >
-        {previews.length > 0 ? (
-          previews.map((preview, index) => (
-            <Box key={index} className="relative h-full flex-1">
-              <Image
-                src={preview}
-                alt={`Preview ${index + 1}`}
-                className="h-full w-full rounded-2xl object-cover"
-              />
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleRemoveImage(index);
-                }}
-                className="absolute cursor-pointer top-1 right-1 rounded-full p-1 h-6 w-6 flex items-center justify-center"
-              >
-                <XIcon className="w-4 h-4" />
-              </Button>
-            </Box>
-          ))
-        ) : (
-          <Box className="flex-col p-3 items-center">
-            <Image className="h-full flex-1 ml-3 w-full" src="/image 27.svg" />
-            <Text>+ foto</Text>
-            <Text className="text-sm text-gray-300">até 5 fotos</Text>
-          </Box>
-        )}
-      </Label>
-      <Input
-        id="photo-upload-input"
-        type="file"
-        className="hidden"
-        accept="image/*"
-        multiple
-        onChange={handleFileChange}
-      />
-    </>
   );
 }
 
