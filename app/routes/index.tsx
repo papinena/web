@@ -5,9 +5,10 @@ import { Spinner } from "~/components/ui/spinner";
 import { PostImage } from "~/components/ui/post-image";
 import { PostAuthor } from "~/components/post-author";
 import { Post } from "~/components/post";
-import type { PostAPIProps } from "~/services/get-post";
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { useEffect } from "react";
+import type { PostAPIProps } from "~/services/get-post";
+import { Separator } from "~/components/ui/separator";
 
 export default function Home() {
   const { useListPosts } = usePost();
@@ -46,11 +47,44 @@ export default function Home() {
 
   const pages = data?.pages.flatMap((page) => page) ?? [];
   const posts = pages.flatMap((p) => p.userPosts.data);
+  const userPosts = posts.filter((p) => p.author);
+  const adminPosts = posts.filter((p) => p.employee);
 
   return (
     <Box className="flex-1 p-3 flex-col gap-3">
       <Box className="gap-4 flex-col">
-        {posts.map((post: PostAPIProps) => (
+        {adminPosts.map((post) => (
+          <Post
+            className="border-2 border-green-primary bg-white rounded-4xl"
+            key={post.id}
+            post={post}
+            to={`/post/admin/${post.id}`}
+          >
+            <Box className="w-full flex-col">
+              <Box className="px-5 flex-col pt-2 pb-5 gap-3">
+                <Post.CreatedAt format="Pp" post={post} />
+                <Box className="gap-3">
+                  {post.media.length > 0 && (
+                    <PostImage
+                      className="rounded-lg size-32"
+                      filename={post.media[0].filename}
+                      alt={post.title}
+                    />
+                  )}
+                  <Box className="flex-col">
+                    <Post.Title className="text-green-primary" post={post} />
+                    <Post.Resume post={post} />
+                  </Box>
+                </Box>
+                <Text className="text-sm text-gray-400">
+                  {`Postado por: ${post.employee?.name} (${post.employee?.position})`}
+                </Text>
+                <Separator className="w-full" />
+              </Box>
+            </Box>
+          </Post>
+        ))}
+        {userPosts.map((post) => (
           <Post className="bg-white rounded-4xl" key={post.id} post={post}>
             <Box className="w-full flex-col">
               <Box className="px-5 py-10 gap-3">

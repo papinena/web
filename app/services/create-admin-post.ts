@@ -1,42 +1,16 @@
+import type { ApiResponse } from "~/interfaces/api-response";
 import { api, apiRequest } from "~/utils/api";
-import { z } from "zod";
-
-const PostMediaType = ["IMAGE", "VIDEO"] as const;
-
-const CreateAdminPostSchema = z.object({
-  title: z.string(),
-  resume: z.string(),
-  description: z
-    .string()
-    .optional()
-    .transform((val) => val ?? null),
-  urgent: z.boolean().optional(),
-  notify: z.boolean().optional(),
-  media: z
-    .array(
-      z.object({
-        filename: z.string(),
-        type: z.enum(PostMediaType),
-      })
-    )
-    .optional(),
-});
-
-type CreateAdminPostType = z.infer<typeof CreateAdminPostSchema>;
-
-interface ApiResponse<T> {
-  status: "success" | "error";
-  message: string;
-  data?: T;
-}
 
 type PostMediaProps = {
-  id: string;
   filename: string;
   type: "IMAGE" | "VIDEO";
-  postId: string;
-  createdAt: string;
-  updatedAt: string;
+};
+
+type CreateAdminPostProps = {
+  title: string;
+  resume: string;
+  description?: string;
+  media: PostMediaProps[];
 };
 
 type PostAPIProps = {
@@ -44,16 +18,16 @@ type PostAPIProps = {
   title: string;
   resume: string;
   description?: string;
-  authorId: string;
+  author_id: string;
   createdAt: string;
   updatedAt: string;
   media: PostMediaProps[];
 };
 
-export async function createAdminPost(data: CreateAdminPostType) {
+export async function createAdminPost(data: CreateAdminPostProps) {
   try {
     const { BASE_URL } = api();
-    const url = new URL(BASE_URL + "/admin/new-post");
+    const url = new URL(BASE_URL + "/user/new-post");
 
     const response = await apiRequest(url.toString(), {
       method: "POST",

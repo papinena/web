@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
 import { cn } from "~/lib/utils";
-import type { PostAPIProps } from "~/services/get-post";
 
-type Media = PostAPIProps["media"][0];
+type Media = { id: string; filename: string; type: "IMAGE" | "VIDEO" };
 
 interface ImageGalleryProps {
   media: Media[];

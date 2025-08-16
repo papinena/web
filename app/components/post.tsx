@@ -12,6 +12,7 @@ import { Image } from "./ui/image";
 interface SubComponentProps {
   post: PostAPIProps;
   className?: string;
+  format?: string;
 }
 
 function PostTitle({ post, className }: SubComponentProps) {
@@ -26,8 +27,8 @@ function PostResume({ post, className }: SubComponentProps) {
   return <Text className={cn("", className)}>{post.resume}</Text>;
 }
 
-function PostCreatedAt({ post, className }: SubComponentProps) {
-  const formattedDate = DateFormatter.format(post.createdAt);
+function PostCreatedAt({ post, className, format }: SubComponentProps) {
+  const formattedDate = DateFormatter.format(post.createdAt, format);
   return (
     <Text className={cn("text-gray-300", className)}>{formattedDate}</Text>
   );
@@ -56,6 +57,7 @@ interface PostProps {
   post: PostAPIProps;
   children: ReactNode;
   className?: string;
+  to?: string;
 }
 
 interface PostComposition {
@@ -69,9 +71,10 @@ export const Post: React.FC<PostProps> & PostComposition = ({
   post,
   children,
   className,
+  to,
 }) => {
   return (
-    <Link to={`/post/${post.id}`} className={cn("w-full", className)}>
+    <Link to={to ?? `/post/${post.id}`} className={cn("w-full", className)}>
       {children}
     </Link>
   );

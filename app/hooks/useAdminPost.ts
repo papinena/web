@@ -10,15 +10,13 @@ export function useAdminPost() {
 
   const createAdminPostMutation = useMutation({
     mutationKey: ["CREATE_ADMIN_POST"],
-    mutationFn: async (data: {
-      form: CreateAdminPostType;
-      files: File[];
-    }) => {
+    mutationFn: async (data: { form: CreateAdminPostType }) => {
+      const photos = data.form.photos;
       let filenames: { filename: string; type: "IMAGE" | "VIDEO" }[] = [];
       let tokenData: { containerUri: string; sasToken: string } | undefined,
         tokenError: { status: string; message: string } | undefined;
 
-      if (data.files.length > 0) {
+      if (photos && photos.length > 0) {
         const sasTokenData = await getSasToken();
         tokenData = sasTokenData.data;
         tokenError = sasTokenData.error;
@@ -26,7 +24,7 @@ export function useAdminPost() {
         if (tokenError) throw new Error(tokenError.message);
         if (!tokenData) throw new Error("Token data is undefined");
 
-        const uploadPromises = data.files.map((file) =>
+        const uploadPromises = photos.map((file) =>
           uploadImage(tokenData.containerUri, tokenData.sasToken, file)
         );
         const uploadedFilenames = await Promise.all(uploadPromises);
@@ -38,7 +36,6 @@ export function useAdminPost() {
 
       const res = await createAdminPost({
         ...data.form,
-        description: data.form.description ?? null,
         media: filenames,
       });
 

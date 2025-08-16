@@ -21,6 +21,15 @@ type PostTypeProps = {
   is_default: boolean;
 };
 
+export type PostAuthorEmployeeProps = {
+  name: string;
+  avatar: string | null;
+  apartment: string;
+  block: string;
+  telephone: string;
+  position: string;
+};
+
 export type PostAuthorProps = {
   name: string;
   avatar: string | null;
@@ -40,7 +49,8 @@ export type PostAPIProps = {
   authorId: string;
   createdAt: string;
   updatedAt: string;
-  author: PostAuthorProps;
+  author: PostAuthorProps | null;
+  employee: PostAuthorEmployeeProps | null;
   types: PostTypeProps[];
   categories: PostCategoryProps[];
   media: PostMediaProps[];

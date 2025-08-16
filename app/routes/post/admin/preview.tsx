@@ -22,21 +22,22 @@ export default function NewAdminPostPreview() {
 
   const onPublish = () => {
     createAdminPostMutation.mutate(
-      { form: post, files },
+      { form: post },
       {
         onSuccess: (postId) => {
           clear();
-          navigate(`/post/${postId}`);
+          navigate(`/post/admin/${postId}`);
         },
       }
     );
   };
 
-  const media = files?.map((file) => ({
-    id: file.name,
-    filename: URL.createObjectURL(file),
-    type: "IMAGE" as const,
-  }));
+  const media =
+    files?.map((file) => ({
+      id: file.name,
+      filename: URL.createObjectURL(file),
+      type: "IMAGE" as const,
+    })) ?? [];
 
   return (
     <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">

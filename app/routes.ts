@@ -21,6 +21,7 @@ export default [
       route("/update/:postId/preview", "./routes/post/update-post-preview.tsx"),
       route("/my-publications", "./routes/post/my-publications.tsx"),
       ...prefix("admin", [
+        route("/:postId", "./routes/post/admin/index.tsx"),
         route("create", "./routes/post/admin/new-post.tsx"),
         route("preview", "./routes/post/admin/preview.tsx"),
       ]),
