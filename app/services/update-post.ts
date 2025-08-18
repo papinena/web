@@ -1,11 +1,11 @@
 import { api, apiRequest } from "~/utils/api";
 import type { CreatePostType } from "~/parsers/create-post";
-import type { PostAPIProps } from "./get-post";
+import type { UserPostAPIProps } from "~/interfaces/post";
 
 interface ApiResponse {
   status: "success" | "error";
   message: string;
-  data?: PostAPIProps;
+  data?: UserPostAPIProps;
 }
 
 export async function updatePost(postId: string, data: CreatePostType) {

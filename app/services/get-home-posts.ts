@@ -1,5 +1,5 @@
+import type { EmployeePostAPIProps, UserPostAPIProps } from "~/interfaces/post";
 import { api, apiRequest } from "~/utils/api";
-import type { PostAPIProps } from "./get-post";
 
 interface ApiResponse {
   status: "success" | "error";
@@ -7,7 +7,12 @@ interface ApiResponse {
   userPosts: {
     status: string;
     message: string;
-    data: PostAPIProps[];
+    data: UserPostAPIProps[];
+  };
+  employeesPosts: {
+    status: string;
+    message: string;
+    data: EmployeePostAPIProps[];
   };
 }
 

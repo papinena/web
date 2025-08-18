@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import "@mdxeditor/editor/style.css";
-import { getPost, type PostAPIProps } from "~/services/get-post";
+import { getPost } from "~/services/get-post";
+import type { UserPostAPIProps } from "~/interfaces/post";
 import type { Route } from "../+types";
 import { Box } from "~/components/ui/box";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
@@ -14,7 +15,7 @@ import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { PostImage } from "~/components/ui/post-image";
 
-function RecommendedPost({ post }: { post: PostAPIProps }) {
+function RecommendedPost({ post }: { post: UserPostAPIProps }) {
   return (
     <Link to={`/post/${post.id}`}>
       <Box className="w-full flex-col">

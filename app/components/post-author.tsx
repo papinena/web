@@ -7,13 +7,13 @@ import {
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
-import type { PostAuthorProps } from "~/services/get-post";
+import type { PostAuthorProps } from "~/interfaces/post";
 import { cn } from "~/lib/utils";
 
 // --- Sub-components ---
 
 interface SubComponentProps {
-  author: PostAuthorProps;
+  author: PostAuthorProps | null;
   className?: string;
 }
 
@@ -34,21 +34,21 @@ function PostAuthorAvatar({
   return (
     <UIAvatar
       style={{ width: 40, height: 40, ...style }}
-      aria-label={author.name || "Avatar"}
+      aria-label={author?.name || "Avatar"}
       className={className}
     >
-      <AvatarImage src={buildUrl(author.avatar ?? "")} {...imageProps} />
-      <AvatarFallback {...fallbackProps}>{author.name?.[0]}</AvatarFallback>
+      <AvatarImage src={buildUrl(author?.avatar ?? "")} {...imageProps} />
+      <AvatarFallback {...fallbackProps}>{author?.name?.[0]}</AvatarFallback>
     </UIAvatar>
   );
 }
 
 function PostAuthorName({ author, className }: SubComponentProps) {
-  return <Text className={className}>{author.name}</Text>;
+  return <Text className={className}>{author?.name}</Text>;
 }
 
 function PostAuthorBlock({ author, className }: SubComponentProps) {
-  return <Text className={className}>Bloco: {author.block}</Text>;
+  return <Text className={className}>Bloco: {author?.block}</Text>;
 }
 
 // --- Main Component ---

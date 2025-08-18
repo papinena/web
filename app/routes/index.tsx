@@ -7,8 +7,9 @@ import { PostAuthor } from "~/components/post-author";
 import { Post } from "~/components/post";
 import { useIntersectionObserver } from "~/hooks/useIntersectionObserver";
 import { useEffect } from "react";
-import type { PostAPIProps } from "~/services/get-post";
 import { Separator } from "~/components/ui/separator";
+import { Button } from "~/components/ui/button";
+import { Link } from "react-router";
 
 export default function Home() {
   const { useListPosts } = usePost();
@@ -46,9 +47,8 @@ export default function Home() {
   }
 
   const pages = data?.pages.flatMap((page) => page) ?? [];
-  const posts = pages.flatMap((p) => p.userPosts.data);
-  const userPosts = posts.filter((p) => p.author);
-  const adminPosts = posts.filter((p) => p.employee);
+  const userPosts = pages.flatMap((p) => p.userPosts.data);
+  const adminPosts = pages.flatMap((p) => p.employeesPosts.data);
 
   return (
     <Box className="flex-1 p-3 flex-col gap-3">
@@ -61,7 +61,7 @@ export default function Home() {
             to={`/post/admin/${post.id}`}
           >
             <Box className="w-full flex-col">
-              <Box className="px-5 flex-col pt-2 pb-5 gap-3">
+              <Box className="px-5 flex-col pt-2 pb-1.5 gap-3">
                 <Post.CreatedAt format="Pp" post={post} />
                 <Box className="gap-3">
                   {post.media.length > 0 && (
@@ -80,6 +80,13 @@ export default function Home() {
                   {`Postado por: ${post.employee?.name} (${post.employee?.position})`}
                 </Text>
                 <Separator className="w-full" />
+                <Button asChild variant={"link"}>
+                  <Link to="#">
+                    <Text className="text-xs ml-auto">
+                      + Publicações no Mural do Condomínio
+                    </Text>
+                  </Link>
+                </Button>
               </Box>
             </Box>
           </Post>
@@ -115,7 +122,7 @@ export default function Home() {
                   <Post.CreatedAt post={post} />
                   <Post.Title post={post} />
                   <Post.Resume post={post} />
-                  <Text>Contato: {post.author.telephone}</Text>
+                  <Text>Contato: {post.author?.telephone}</Text>
                   <Post.Networks post={post} />
                 </Box>
               </Box>

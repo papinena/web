@@ -1,10 +1,10 @@
 import { api, apiRequest } from "~/utils/api";
-import type { PostAPIProps } from "./get-post";
+import type { UserPostAPIProps } from "~/interfaces/post";
 
 interface ApiResponse {
   status: "sucess" | "error";
   message: string;
-  data: PostAPIProps[];
+  data: UserPostAPIProps[];
 }
 
 export async function getMyPublications() {

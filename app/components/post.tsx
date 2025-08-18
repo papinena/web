@@ -4,13 +4,13 @@ import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { DateFormatter } from "~/utils/date-formatter";
 import { cn } from "~/lib/utils";
-import type { PostAPIProps } from "~/services/get-post";
+import type { EmployeePostAPIProps, UserPostAPIProps } from "~/interfaces/post";
 import { Image } from "./ui/image";
 
 // --- Sub-components ---
 
 interface SubComponentProps {
-  post: PostAPIProps;
+  post: UserPostAPIProps | EmployeePostAPIProps;
   className?: string;
   format?: string;
 }
@@ -54,7 +54,7 @@ function PostNetworks({ post, className }: SubComponentProps) {
 // --- Main Component ---
 
 interface PostProps {
-  post: PostAPIProps;
+  post: UserPostAPIProps | EmployeePostAPIProps;
   children: ReactNode;
   className?: string;
   to?: string;

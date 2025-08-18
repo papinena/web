@@ -1,70 +1,19 @@
+import type { UserPostAPIProps } from "~/interfaces/post";
 import { api, apiRequest } from "~/utils/api";
-
-type PostMediaProps = {
-  id: string;
-  filename: string;
-  type: "IMAGE" | "VIDEO";
-  postId: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type PostCategoryProps = {
-  id: number;
-  name: string;
-  is_default: boolean;
-};
-
-type PostTypeProps = {
-  id: number;
-  name: string;
-  is_default: boolean;
-};
-
-export type PostAuthorEmployeeProps = {
-  name: string;
-  avatar: string | null;
-  apartment: string;
-  block: string;
-  telephone: string;
-  position: string;
-};
-
-export type PostAuthorProps = {
-  name: string;
-  avatar: string | null;
-  apartment: string;
-  block: string;
-  telephone: string;
-};
-
-export type PostAPIProps = {
-  id: string;
-  title: string;
-  resume: string;
-  description?: string;
-  expiresOn: string;
-  social: string;
-  priority: string;
-  authorId: string;
-  createdAt: string;
-  updatedAt: string;
-  author: PostAuthorProps | null;
-  employee: PostAuthorEmployeeProps | null;
-  types: PostTypeProps[];
-  categories: PostCategoryProps[];
-  media: PostMediaProps[];
-};
 
 interface ApiResponse {
   status: "success" | "error";
   message: string;
   data?: {
-    post: { status: "success" | "error"; message: string; data: PostAPIProps };
+    post: {
+      status: "success" | "error";
+      message: string;
+      data: UserPostAPIProps;
+    };
     recommendedPosts: {
       status: "success" | "error";
       message: string;
-      data: PostAPIProps[];
+      data: UserPostAPIProps[];
     };
   };
 }

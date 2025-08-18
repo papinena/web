@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Separator } from "~/components/ui/separator";
-import type { PostAPIProps } from "~/services/get-post";
+import type { UserPostAPIProps } from "~/interfaces/post";
 import { useQuery } from "@tanstack/react-query";
 import { getMyPublications } from "~/services/get-my-publications";
 import { Box } from "~/components/ui/box";
@@ -10,7 +10,7 @@ import { Button } from "~/components/ui/button";
 import { PostImage } from "~/components/ui/post-image";
 import { usePost } from "~/hooks/usePost";
 
-function Post({ post }: { post: PostAPIProps }) {
+function Post({ post }: { post: UserPostAPIProps }) {
   const { deletePostMutation } = usePost();
   const hasImage = post.media.length > 0;
 
