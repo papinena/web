@@ -1,7 +1,9 @@
 import * as Sentry from "@sentry/react";
 
+const dsn = process.env.VITE_SENTRY_DSN;
+
 Sentry.init({
-  dsn: "https://c8c2ab88ba4b557a7c0050d1dfe48749@o4509481423863808.ingest.us.sentry.io/4509604794466304",
+  dsn: dsn,
 
   // Adds request headers and IP for users, for more info visit:
   // https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
