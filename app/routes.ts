@@ -13,6 +13,7 @@ export default [
   ]),
   layout("./routes/app.tsx", [
     index("./routes/index.tsx"),
+    route("/faq", "./routes/faq.tsx"),
     ...prefix("/post", [
       route("/:postId", "./routes/post/index.tsx"),
       route("/create", "./routes/post/new-post.tsx"),
