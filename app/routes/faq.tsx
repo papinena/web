@@ -21,7 +21,7 @@ function Trigger({ children, ...props }: React.ComponentProps<"p">) {
 
 function Content({ children, ...props }: React.ComponentProps<"p">) {
   return (
-    <AccordionContent className="flex flex-col gap-4 text-balance">
+    <AccordionContent className="flex flex-col gap-4">
       <Text {...props}>{children}</Text>
     </AccordionContent>
   );
@@ -33,7 +33,7 @@ function Item({
   ...props
 }: React.ComponentProps<"p"> & { value: string }) {
   return (
-    <AccordionItem value={value} className="flex flex-col gap-4 text-balance">
+    <AccordionItem value={value} className="flex flex-col gap-4">
       <Text {...props}>{children}</Text>
     </AccordionItem>
   );
@@ -57,7 +57,7 @@ export function FaqAccordion() {
 export default function Faq() {
   return (
     <RouteContainer>
-      <Box className="flex-1 flex-col bg-white rounded-2xl p-3">
+      <Box className="flex-1 flex-col bg-white rounded-2xl p-3 gap-3">
         <Text className="text-xl font-bold">Tire suas dúvidas</Text>
         <Box className="flex-col gap-3">
           <Text>
