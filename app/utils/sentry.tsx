@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/react";
 
-const dsn = process.env.VITE_SENTRY_DSN;
+const dsn = import.meta.env.VITE_SENTRY_DSN;
 
 Sentry.init({
   dsn: dsn,
