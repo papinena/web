@@ -26,6 +26,9 @@ export default [
         route("preview", "./routes/post/admin/preview.tsx"),
       ]),
     ]),
+    ...prefix("/posts", [
+      route("/condominium", "./routes/post/condominium.tsx"),
+    ]),
     route("login", "./routes/login.tsx"),
     ...prefix("user", [
       route("dashboard", "./routes/user/dashboard.tsx"),

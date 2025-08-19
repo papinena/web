@@ -25,6 +25,7 @@ export type PostAuthorEmployeeProps = {
   apartment: string;
   block: string;
   telephone: string;
+  condominiumId: number;
   position: string;
 };
 
@@ -46,7 +47,7 @@ export type EmployeePostAPIProps = {
   priority: string;
   authorId: string;
   createdAt: string;
-  employee: PostAuthorEmployeeProps | null;
+  employee: PostAuthorEmployeeProps;
   updatedAt: string;
   types: PostTypeProps[];
   categories: PostCategoryProps[];
@@ -62,7 +63,7 @@ export type UserPostAPIProps = {
   priority: string;
   authorId: string;
   createdAt: string;
-  author: PostAuthorProps | null;
+  author: PostAuthorProps;
   updatedAt: string;
   types: PostTypeProps[];
   categories: PostCategoryProps[];

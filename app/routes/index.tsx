@@ -81,7 +81,9 @@ export default function Home() {
                 </Text>
                 <Separator className="w-full" />
                 <Button asChild variant={"link"}>
-                  <Link to="#">
+                  <Link
+                    to={`/posts/condominium/${post.employee.condominiumId}`}
+                  >
                     <Text className="text-xs ml-auto">
                       + Publicações no Mural do Condomínio
                     </Text>
