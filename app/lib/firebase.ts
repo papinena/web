@@ -3,6 +3,7 @@ import {
   getMessaging,
   getToken,
   onMessage,
+  isSupported,
   type Messaging,
 } from "firebase/messaging";
 import { STORAGE_KEYS } from "~/utils/constants";
@@ -63,6 +64,10 @@ class FirebaseService {
     localStorage.setItem(STORAGE_KEYS.FCM_TOKEN, token);
   }
 
+  private async isSupported(): Promise<boolean> {
+    return isSupported();
+  }
+
   private async saveTokenToServer(token: string): Promise<void> {
     const storedToken = localStorage.getItem(STORAGE_KEYS.FCM_TOKEN);
 
@@ -94,6 +99,10 @@ class FirebaseService {
       return null;
     }
 
+    if (!this.isSupported()) {
+      console.log("Firebase Messaging is not supported in this browser.");
+    }
+
     try {
       await this.registerServiceWorker();
       const permissionGranted = await this.requestPermission();
@@ -114,6 +123,10 @@ class FirebaseService {
   public async setup(): Promise<string | null> {
     if (typeof window === "undefined" || !this.messaging) {
       return null;
+    }
+
+    if (!this.isSupported()) {
+      console.log("Firebase Messaging is not supported in this browser.");
     }
 
     try {
