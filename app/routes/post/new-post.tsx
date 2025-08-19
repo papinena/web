@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { useNewPostStore } from "~/stores/new-post";
 import { PostForm } from "./post-form";
 import type { CreatePostType } from "~/parsers/create-post";
+import { RouteContainer } from "~/components/route-container";
 
 export default function NewPost() {
   const navigate = useNavigate();
@@ -12,5 +13,9 @@ export default function NewPost() {
     navigate("/post/create/preview");
   };
 
-  return <PostForm onSave={onSave} initialValues={post} />;
+  return (
+    <RouteContainer>
+      <PostForm onSave={onSave} initialValues={post} />
+    </RouteContainer>
+  );
 }

@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { Separator } from "~/components/ui/separator";
 import { Button } from "~/components/ui/button";
 import { Link } from "react-router";
+import { RouteContainer } from "~/components/route-container";
 
 export default function Home() {
   const { useListPosts } = usePost();
@@ -32,17 +33,21 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <Box className="flex flex-1 items-center justify-center h-full">
-        <Spinner />
-      </Box>
+      <RouteContainer>
+        <Box className="flex flex-1 items-center justify-center h-full">
+          <Spinner />
+        </Box>
+      </RouteContainer>
     );
   }
 
   if (error) {
     return (
-      <Box className="flex flex-1 items-center justify-center h-full">
-        <Text>Ocorreu um erro ao buscar as publicações.</Text>
-      </Box>
+      <RouteContainer>
+        <Box className="flex flex-1 items-center justify-center h-full">
+          <Text>Ocorreu um erro ao buscar as publicações.</Text>
+        </Box>
+      </RouteContainer>
     );
   }
 
@@ -51,19 +56,51 @@ export default function Home() {
   const adminPosts = pages.flatMap((p) => p.employeesPosts.data);
 
   return (
-    <Box className="flex-1 p-3 flex-col gap-3">
-      <Box className="gap-4 flex-col">
-        {adminPosts.map((post) => (
-          <Post
-            className="border-2 border-green-primary bg-white rounded-4xl"
-            key={post.id}
-            post={post}
-            to={`/post/admin/${post.id}`}
-          >
-            <Box className="w-full flex-col">
-              <Box className="px-5 flex-col pt-2 pb-1.5 gap-3">
-                <Post.CreatedAt format="Pp" post={post} />
-                <Box className="gap-3">
+    <RouteContainer>
+      <Box className="flex-1 p-3 flex-col gap-3">
+        <Box className="gap-4 flex-col">
+          {adminPosts.map((post) => (
+            <Post
+              className="border-2 border-green-primary bg-white rounded-4xl"
+              key={post.id}
+              post={post}
+              to={`/post/admin/${post.id}`}
+            >
+              <Box className="w-full flex-col">
+                <Box className="px-5 flex-col pt-2 pb-1.5 gap-3">
+                  <Post.CreatedAt format="Pp" post={post} />
+                  <Box className="gap-3">
+                    {post.media.length > 0 && (
+                      <PostImage
+                        className="rounded-lg size-32"
+                        filename={post.media[0].filename}
+                        alt={post.title}
+                      />
+                    )}
+                    <Box className="flex-col">
+                      <Post.Title className="text-green-primary" post={post} />
+                      <Post.Resume post={post} />
+                    </Box>
+                  </Box>
+                  <Text className="text-sm text-gray-400">
+                    {`Postado por: ${post.employee?.name} (${post.employee?.position})`}
+                  </Text>
+                  <Separator className="w-full" />
+                  <Button asChild variant={"link"}>
+                    <Link to={`/posts/condominium`}>
+                      <Text className="text-xs ml-auto">
+                        + Publicações no Mural do Condomínio
+                      </Text>
+                    </Link>
+                  </Button>
+                </Box>
+              </Box>
+            </Post>
+          ))}
+          {userPosts.map((post) => (
+            <Post className="bg-white rounded-4xl" key={post.id} post={post}>
+              <Box className="w-full flex-col">
+                <Box className="px-5 py-10 gap-3">
                   {post.media.length > 0 && (
                     <PostImage
                       className="rounded-lg size-32"
@@ -72,69 +109,37 @@ export default function Home() {
                     />
                   )}
                   <Box className="flex-col">
-                    <Post.Title className="text-green-primary" post={post} />
+                    <PostAuthor className="items-start">
+                      <PostAuthor.Avatar
+                        style={{ width: 50, height: 50 }}
+                        className="!rounded-lg"
+                        fallbackProps={{
+                          className: "!rounded-lg",
+                        }}
+                        author={post.author}
+                      />
+                      <Box className="flex-col">
+                        <Box className="flex-col">
+                          <PostAuthor.Name author={post.author} />
+                          <PostAuthor.Block author={post.author} />
+                        </Box>
+                      </Box>
+                    </PostAuthor>
+                    <Post.CreatedAt post={post} />
+                    <Post.Title post={post} />
                     <Post.Resume post={post} />
+                    <Text>Contato: {post.author?.telephone}</Text>
+                    <Post.Networks post={post} />
                   </Box>
                 </Box>
-                <Text className="text-sm text-gray-400">
-                  {`Postado por: ${post.employee?.name} (${post.employee?.position})`}
-                </Text>
-                <Separator className="w-full" />
-                <Button asChild variant={"link"}>
-                  <Link
-                    to={`/posts/condominium/${post.employee.condominiumId}`}
-                  >
-                    <Text className="text-xs ml-auto">
-                      + Publicações no Mural do Condomínio
-                    </Text>
-                  </Link>
-                </Button>
               </Box>
-            </Box>
-          </Post>
-        ))}
-        {userPosts.map((post) => (
-          <Post className="bg-white rounded-4xl" key={post.id} post={post}>
-            <Box className="w-full flex-col">
-              <Box className="px-5 py-10 gap-3">
-                {post.media.length > 0 && (
-                  <PostImage
-                    className="rounded-lg size-32"
-                    filename={post.media[0].filename}
-                    alt={post.title}
-                  />
-                )}
-                <Box className="flex-col">
-                  <PostAuthor className="items-start">
-                    <PostAuthor.Avatar
-                      style={{ width: 50, height: 50 }}
-                      className="!rounded-lg"
-                      fallbackProps={{
-                        className: "!rounded-lg",
-                      }}
-                      author={post.author}
-                    />
-                    <Box className="flex-col">
-                      <Box className="flex-col">
-                        <PostAuthor.Name author={post.author} />
-                        <PostAuthor.Block author={post.author} />
-                      </Box>
-                    </Box>
-                  </PostAuthor>
-                  <Post.CreatedAt post={post} />
-                  <Post.Title post={post} />
-                  <Post.Resume post={post} />
-                  <Text>Contato: {post.author?.telephone}</Text>
-                  <Post.Networks post={post} />
-                </Box>
-              </Box>
-            </Box>
-          </Post>
-        ))}
+            </Post>
+          ))}
+        </Box>
+        {/* Trigger element for infinite scroll */}
+        <Box ref={ref} className="h-10" />
+        {isFetchingNextPage && <Spinner />}
       </Box>
-      {/* Trigger element for infinite scroll */}
-      <Box ref={ref} className="h-10" />
-      {isFetchingNextPage && <Spinner />}
-    </Box>
+    </RouteContainer>
   );
 }

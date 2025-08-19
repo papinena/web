@@ -8,6 +8,7 @@ import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { ErrorMessage } from "~/components/error-message";
 import { useAdminNewPostStore } from "~/stores/admin-new-post";
 import { useAdminPost } from "~/hooks/useAdminPost";
+import { RouteContainer } from "~/components/route-container";
 
 export default function NewAdminPostPreview() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function NewAdminPostPreview() {
   const { createAdminPostMutation } = useAdminPost();
 
   if (!post) {
-    return <div>No post data found.</div>;
+    return <RouteContainer>No post data found.</RouteContainer>;
   }
 
   const onPublish = () => {
@@ -40,28 +41,30 @@ export default function NewAdminPostPreview() {
     })) ?? [];
 
   return (
-    <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
-      <ImageGallery media={media} buildUrl={(filename) => filename} />
-      <Text className="text-bold text-green-primary">{post.title}</Text>
-      <Text>{post.resume}</Text>
-      <Box className="flex gap-10 w-full">
-        <Button
-          className="bg-green-primary flex-1 cursor-pointer"
-          onClick={() => navigate(-1)}
-        >
-          Editar
-        </Button>
-        <ButtonWithSpinner
-          className="mx-0 hover:bg-black/90 flex-1 bg-green-primary"
-          loading={createAdminPostMutation.isPending}
-          onClick={onPublish}
-        >
-          Publicar
-        </ButtonWithSpinner>
+    <RouteContainer>
+      <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
+        <ImageGallery media={media} buildUrl={(filename) => filename} />
+        <Text className="text-bold text-green-primary">{post.title}</Text>
+        <Text>{post.resume}</Text>
+        <Box className="flex gap-10 w-full">
+          <Button
+            className="bg-green-primary flex-1 cursor-pointer"
+            onClick={() => navigate(-1)}
+          >
+            Editar
+          </Button>
+          <ButtonWithSpinner
+            className="mx-0 hover:bg-black/90 flex-1 bg-green-primary"
+            loading={createAdminPostMutation.isPending}
+            onClick={onPublish}
+          >
+            Publicar
+          </ButtonWithSpinner>
+        </Box>
+        <ErrorMessage show={createAdminPostMutation.isError}>
+          {(createAdminPostMutation.error as Error)?.message}
+        </ErrorMessage>
       </Box>
-      <ErrorMessage show={createAdminPostMutation.isError}>
-        {(createAdminPostMutation.error as Error)?.message}
-      </ErrorMessage>
-    </Box>
+    </RouteContainer>
   );
 }

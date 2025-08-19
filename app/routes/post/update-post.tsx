@@ -9,6 +9,7 @@ import { usePost } from "~/hooks/usePost";
 import type { CreatePostType } from "~/parsers/create-post";
 import { useNewPostStore } from "~/stores/new-post";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
+import { RouteContainer } from "~/components/route-container";
 
 export default function UpdatePost() {
   const { postId } = useParams();
@@ -25,25 +26,31 @@ export default function UpdatePost() {
 
   if (isLoading) {
     return (
-      <Box className="flex flex-1 items-center justify-center h-full">
-        <Spinner />
-      </Box>
+      <RouteContainer>
+        <Box className="flex flex-1 items-center justify-center h-full">
+          <Spinner />
+        </Box>
+      </RouteContainer>
     );
   }
 
   if (error) {
     return (
-      <Box className="flex items-center justify-center h-full">
-        <Text>Ocorreu um erro ao buscar os dados da publicação.</Text>
-      </Box>
+      <RouteContainer>
+        <Box className="flex items-center justify-center h-full">
+          <Text>Ocorreu um erro ao buscar os dados da publicação.</Text>
+        </Box>
+      </RouteContainer>
     );
   }
 
   if (!post) {
     return (
-      <Box className="flex items-center justify-center h-full">
-        <Text>Dados do post não foram encontrados</Text>
-      </Box>
+      <RouteContainer>
+        <Box className="flex items-center justify-center h-full">
+          <Text>Dados do post não foram encontrados</Text>
+        </Box>
+      </RouteContainer>
     );
   }
 
@@ -68,11 +75,13 @@ export default function UpdatePost() {
     : [];
 
   return (
-    <PostForm
-      onSave={onSave}
-      initialValues={initialValues}
-      isLoading={updatePostMutation.isPending}
-      previews={previews}
-    />
+    <RouteContainer>
+      <PostForm
+        onSave={onSave}
+        initialValues={initialValues}
+        isLoading={updatePostMutation.isPending}
+        previews={previews}
+      />
+    </RouteContainer>
   );
 }

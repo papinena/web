@@ -1,5 +1,4 @@
 import { Link, Outlet, redirect } from "react-router";
-import { Footer } from "~/components/footer";
 import { Box } from "~/components/ui/box";
 import { Header } from "~/components/header";
 import { authUtils } from "~/utils/auth";
@@ -63,9 +62,8 @@ export function App() {
   return (
     <Box className="min-h-dvh w-full h-full flex-col">
       <Header />
-      <Box className="bg-gray-200 flex-1 flex h-full w-full p-3 flex-col px-5 py-3 gap-3">
+      <Box className="flex-1 flex flex-col">
         <Outlet />
-        <Footer className="ml-auto" />
       </Box>
       <Box>
         <Box className="bg-white min-h-12 relative w-full items-center justify-center">

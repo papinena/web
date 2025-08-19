@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { useAdminNewPostStore } from "~/stores/admin-new-post";
 import { AdminPostForm } from "~/components/post/admin-post-form";
 import type { CreateAdminPostType } from "~/parsers/create-admin-post";
+import { RouteContainer } from "~/components/route-container";
 
 export default function NewAdminPost() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ export default function NewAdminPost() {
   const previews = post?.photos?.map((file) => URL.createObjectURL(file));
 
   return (
-    <AdminPostForm previews={previews} onSave={onSave} initialValues={post} />
+    <RouteContainer>
+      <AdminPostForm previews={previews} onSave={onSave} initialValues={post} />
+    </RouteContainer>
   );
 }

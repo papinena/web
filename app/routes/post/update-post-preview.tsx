@@ -11,6 +11,7 @@ import { usePost } from "~/hooks/usePost";
 import { useAuth } from "~/hooks/useAuth";
 import { Image } from "~/components/ui/image";
 import { PostAuthor } from "~/components/post-author";
+import { RouteContainer } from "~/components/route-container";
 
 function PostNetworks({ social }: { social?: string }) {
   if (!social) return null;
@@ -37,7 +38,7 @@ export default function UpdatePostPreview() {
   const { authData } = useAuth();
 
   if (!post) {
-    return <Box>No post data found.</Box>;
+    return <RouteContainer>No post data found.</RouteContainer>;
   }
 
   const onPublish = () => {
@@ -64,40 +65,42 @@ export default function UpdatePostPreview() {
     authData?.userType === "user" ? authData.user : authData?.employee;
 
   return (
-    <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
-      <ImageGallery media={media} buildUrl={(filename) => filename} />
-      {post.description && (
-        <MarkdownEditor markdown={post.description} readOnly />
-      )}
-      <Text className="font-bold">
-        Se interessou? Entre em contato direto com o seu vizinho.
-      </Text>
-      <Box className="flex-col">
-        <PostAuthor>
-          <PostAuthor.Avatar author={author} />
-          <Box className="flex-col">
-            <PostAuthor.Name author={author} />
-            <PostAuthor.Block author={author} />
+    <RouteContainer>
+      <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
+        <ImageGallery media={media} buildUrl={(filename) => filename} />
+        {post.description && (
+          <MarkdownEditor markdown={post.description} readOnly />
+        )}
+        <Text className="font-bold">
+          Se interessou? Entre em contato direto com o seu vizinho.
+        </Text>
+        <Box className="flex-col">
+          <PostAuthor>
+            <PostAuthor.Avatar author={author} />
+            <Box className="flex-col">
+              <PostAuthor.Name author={author} />
+              <PostAuthor.Block author={author} />
+            </Box>
+          </PostAuthor>
+          <PostNetworks social={`${post.instagram};${post.facebook}`} />
+          <Box className="flex items-center gap-1.5">
+            <Image src="/wpp-icon.svg" className="size-5" />
+            <Text>{author?.telephone}</Text>
           </Box>
-        </PostAuthor>
-        <PostNetworks social={`${post.instagram};${post.facebook}`} />
-        <Box className="flex items-center gap-1.5">
-          <Image src="/wpp-icon.svg" className="size-5" />
-          <Text>{author?.telephone}</Text>
         </Box>
+        <Box className="flex gap-4">
+          <Button onClick={() => navigate(-1)}>Voltar</Button>
+          <ButtonWithSpinner
+            loading={updatePostMutation.isPending}
+            onClick={onPublish}
+          >
+            Atualizar
+          </ButtonWithSpinner>
+        </Box>
+        <ErrorMessage show={updatePostMutation.isError}>
+          {(updatePostMutation.error as Error)?.message}
+        </ErrorMessage>
       </Box>
-      <Box className="flex gap-4">
-        <Button onClick={() => navigate(-1)}>Voltar</Button>
-        <ButtonWithSpinner
-          loading={updatePostMutation.isPending}
-          onClick={onPublish}
-        >
-          Atualizar
-        </ButtonWithSpinner>
-      </Box>
-      <ErrorMessage show={updatePostMutation.isError}>
-        {(updatePostMutation.error as Error)?.message}
-      </ErrorMessage>
-    </Box>
+    </RouteContainer>
   );
 }

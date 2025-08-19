@@ -9,6 +9,7 @@ import { Spinner } from "~/components/ui/spinner";
 import { Button } from "~/components/ui/button";
 import { PostImage } from "~/components/ui/post-image";
 import { usePost } from "~/hooks/usePost";
+import { RouteContainer } from "~/components/route-container";
 
 function Post({ post }: { post: UserPostAPIProps }) {
   const { deletePostMutation } = usePost();
@@ -67,28 +68,34 @@ export default function MyPublications() {
 
   if (isLoading) {
     return (
-      <Box className="flex items-center justify-center h-full">
-        <Spinner />
-      </Box>
+      <RouteContainer>
+        <Box className="flex items-center justify-center h-full">
+          <Spinner />
+        </Box>
+      </RouteContainer>
     );
   }
 
   if (error) {
     return (
-      <Box className="flex items-center justify-center h-full">
-        <Text>Ocorreu um erro ao buscar as publicações.</Text>
-      </Box>
+      <RouteContainer>
+        <Box className="flex items-center justify-center h-full">
+          <Text>Ocorreu um erro ao buscar as publicações.</Text>
+        </Box>
+      </RouteContainer>
     );
   }
 
   return (
-    <Box className="flex-1 bg-white rounded-lg p-3 flex-col gap-3">
-      <Text variant="title">Minhas publicações</Text>
-      <Box className="gap-4 flex-col">
-        {publications?.data.map((post: any) => (
-          <Post key={post.id} post={post} />
-        ))}
+    <RouteContainer>
+      <Box className="flex-1 bg-white rounded-lg p-3 flex-col gap-3">
+        <Text variant="title">Minhas publicações</Text>
+        <Box className="gap-4 flex-col">
+          {publications?.data.map((post: any) => (
+            <Post key={post.id} post={post} />
+          ))}
+        </Box>
       </Box>
-    </Box>
+    </RouteContainer>
   );
 }

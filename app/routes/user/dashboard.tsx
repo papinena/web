@@ -4,6 +4,7 @@ import { Image } from "~/components/ui/image";
 import { Text } from "~/components/ui/text";
 import { useAuth } from "~/hooks/useAuth";
 import { Widget } from "~/components/ui/widget";
+import { RouteContainer } from "~/components/route-container";
 
 export default function Dashboard() {
   const { authData } = useAuth();
@@ -13,55 +14,57 @@ export default function Dashboard() {
   const user = authData?.user;
 
   return (
-    <Box className="flex-1">
-      <Box className="flex-col gap-5">
-        <Widget>
-          <Widget.Title className="font-bold">
-            Seu painel de controle
-          </Widget.Title>
-          <Text>
-            Olá,
-            <strong className="text-blue-primary">@{user?.name}</strong>, por
-            aqui você pode acessar todas as informações relacionadas à sua
-            conta. :-)
-          </Text>
-        </Widget>
-        <Link to="/user/edit">
+    <RouteContainer>
+      <Box className="flex-1">
+        <Box className="flex-col gap-5">
           <Widget>
-            <Widget.Title
-              icon={<Image src="/image 113.svg" className={iconClassName} />}
-            >
-              Meu cadastro
+            <Widget.Title className="font-bold">
+              Seu painel de controle
             </Widget.Title>
-            <Text>Edite, remova ou inclua novas informações sobre você.</Text>
+            <Text>
+              Olá,
+              <strong className="text-blue-primary">@{user?.name}</strong>, por
+              aqui você pode acessar todas as informações relacionadas à sua
+              conta. :-)
+            </Text>
           </Widget>
-        </Link>
-        <Link to="/post/my-publications">
-          <Widget>
-            <Widget.Title
-              icon={<Image src="/image 112.svg" className={iconClassName} />}
-            >
-              Minhas publicações
-            </Widget.Title>
-            <Text>Visualize, altere ou remova as postagens.</Text>
-          </Widget>
-        </Link>{" "}
-        <Link to="/user/condominium">
-          <Widget>
-            <Widget.Title
-              icon={
-                <Image
-                  src="/dashboard-my-condominium.svg"
-                  className={iconClassName}
-                />
-              }
-            >
-              Meu condomínio
-            </Widget.Title>
-            <Text>Conheca seu condomínio</Text>
-          </Widget>
-        </Link>
+          <Link to="/user/edit">
+            <Widget>
+              <Widget.Title
+                icon={<Image src="/image 113.svg" className={iconClassName} />}
+              >
+                Meu cadastro
+              </Widget.Title>
+              <Text>Edite, remova ou inclua novas informações sobre você.</Text>
+            </Widget>
+          </Link>
+          <Link to="/post/my-publications">
+            <Widget>
+              <Widget.Title
+                icon={<Image src="/image 112.svg" className={iconClassName} />}
+              >
+                Minhas publicações
+              </Widget.Title>
+              <Text>Visualize, altere ou remova as postagens.</Text>
+            </Widget>
+          </Link>{" "}
+          <Link to="/user/condominium">
+            <Widget>
+              <Widget.Title
+                icon={
+                  <Image
+                    src="/dashboard-my-condominium.svg"
+                    className={iconClassName}
+                  />
+                }
+              >
+                Meu condomínio
+              </Widget.Title>
+              <Text>Conheca seu condomínio</Text>
+            </Widget>
+          </Link>
+        </Box>
       </Box>
-    </Box>
+    </RouteContainer>
   );
 }

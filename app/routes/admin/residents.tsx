@@ -10,6 +10,7 @@ import { getAdminResidents } from "~/services/get-admin-residents";
 import { Spinner } from "~/components/ui/spinner";
 import { useAuth } from "~/hooks/useAuth";
 import { updateResidentStatus } from "~/services/update-resident-status";
+import { RouteContainer } from "~/components/route-container";
 
 import { UserAvatar } from "~/components/user-avatar";
 
@@ -104,52 +105,62 @@ export default function Residents() {
   };
 
   if (residentsQuery.isLoading) {
-    return <Spinner />;
+    return (
+      <RouteContainer>
+        <Spinner />
+      </RouteContainer>
+    );
   }
 
   if (residentsQuery.isError) {
-    return <Text>Ocorreu um erro ao buscar os dados</Text>;
+    return (
+      <RouteContainer>
+        <Text>Ocorreu um erro ao buscar os dados</Text>
+      </RouteContainer>
+    );
   }
 
   const condominiumUsers = residentsQuery.data?.condominiumUsers.data;
 
   return (
-    <Box className="flex-1">
-      <Box className="bg-white w-full gap-5 flex-col px-1.5 pt-1.5 pb-14 rounded-lg">
-        <Text className="text-lg font-semibold">
-          Gerenciamento de moradores
-        </Text>
-        {condominiumUsers?.map((resident) => (
-          <Box className="flex-col" key={resident.id}>
-            <Resident
-              avatar={resident.avatar}
-              name={`${resident.name} ${resident.last_name}`}
-              block={resident.block}
-              apartment={resident.apartment}
-              onSelect={() => handleSelectResident(resident.id)}
-              isSelected={selectedResidents.includes(resident.id)}
-              is_approved={resident.is_approved}
-            />
-            <Separator className="my-4" />
+    <RouteContainer>
+      <Box className="flex-1">
+        <Box className="bg-white w-full gap-5 flex-col px-1.5 pt-1.5 pb-14 rounded-lg">
+          <Text className="text-lg font-semibold">
+            Gerenciamento de moradores
+          </Text>
+          {condominiumUsers?.map((resident) => (
+            <Box className="flex-col" key={resident.id}>
+              <Resident
+                avatar={resident.avatar}
+                name={`${resident.name} ${resident.last_name}`}
+                block={resident.block}
+                apartment={resident.apartment}
+                onSelect={() => handleSelectResident(resident.id)}
+                isSelected={selectedResidents.includes(resident.id)}
+                is_approved={resident.is_approved}
+              />
+              <Separator className="my-4" />
+            </Box>
+          ))}
+          <Box className="w-full gap-12 mt-3 space-between">
+            <Button
+              className={cn("flex-1 bg-green-primary hover:bg-green-primary/90")}
+              onClick={() => handleUpdateStatus(false)}
+              disabled={isPending}
+            >
+              <Text className="text-white">Reprovar</Text>
+            </Button>
+            <Button
+              className={cn("flex-1 bg-green-primary hover:bg-green-primary/90")}
+              onClick={() => handleUpdateStatus(true)}
+              disabled={isPending}
+            >
+              <Text className="text-white">Aprovar</Text>
+            </Button>
           </Box>
-        ))}
-        <Box className="w-full gap-12 mt-3 space-between">
-          <Button
-            className={cn("flex-1 bg-green-primary hover:bg-green-primary/90")}
-            onClick={() => handleUpdateStatus(false)}
-            disabled={isPending}
-          >
-            <Text className="text-white">Reprovar</Text>
-          </Button>
-          <Button
-            className={cn("flex-1 bg-green-primary hover:bg-green-primary/90")}
-            onClick={() => handleUpdateStatus(true)}
-            disabled={isPending}
-          >
-            <Text className="text-white">Aprovar</Text>
-          </Button>
         </Box>
       </Box>
-    </Box>
+    </RouteContainer>
   );
 }

@@ -14,6 +14,7 @@ import { Separator } from "~/components/ui/separator";
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { PostImage } from "~/components/ui/post-image";
+import { RouteContainer } from "~/components/route-container";
 
 function RecommendedPost({ post }: { post: UserPostAPIProps }) {
   return (
@@ -61,11 +62,11 @@ export default function Post({ params }: Route.ComponentProps) {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <RouteContainer>Loading...</RouteContainer>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <RouteContainer>Error: {error.message}</RouteContainer>;
   }
 
   const post = data?.post.data;
@@ -74,40 +75,42 @@ export default function Post({ params }: Route.ComponentProps) {
   const recommendedPosts = data?.recommendedPosts;
 
   return (
-    <Box className="flex-1 flex-col gap-5">
-      <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
-        {hasMedia && <ImageGallery media={post.media} buildUrl={buildUrl} />}
-        {post?.description && (
-          <MarkdownEditor markdown={post.description} readOnly />
-        )}
-        <Text className="font-bold">
-          Se interessou? Entre em contato direto com o seu vizinho.
-        </Text>
-        <Box className="flex-col">
-          <PostAuthor>
-            <PostAuthor.Avatar author={author} />
-            <Box className="flex-col">
-              <PostAuthor.Name author={author} />
-              <PostAuthor.Block author={author} />
+    <RouteContainer>
+      <Box className="flex-1 flex-col gap-5">
+        <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
+          {hasMedia && <ImageGallery media={post.media} buildUrl={buildUrl} />}
+          {post?.description && (
+            <MarkdownEditor markdown={post.description} readOnly />
+          )}
+          <Text className="font-bold">
+            Se interessou? Entre em contato direto com o seu vizinho.
+          </Text>
+          <Box className="flex-col">
+            <PostAuthor>
+              <PostAuthor.Avatar author={author} />
+              <Box className="flex-col">
+                <PostAuthor.Name author={author} />
+                <PostAuthor.Block author={author} />
+              </Box>
+            </PostAuthor>
+            <PostNetworks social={post?.social} />
+            <Box className="flex items-center gap-1.5">
+              <Image src="/wpp-icon.svg" className="size-5" />
+              <Text>{author?.telephone}</Text>
             </Box>
-          </PostAuthor>
-          <PostNetworks social={post?.social} />
-          <Box className="flex items-center gap-1.5">
-            <Image src="/wpp-icon.svg" className="size-5" />
-            <Text>{author?.telephone}</Text>
           </Box>
         </Box>
-      </Box>
-      <Box className="flex-col p-3 bg-white rounded-lg gap-5">
-        <Box className="flex-col">
-          {recommendedPosts?.data.map((r) => (
-            <RecommendedPost post={r} />
-          ))}
+        <Box className="flex-col p-3 bg-white rounded-lg gap-5">
+          <Box className="flex-col">
+            {recommendedPosts?.data.map((r) => (
+              <RecommendedPost post={r} />
+            ))}
+          </Box>
+          <Button asChild variant={"link"} className="ml-auto underline">
+            <Link to="#">Veja mais publicações relacionadas</Link>
+          </Button>
         </Box>
-        <Button asChild variant={"link"} className="ml-auto underline">
-          <Link to="#">Veja mais publicações relacionadas</Link>
-        </Button>
       </Box>
-    </Box>
+    </RouteContainer>
   );
 }

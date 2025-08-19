@@ -9,6 +9,7 @@ import { MarkdownEditor } from "~/components/markdown-editor";
 import { Text } from "~/components/ui/text";
 import { Image } from "~/components/ui/image";
 import { PostAuthor } from "~/components/post-author";
+import { RouteContainer } from "~/components/route-container";
 
 function PostNetworks({ social }: { social?: string }) {
   if (!social) return;
@@ -38,25 +39,27 @@ export default function Post({ params }: Route.ComponentProps) {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <RouteContainer>Loading...</RouteContainer>;
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <RouteContainer>Error: {error.message}</RouteContainer>;
   }
 
   const post = data?.post.data;
   const hasMedia = post?.media && post.media.length > 0;
 
   return (
-    <Box className="flex-1 flex-col gap-5">
-      <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
-        {hasMedia && <ImageGallery media={post.media} buildUrl={buildUrl} />}
-        <Text className="text-green-primary font-bold">{post?.resume}</Text>
-        {post?.description && (
-          <MarkdownEditor markdown={post.description} readOnly />
-        )}
+    <RouteContainer>
+      <Box className="flex-1 flex-col gap-5">
+        <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
+          {hasMedia && <ImageGallery media={post.media} buildUrl={buildUrl} />}
+          <Text className="text-green-primary font-bold">{post?.resume}</Text>
+          {post?.description && (
+            <MarkdownEditor markdown={post.description} readOnly />
+          )}
+        </Box>
       </Box>
-    </Box>
+    </RouteContainer>
   );
 }
