@@ -51,18 +51,15 @@ export function AdminHamburguerMenu({
             <TextMenuItem to="/admin/edit">Meu Cadastro</TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <TextMenuItem to="/post/my-publications">
+            <TextMenuItem to="/post/admin/my-publications">
               Minhas publicações
             </TextMenuItem>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem to="/my-condominium">Meu condomínio</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <IconMenuItem to="/help" iconSrc="/image 129.svg">
-              Ajudar
+              Ajuda
             </IconMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
@@ -74,8 +71,9 @@ export function AdminHamburguerMenu({
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Image src="/image 136.svg" />
-          <MenuItemText>Gestão do condomínio</MenuItemText>
+          <IconMenuItem to="/admin/dashboard" iconSrc="/image 136.svg">
+            Gestão do condomínio
+          </IconMenuItem>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

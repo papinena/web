@@ -78,6 +78,11 @@ export function UserHamburguerMenu({
           <DropdownMenuItem>
             <TextMenuItem to="/contact">Fale com o Vizis</TextMenuItem>
           </DropdownMenuItem>
+          <DropdownMenuItem>
+            <IconMenuItem to="/admin/dashboard" iconSrc="/image 136.svg">
+              Gestão do condomínio
+            </IconMenuItem>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

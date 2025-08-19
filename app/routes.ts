@@ -25,6 +25,7 @@ export default [
         route("/:postId", "./routes/post/admin/index.tsx"),
         route("create", "./routes/post/admin/new-post.tsx"),
         route("preview", "./routes/post/admin/preview.tsx"),
+        route("/my-publications", "./routes/post/admin/my-publications.tsx"),
       ]),
     ]),
     ...prefix("/posts", [
