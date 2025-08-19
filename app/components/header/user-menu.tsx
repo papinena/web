@@ -61,10 +61,15 @@ export function UserHamburguerMenu({
             <TextMenuItem to="/user/condominium">Meu condomínio</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+        <DropdownMenuItem>
+          <IconMenuItem to="/posts/condominium" iconSrc="/image 119.svg">
+            Mural do condomínio
+          </IconMenuItem>
+        </DropdownMenuItem>
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <IconMenuItem to="/help" iconSrc="/image 129.svg">
-              Ajudar
+              Ajuda
             </IconMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
