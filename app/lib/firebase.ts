@@ -101,6 +101,7 @@ class FirebaseService {
 
     if (!this.isSupported()) {
       console.log("Firebase Messaging is not supported in this browser.");
+      return null;
     }
 
     try {
@@ -127,6 +128,7 @@ class FirebaseService {
 
     if (!this.isSupported()) {
       console.log("Firebase Messaging is not supported in this browser.");
+      return null;
     }
 
     try {
