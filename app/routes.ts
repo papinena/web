@@ -12,6 +12,7 @@ export default [
     route("reset", "./routes/password/reset.tsx"),
   ]),
   layout("./routes/app.tsx", [
+    route("/search", "./routes/search.tsx"),
     index("./routes/index.tsx"),
     route("/faq", "./routes/faq.tsx"),
     ...prefix("/post", [
