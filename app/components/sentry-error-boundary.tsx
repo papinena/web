@@ -1,21 +1,24 @@
-import { Link, useRouteError } from "react-router";
+import { useNavigate, useRouteError } from "react-router";
 import * as Sentry from "@sentry/react";
 import { useEffect } from "react";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
-import { authUtils } from "~/utils/auth";
+import { useAuthStore } from "~/stores/auth";
 
 export function ErrorBoundary() {
   const error = useRouteError();
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     Sentry.captureException(error);
   }, [error]);
 
-  const handleGoToLogin = () => {
-    authUtils.clearAuth();
-  };
+  function onClick() {
+    logout();
+    navigate("/login");
+  }
 
   const errorMessage =
     error instanceof Error ? error.message : "Um erro inesperado aconteceu.";
@@ -27,10 +30,8 @@ export function ErrorBoundary() {
       <pre className="mt-4 text-center p-2 bg-red-100 rounded text-wrap break-words">
         {errorMessage}
       </pre>
-      <Button asChild variant="destructive" className="mt-4">
-        <Link to="/login" onClick={handleGoToLogin}>
-          Ir para o Login
-        </Link>
+      <Button variant="destructive" onClick={onClick} className="mt-4">
+        Ir para o Login
       </Button>
     </Box>
   );
