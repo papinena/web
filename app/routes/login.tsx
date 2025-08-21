@@ -17,6 +17,8 @@ import { useAuth } from "~/hooks/useAuth";
 import { Separator } from "~/components/ui/separator";
 import { firebaseService } from "~/lib/firebase";
 import { saveFcmToken } from "~/services/save-fcm-token";
+import { RouteContainer } from "~/components/route-container";
+import { BoxWithImage } from "~/components/register/box-with-image";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -72,88 +74,83 @@ export default function Login() {
   };
 
   return (
-    <Box className="flex-1 h-full w-full">
-      <Box className="flex flex-1 flex-col">
-        <Box className="relative items-start w-full z-1">
-          <Image className="w-full" src="/Group 55.svg" />
-        </Box>
-        <Box className="p-5 text-center flex-col gap-5 flex rounded-2xl -mt-16 flex-1 z-1 bg-white h-full w-full">
-          <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
+    <RouteContainer>
+      <BoxWithImage images={<Image className="w-full" src="/Group 55.svg" />}>
+        <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-5 w-full"
-          >
-            <Box className="flex flex-col gap-1">
-              <Input
-                placeholder="Email"
-                {...register("email")}
-                className={errors.email ? "border-red-500" : ""}
-              />
-              <ErrorMessage show={!!errors.email}>
-                {errors.email?.message}
-              </ErrorMessage>
-            </Box>
-
-            <Box className="flex flex-col gap-1">
-              <PasswordInput
-                placeholder="Senha"
-                {...register("password")}
-                className={errors.password ? "border-red-500" : ""}
-              />
-              <ErrorMessage show={!!errors.password}>
-                {errors.password?.message}
-              </ErrorMessage>
-            </Box>
-
-            <ErrorMessage show={!!formError}>{formError}</ErrorMessage>
-
-            <Button
-              type="submit"
-              className="bg-blue-primary max-w-72 mx-auto w-full"
-              disabled={loginMutation.isPending}
-            >
-              {loginMutation.isPending ? (
-                <Box className="flex items-center gap-2">
-                  <Spinner size="sm" />
-                  <Text>Entrando...</Text>
-                </Box>
-              ) : (
-                "Entrar"
-              )}
-            </Button>
-            <Button
-              asChild
-              variant={"link"}
-              className="mx-auto border-blue-primary cursor-pointer"
-            >
-              <Link to="/password/forgot">
-                <Text className="text-wrap text-gray-400">
-                  Esqueci minha senha
-                </Text>
-              </Link>
-            </Button>
-          </form>
-          <Box className="w-full flex-1 items-center gap-3 max-w-76 mx-auto">
-            <Separator className="flex-1" />
-            <Text>ou</Text>
-            <Separator className="flex-1" />
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-5 w-full"
+        >
+          <Box className="flex flex-col gap-1">
+            <Input
+              placeholder="Email"
+              {...register("email")}
+              className={errors.email ? "border-red-500" : ""}
+            />
+            <ErrorMessage show={!!errors.email}>
+              {errors.email?.message}
+            </ErrorMessage>
           </Box>
 
+          <Box className="flex flex-col gap-1">
+            <PasswordInput
+              placeholder="Senha"
+              {...register("password")}
+              className={errors.password ? "border-red-500" : ""}
+            />
+            <ErrorMessage show={!!errors.password}>
+              {errors.password?.message}
+            </ErrorMessage>
+          </Box>
+
+          <ErrorMessage show={!!formError}>{formError}</ErrorMessage>
+
+          <Button
+            type="submit"
+            className="bg-blue-primary max-w-72 mx-auto w-full"
+            disabled={loginMutation.isPending}
+          >
+            {loginMutation.isPending ? (
+              <Box className="flex items-center gap-2">
+                <Spinner size="sm" />
+                <Text>Entrando...</Text>
+              </Box>
+            ) : (
+              "Entrar"
+            )}
+          </Button>
           <Button
             asChild
-            variant={"outline"}
-            className="max-w-72 mx-auto py-8 border-blue-primary cursor-pointer"
+            variant={"link"}
+            className="mx-auto border-blue-primary cursor-pointer"
           >
-            <Link to="/register/user">
-              <Text className="text-wrap text-blue-primary">
-                Quer um condomínio mais eficiente? Saiba como o Vizis facilita a
-                sua vida!
+            <Link to="/password/forgot">
+              <Text className="text-wrap text-gray-400">
+                Esqueci minha senha
               </Text>
             </Link>
           </Button>
+        </form>
+        <Box className="w-full flex-1 items-center gap-3 max-w-76 mx-auto">
+          <Separator className="flex-1" />
+          <Text>ou</Text>
+          <Separator className="flex-1" />
         </Box>
-      </Box>
-    </Box>
+
+        <Button
+          asChild
+          variant={"outline"}
+          className="max-w-72 mx-auto py-8 border-blue-primary cursor-pointer"
+        >
+          <Link to="/register/user">
+            <Text className="text-wrap text-blue-primary">
+              Quer um condomínio mais eficiente? Saiba como o Vizis facilita a
+              sua vida!
+            </Text>
+          </Link>
+        </Button>
+      </BoxWithImage>
+    </RouteContainer>
   );
 }
