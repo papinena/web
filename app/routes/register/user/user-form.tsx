@@ -42,8 +42,6 @@ export default function UserForm() {
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
 
-  console.log(methods.formState.errors);
-
   return (
     <FormProvider {...methods}>
       <Form onSubmit={onSave}>

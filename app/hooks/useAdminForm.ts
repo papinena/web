@@ -1,33 +1,33 @@
-import { useState, type ChangeEvent } from 'react';
-import { type CreateAdminType } from '~/parsers/create-admin';
+import { useState, type ChangeEvent } from "react";
+import { type CreateAdminType } from "~/parsers/create-admin";
 
 const defaultValues = {
   employee: {
-    name: '',
-    lastName: '',
-    telephone: '',
-    position: '',
+    name: "",
+    lastName: "",
+    telephone: "",
+    position: "",
     isResident: undefined,
-    email: '',
-    confirmEmail: '',
-    password: '',
-    confirmPassword: '',
-    photo: '',
+    email: "",
+    confirmEmail: "",
+    password: "",
+    confirmPassword: "",
+    photo: "",
   },
   condominium: {
-    name: '',
+    name: "",
   },
   condominiumAdministrator: {
-    name: '',
+    name: "",
   },
-  employees: [{ name: '', email: '' }],
+  employees: [],
 } as CreateAdminType;
 
-const STORAGE_KEY = 'admin-form-fields';
+const STORAGE_KEY = "admin-form-fields";
 
 export function useAdminForm() {
   const [fields, setFields] = useState<typeof defaultValues>(() => {
-    if (typeof window === 'undefined') return defaultValues;
+    if (typeof window === "undefined") return defaultValues;
     const storedValues = localStorage.getItem(STORAGE_KEY);
     if (!storedValues) return defaultValues;
 

@@ -24,8 +24,7 @@ import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { ErrorMessage } from "~/components/error-message";
-import { useNavigate } from "react-router";
-import { RouteContainer } from "~/components/route-container";
+import { Form, useNavigate } from "react-router";
 
 function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
   const mutation = useMutation({
@@ -100,71 +99,72 @@ export default function AdminForm() {
 
   return (
     <FormProvider {...methods}>
-      <Box className="flex-1 flex-col w-full">
-        <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-green-primary border-2">
-          <Box className="flex-col gap-5 mx-auto">
-            <Box className="flex-col gap-5">
-              <Text variant="title">Cadastro da Administração</Text>
-              <Box className="gap-5">
-                <Box className="flex-col rounded-2xl">
-                  <UploadPhotoInput
-                    preview={preview}
-                    handleFileChange={handleFileChange}
-                  />
-                </Box>
-                <Box className="flex-col max-w-64 flex-1 gap-3">
-                  <NameInput
-                    label="Nome"
-                    {...methods.register("employee.name", { required: true })}
-                    error={methods.formState.errors.employee?.name?.message}
-                  />
-                  <InputWithLabel
-                    label="Sobrenome"
-                    error={methods.formState.errors.employee?.lastName?.message}
-                    {...methods.register("employee.lastName", {
-                      required: true,
-                    })}
-                  />
+      <Form onSubmit={methods.handleSubmit(onSave)}>
+        <Box className="flex-1 flex-col w-full">
+          <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-green-primary border-2">
+            <Box className="flex-col gap-5 mx-auto">
+              <Box className="flex-col gap-5">
+                <Text variant="title">Cadastro da Administração</Text>
+                <Box className="gap-5">
+                  <Box className="flex-col rounded-2xl">
+                    <UploadPhotoInput
+                      preview={preview}
+                      handleFileChange={handleFileChange}
+                    />
+                  </Box>
+                  <Box className="flex-col max-w-64 flex-1 gap-3">
+                    <NameInput
+                      label="Nome"
+                      {...methods.register("employee.name", { required: true })}
+                      error={methods.formState.errors.employee?.name?.message}
+                    />
+                    <InputWithLabel
+                      label="Sobrenome"
+                      error={
+                        methods.formState.errors.employee?.lastName?.message
+                      }
+                      {...methods.register("employee.lastName", {
+                        required: true,
+                      })}
+                    />
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-            <BasicInformation />
-            <CondominiumInformation />
-            <EmployeesInformation />
-            <SectionContainer>
-              <SectionTitle>
-                Inclua informações úteis para o condomínio
-              </SectionTitle>
-              <Item className="w-full">
-                <Textarea
-                  className="min-h-20"
-                  {...methods.register("condominium.usefulInformation")}
-                />
-              </Item>
-              <Text className="text-sm text-gray-400">
-                Ex: bombeiro, polícia, eletricista do prédio, local para
-                descarte de pilhas/baterias e remédios, horário da adm, etc
-              </Text>
-            </SectionContainer>
-            {hasErrors && (
-              <Box className="border-red-400 text-center p-3 border rounded-lg">
-                <Text className="text-red-400">
-                  Os campos em vermelho são de preenchimento obrigatório.
+              <BasicInformation />
+              <CondominiumInformation />
+              <EmployeesInformation />
+              <SectionContainer>
+                <SectionTitle>
+                  Inclua informações úteis para o condomínio
+                </SectionTitle>
+                <Item className="w-full">
+                  <Textarea
+                    className="min-h-20"
+                    {...methods.register("condominium.usefulInformation")}
+                  />
+                </Item>
+                <Text className="text-sm text-gray-400">
+                  Ex: bombeiro, polícia, eletricista do prédio, local para
+                  descarte de pilhas/baterias e remédios, horário da adm, etc
                 </Text>
-              </Box>
-            )}
-            <ErrorMessage className="mx-auto" show={mutation.isError}>
-              {(mutation.error as Error)?.message}
-            </ErrorMessage>
-            <ButtonWithSpinner
-              loading={mutation.isPending}
-              onClick={methods.handleSubmit(onSave)}
-            >
-              Enviar
-            </ButtonWithSpinner>
+              </SectionContainer>
+              {hasErrors && (
+                <Box className="border-red-400 text-center p-3 border rounded-lg">
+                  <Text className="text-red-400">
+                    Os campos em vermelho são de preenchimento obrigatório.
+                  </Text>
+                </Box>
+              )}
+              <ErrorMessage className="mx-auto" show={mutation.isError}>
+                {(mutation.error as Error)?.message}
+              </ErrorMessage>
+              <ButtonWithSpinner type="submit" loading={mutation.isPending}>
+                Enviar
+              </ButtonWithSpinner>
+            </Box>
           </Box>
         </Box>
-      </Box>
+      </Form>
     </FormProvider>
   );
 }
