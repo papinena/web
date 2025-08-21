@@ -14,7 +14,7 @@ export default function AdminIndex() {
             src="/Group 152.svg"
           />
         </Box>
-        <Box className="p-5 text-center flex-col gap-5 flex rounded-2xl -mt-16 flex-1 z-1 bg-white h-full w-full">
+        <Box className="p-5 text-center flex-col gap-5 flex rounded-2xl -mt-32 flex-1 z-1 bg-white h-full w-full">
           <Text className="text-green-primary">
             Olá, <strong>Administração do Condomínio XXX</strong>, sejam
             bem-vindos(as) ao Vizis!

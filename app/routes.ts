@@ -44,17 +44,19 @@ export default [
       route("residents", "./routes/admin/residents.tsx"),
     ]),
     ...prefix("register", [
-      ...prefix("user", [
-        route("/", "./routes/register/user/user.tsx"),
-        route("/form", "./routes/register/user/user-form.tsx"),
-        route("/submitted", "./routes/register/user/submitted.tsx"),
+      layout("./routes/register/layout.tsx", [
+        ...prefix("user", [
+          route("/", "./routes/register/user/user.tsx"),
+          route("/form", "./routes/register/user/user-form.tsx"),
+          route("/submitted", "./routes/register/user/submitted.tsx"),
+        ]),
+        ...prefix("admin", [
+          route("/", "./routes/register/admin/admin.tsx"),
+          route("/form", "./routes/register/admin/admin-form.tsx"),
+          route("/submitted", "./routes/register/admin/submitted.tsx"),
+        ]),
+        route("error", "./routes/register/error.tsx"),
       ]),
-      ...prefix("admin", [
-        route("/", "./routes/register/admin/admin.tsx"),
-        route("/form", "./routes/register/admin/admin-form.tsx"),
-        route("/submitted", "./routes/register/admin/submitted.tsx"),
-      ]),
-      route("error", "./routes/register/error.tsx"),
     ]),
   ]),
 ] satisfies RouteConfig;

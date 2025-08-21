@@ -1,15 +1,9 @@
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
 import { Text } from "~/components/ui/text";
-import { useAuth } from "~/hooks/useAuth";
-import { Button } from "./ui/button";
-import { PlusIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 export function Footer({ className }: { className?: string }) {
-  const { isAuthenticated } = useAuth();
-  const isAuth = isAuthenticated();
-
   return (
     <Box
       className={cn(
