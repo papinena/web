@@ -1,6 +1,5 @@
 import { Box } from "./ui/box";
 import { type ComponentProps, type ReactNode } from "react";
-import { Footer } from "./footer";
 import { cn } from "~/lib/utils";
 
 interface RouteContainerProps extends ComponentProps<typeof Box> {
@@ -21,7 +20,6 @@ export function RouteContainer({
       {...props}
     >
       {children}
-      <Footer className="ml-auto" />
     </Box>
   );
 }
