@@ -7,7 +7,7 @@ import { Text } from "~/components/ui/text";
 export default function AdminIndex() {
   return (
     <BoxWithImage
-      imageContainerClassName="-mt-12"
+      imageContainerClassName="-mt-18"
       images={<Image className="w-full" src="/Group 55.svg" />}
     >
       <Text className="text-green-primary font-bold">

@@ -75,7 +75,10 @@ export default function Login() {
 
   return (
     <RouteContainer>
-      <BoxWithImage images={<Image className="w-full" src="/Group 55.svg" />}>
+      <BoxWithImage
+        imageContainerClassName="-mt-18"
+        images={<Image className="w-full" src="/Group 55.svg" />}
+      >
         <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
 
         <form

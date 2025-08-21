@@ -5,16 +5,8 @@ import { Text } from "~/components/ui/text";
 export default function Submitted() {
   return (
     <BoxWithImage
-      images={
-        <>
-          {" "}
-          <Image className="w-full" src="/register-admin-image-card.svg" />
-          <Image
-            className="absolute left-32 top-18 h-8 w-8"
-            src="/Group 152.svg"
-          />
-        </>
-      }
+      imageContainerClassName="-mt-18"
+      images={<Image className="w-full" src="/Group 55.svg" />}
     >
       <Text className="text-blue-primary font-bold">
         Cadastro realizado com sucesso!
