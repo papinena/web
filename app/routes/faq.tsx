@@ -68,10 +68,7 @@ export default function Faq() {
             Se a sua dúvida não estiver por aqui, não tem problema, é só falar
             com a gente!
           </Text>
-          <Text>
-            📱 WhatsApp: (21) 98742-5005 📧 E-mail: atendimento@vizis.com.br
-            Será um prazer ajudar você. 💚
-          </Text>
+          <Text>📧 E-mail: email@vizis.co Será um prazer ajudar você. 💚</Text>
         </Box>
         <FaqAccordion />
       </Box>

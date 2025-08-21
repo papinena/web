@@ -141,6 +141,10 @@ export default function AdminForm() {
                   {...methods.register("condominium.usefulInformation")}
                 />
               </Item>
+              <Text className="text-sm text-gray-400">
+                Ex: bombeiro, polícia, eletricista do prédio, local para
+                descarte de pilhas/baterias e remédios, horário da adm, etc
+              </Text>
             </SectionContainer>
             {hasErrors && (
               <Box className="border-red-400 text-center p-3 border rounded-lg">

@@ -9,6 +9,7 @@ import { Item } from "../register/item";
 import { TelephoneInput } from "../register/telephone-input";
 import { EmailInput } from "../register/email-input";
 import type { CreateAdminType } from "~/parsers/create-admin";
+import { Text } from "../ui/text";
 
 export function CondominiumInformation() {
   const {
@@ -19,7 +20,7 @@ export function CondominiumInformation() {
   return (
     <SectionContainer>
       <SectionTitle>Sobre o condomínio</SectionTitle>
-      <Box className="w-full flex flex-wrap gap-2">
+      <Box className="w-full flex flex-wrap gap-3">
         <Item className="flex-1">
           <InputWithLabel
             label="Nome do condomínio"
@@ -34,7 +35,7 @@ export function CondominiumInformation() {
             error={errors.condominiumAdministrator?.name?.message}
           />
           <InputWithLabel
-            label="Contato"
+            label="Nome do contato"
             {...register("condominiumAdministrator.contact")}
             error={errors.condominiumAdministrator?.contact?.message}
           />
@@ -66,6 +67,10 @@ export function CondominiumInformation() {
               {...register("condominiumAdministrator.counsil")}
               error={errors.condominiumAdministrator?.counsil?.message}
             />
+            <Text className="text-sm text-gray-400">
+              Inclua o nome dos membros do conselho e ao lado o apartamento de
+              cada um
+            </Text>
           </Box>
         </Item>
         <Item>
