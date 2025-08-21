@@ -15,7 +15,9 @@ import { saveUnauthenticatedFcmToken } from "~/services/save-unauthenticated-fcm
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
 
-const defaultValues: UserFormType = {
+const defaultValues: Omit<UserFormType, "condominiumId"> & {
+  condominiumId?: number;
+} = {
   name: "",
   lastName: "",
   apartment: "",
@@ -24,7 +26,6 @@ const defaultValues: UserFormType = {
   confirmEmail: "",
   password: "",
   confirmPassword: "",
-  condominiumId: "",
   tags: [],
   photo: "",
 };
@@ -75,7 +76,7 @@ export function useRegisterUser({
     resolver: zodResolver(CreateUserSchema),
   });
 
-  const { mutate, error, isPending } = useMutation({
+  const { mutate, isError, error, isPending } = useMutation({
     mutationFn: async (data: UserFormType) => {
       let filename = "";
       let tokenData,
@@ -101,7 +102,7 @@ export function useRegisterUser({
 
       const dataToSave = {
         ...data,
-        birthDate: DateFormatter.parse(data.birthDate ?? ""),
+        birthDate: data.birthDate ? DateFormatter.parse(data.birthDate) : null,
         photo: filename,
         tags: selectedTheme,
       };
@@ -151,7 +152,9 @@ export function useRegisterUser({
   return {
     methods,
     onSave,
+    error,
     isPending,
+    isError,
     selectedTheme,
     handleSelectedTheme,
     preview,

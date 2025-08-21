@@ -4,8 +4,6 @@ import { Image } from "~/components/ui/image";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
-import type { ReactNode } from "react";
-import { cn } from "~/lib/utils";
 import { Checkbox } from "~/components/ui/checkbox";
 import { MarkdownEditor } from "~/components/markdown-editor";
 import { useForm, FormProvider, Controller } from "react-hook-form";
@@ -15,9 +13,7 @@ import { useUserNewPost } from "~/hooks/useUserNewPost";
 import { ThemeItem } from "~/components/theme-item";
 import { useState } from "react";
 import { ErrorMessage } from "~/components/error-message";
-import { XIcon } from "lucide-react";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
-import { Button } from "~/components/ui/button";
 
 import { Item } from "~/components/post/item";
 import { ItemLabel } from "~/components/post/item-label";

@@ -34,7 +34,7 @@ export class UserMapper {
    */
   static toAPI(
     user: Partial<Omit<UserUIProps, "birthDate">> & {
-      birthDate?: Date;
+      birthDate?: Date | null;
       password?: string;
       photo?: string;
       avatar?: string;
@@ -43,7 +43,7 @@ export class UserMapper {
     return {
       name: user.name,
       last_name: user.lastName,
-      birth_date: (user.birthDate ?? new Date()).toISOString(),
+      birth_date: user.birthDate?.toISOString(),
       telephone: user.telephone,
       email: user.email,
       block: user.block,

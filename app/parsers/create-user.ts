@@ -9,12 +9,16 @@ export const CreateUserSchema = z
     birthDate: z.string().optional(),
     photo: z.string().optional(),
     telephone: z.string().min(1, "Telefone é obrigatório"),
-    email: z.email("Email inválido").transform(val => val.toLowerCase()),
-confirmEmail: z.email("Email inválido").transform(val => val.toLowerCase()),
+    email: z.email("Email inválido").transform((val) => val.toLowerCase()),
+    confirmEmail: z
+      .email("Email inválido")
+      .transform((val) => val.toLowerCase()),
     password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
     confirmPassword: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
     condominiumId: z.string().min(1, "Condomínio é obrigatório"),
-    tags: z.array(z.object({ id: z.number(), label: z.string() })).optional(),
+    tags: z
+      .array(z.object({ id: z.number(), label: z.string() }))
+      .min(3, { error: "Mínimo de 3 temas" }),
   })
   .refine((data) => data.email === data.confirmEmail, {
     message: "Emails não conferem",

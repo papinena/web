@@ -5,7 +5,7 @@ import type { ApiResponse } from "~/interfaces/api-response";
 import type { UserAPIProps } from "~/interfaces/user";
 
 export async function createUser(
-  data: Omit<CreateUserType, "birthDate"> & { birthDate: Date }
+  data: Omit<CreateUserType, "birthDate"> & { birthDate: Date | null }
 ) {
   const { BASE_URL } = api();
   const body = JSON.stringify({
