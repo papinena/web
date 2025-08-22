@@ -128,7 +128,6 @@ export default function Home() {
                     <Post.CreatedAt post={post} />
                     <Post.Title post={post} />
                     <Post.Resume post={post} />
-                    <Text>Contato: {post.author?.telephone}</Text>
                     <Post.Networks post={post} />
                   </Box>
                 </Box>

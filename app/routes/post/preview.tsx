@@ -1,6 +1,4 @@
 import { Box } from "~/components/ui/box";
-import { headingsPlugin, listsPlugin, MDXEditor } from "@mdxeditor/editor";
-import "@mdxeditor/editor/style.css";
 import { ImageGallery } from "~/components/image-gallery";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
@@ -14,20 +12,28 @@ import { useAuth } from "~/hooks/useAuth";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
 import { Image } from "~/components/ui/image";
 import { RouteContainer } from "~/components/route-container";
+import { Post } from "~/components/post";
+import { MarkdownEditor } from "~/components/markdown-editor";
 
 function PostNetworks({ social }: { social?: string }) {
   if (!social) return null;
   const [ig, fb] = social.split(";");
+  if (!ig && !fb) return null;
+
   return (
     <Box className="flex-col">
-      <Box className="flex items-center gap-1.5">
-        <Image src="/instagram.svg" className="size-5" />
-        <Text>{ig}</Text>
-      </Box>
-      <Box className="flex items-center gap-1.5">
-        <Image src="/facebook.svg" className="size-5" />
-        <Text>{fb}</Text>
-      </Box>
+      {ig && (
+        <Box className="flex items-center gap-1.5">
+          <Image src="/instagram.svg" className="size-5" />
+          <Text>{ig}</Text>
+        </Box>
+      )}
+      {fb && (
+        <Box className="flex items-center gap-1.5">
+          <Image src="/facebook.svg" className="size-5" />
+          <Text>{fb}</Text>
+        </Box>
+      )}
     </Box>
   );
 }
@@ -69,14 +75,17 @@ export default function NewPostPreview() {
     <RouteContainer>
       <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
         <ImageGallery media={media} buildUrl={(filename) => filename} />
-        {post.description && (
-          <MDXEditor
-            plugins={[headingsPlugin(), listsPlugin()]}
-            markdown={post.description}
-            readOnly
-            contentEditableClassName="prose"
-          />
-        )}
+        <Box className="flex-col gap-2">
+          <Post.Title post={post} />
+          <Post.Resume post={post} />
+          {post.description && (
+            <MarkdownEditor
+              contentEditableClassName="!px-0 !pt-0"
+              markdown={post.description}
+              readOnly
+            />
+          )}
+        </Box>
         <Text className="font-bold">
           Se interessou? Entre em contato direto com o seu vizinho.
         </Text>

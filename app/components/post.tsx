@@ -10,12 +10,14 @@ import { Image } from "./ui/image";
 // --- Sub-components ---
 
 interface SubComponentProps {
-  post: UserPostAPIProps | EmployeePostAPIProps;
   className?: string;
   format?: string;
 }
 
-function PostTitle({ post, className }: SubComponentProps) {
+function PostTitle({
+  post,
+  className,
+}: SubComponentProps & { post: { title: string } }) {
   return (
     <Text className={cn("text-md font-bold text-blue-primary", className)}>
       {post.title}
@@ -23,30 +25,48 @@ function PostTitle({ post, className }: SubComponentProps) {
   );
 }
 
-function PostResume({ post, className }: SubComponentProps) {
+function PostResume({
+  post,
+  className,
+}: SubComponentProps & { post: { resume: string } }) {
   return <Text className={cn("", className)}>{post.resume}</Text>;
 }
 
-function PostCreatedAt({ post, className, format }: SubComponentProps) {
+function PostCreatedAt({
+  post,
+  className,
+  format,
+}: SubComponentProps & { post: { createdAt: Date | string } }) {
   const formattedDate = DateFormatter.format(post.createdAt, format);
   return (
     <Text className={cn("text-gray-300", className)}>{formattedDate}</Text>
   );
 }
 
-function PostNetworks({ post, className }: SubComponentProps) {
+function PostNetworks({
+  post,
+  className,
+}: SubComponentProps & { post: { social: string } }) {
   if (!post.social) return null;
+
   const [ig, fb] = post.social.split(";");
+
+  if (!ig && !fb) return null;
+
   return (
     <Box className={cn("flex-col", className)}>
-      <Box className="flex items-center gap-1.5">
-        <Image src="/instagram.svg" className="size-5" />
-        <Text>{ig}</Text>
-      </Box>
-      <Box className="flex items-center gap-1.5">
-        <Image src="/facebook.svg" className="size-5" />
-        <Text>{fb}</Text>
-      </Box>
+      {ig && (
+        <Box className="flex items-center gap-1.5">
+          <Image src="/instagram.svg" className="size-5" />
+          <Text>{ig}</Text>
+        </Box>
+      )}
+      {ig && (
+        <Box className="flex items-center gap-1.5">
+          <Image src="/facebook.svg" className="size-5" />
+          <Text>{fb}</Text>
+        </Box>
+      )}
     </Box>
   );
 }
