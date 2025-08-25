@@ -5,24 +5,24 @@ import { useImageReadToken } from "~/hooks/useImageReadToken";
 interface AvatarProps {
   size?: number; // px
   className?: string;
+  onClick(): void;
 }
 
-export function Avatar({ size = 40, className = "" }: AvatarProps) {
+export function Avatar({ onClick, size = 40, className = "" }: AvatarProps) {
   const { authData } = useAuth();
   const { buildUrl } = useImageReadToken();
 
   const data =
     authData?.userType === "user" ? authData.user : authData?.employee;
 
-  console.log(data);
-
   return (
     <AvatarUI
+      onClick={onClick}
       className={className}
       style={{ width: size, height: size }}
       aria-label={data.name || data.email || "Avatar"}
     >
-      <AvatarImage src={buildUrl(data.avatar)} />
+      <AvatarImage className="object-cover" src={buildUrl(data.avatar)} />
       <AvatarFallback>{data.email[0]}</AvatarFallback>
     </AvatarUI>
   );

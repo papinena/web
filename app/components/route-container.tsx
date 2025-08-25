@@ -14,7 +14,7 @@ export function RouteContainer({
   return (
     <Box
       className={cn(
-        "bg-gray-200 flex-1 flex flex-col h-full w-full p-3 px-5 py-3 gap-3",
+        "bg-gray-200 flex-1 flex flex-col h-full w-full p-3 px-5 pb-10 pt-3 gap-3",
         className
       )}
       {...props}

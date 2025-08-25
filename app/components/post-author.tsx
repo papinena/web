@@ -37,14 +37,18 @@ function PostAuthorAvatar({
       aria-label={author?.name || "Avatar"}
       className={className}
     >
-      <AvatarImage src={buildUrl(author?.avatar ?? "")} {...imageProps} />
+      <AvatarImage
+        className="object-cover"
+        src={buildUrl(author?.avatar ?? "")}
+        {...imageProps}
+      />
       <AvatarFallback {...fallbackProps}>{author?.name?.[0]}</AvatarFallback>
     </UIAvatar>
   );
 }
 
 function PostAuthorName({ author, className }: SubComponentProps) {
-  return <Text className={className}>{author?.name}</Text>;
+  return <Text className={cn("font-bold", className)}>{author?.name}</Text>;
 }
 
 function PostAuthorBlock({ author, className }: SubComponentProps) {

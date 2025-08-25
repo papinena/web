@@ -46,7 +46,7 @@ export default function UserForm() {
     <FormProvider {...methods}>
       <Form onSubmit={onSave}>
         <Box className="flex-1 flex-col w-full">
-          <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-blue-primary border-2">
+          <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg">
             <Box className="flex-col gap-5 mx-auto">
               <Box className="flex-col gap-5">
                 <Text variant="title">Seu cadastro</Text>
@@ -59,7 +59,7 @@ export default function UserForm() {
                   </Box>
                   <Box className="flex-col max-w-64 flex-1 gap-3">
                     <NameInput
-                      label="Nome"
+                      label="Nome*"
                       {...methods.register("name", { required: true })}
                       error={methods.formState.errors.name?.message}
                     />
@@ -108,13 +108,14 @@ export default function UserForm() {
                       error={methods.formState.errors.birthDate?.message}
                     />
                     <TelephoneInput
-                      label="Telefone / Whatsapp"
+                      label="Telefone / Whatsapp*"
                       {...methods.register("telephone")}
                       error={methods.formState.errors.telephone?.message}
                     />
                   </Item>
                   <Item>
                     <EmailInput
+                      label="Email*"
                       error={methods.formState.errors.email?.message}
                       {...methods.register("email")}
                     />
@@ -186,7 +187,11 @@ export default function UserForm() {
               <ErrorMessage className="mx-auto" show={isError}>
                 {(error as Error)?.message}
               </ErrorMessage>
-              <ButtonWithSpinner loading={isPending} type="submit">
+              <ButtonWithSpinner
+                className="bg-blue-primary hover:bg-blue-primary/90"
+                loading={isPending}
+                type="submit"
+              >
                 {isPending ? "Enviando..." : "Enviar"}
               </ButtonWithSpinner>
             </Box>

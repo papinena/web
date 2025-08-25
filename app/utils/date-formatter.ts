@@ -3,6 +3,7 @@ import {
   formatDistanceToNow as formatDistanceToNowFns,
   parse as parseFns,
   parseISO,
+  type FormatDistanceFnOptions,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -19,10 +20,7 @@ export class DateFormatter {
    * @param formatStr - The desired output format string.
    * @returns The formatted date string.
    */
-  static format(
-    date: string | Date,
-    formatStr: string = "dd/MM/yyyy"
-  ): string {
+  static format(date: string | Date, formatStr: string = "dd/MM/yyyy"): string {
     const dateObj = typeof date === "string" ? parseISO(date) : date;
     return formatFns(dateObj, formatStr, { locale: ptBR });
   }
@@ -34,10 +32,7 @@ export class DateFormatter {
    * @param formatStr - The format of the date string.
    * @returns The parsed Date object.
    */
-  static parse(
-    dateString: string,
-    formatStr: string = "dd/MM/yyyy"
-  ): Date {
+  static parse(dateString: string, formatStr: string = "dd/MM/yyyy"): Date {
     return parseFns(dateString, formatStr, new Date(), { locale: ptBR });
   }
 
@@ -47,8 +42,15 @@ export class DateFormatter {
    * @param date - The date to compare (ISO string or Date object).
    * @returns A string representing the distance to now.
    */
-  static formatDistanceToNow(date: string | Date): string {
+  static formatDistanceToNow(
+    date: string | Date,
+    options?: FormatDistanceFnOptions
+  ): string {
     const dateObj = typeof date === "string" ? parseISO(date) : date;
-    return formatDistanceToNowFns(dateObj, { addSuffix: true, locale: ptBR });
+    return formatDistanceToNowFns(dateObj, {
+      addSuffix: true,
+      locale: ptBR,
+      ...options,
+    });
   }
 }

@@ -13,7 +13,7 @@ export function NameInput({
   label?: string;
   error?: string;
 } & InputHTMLAttributes<HTMLInputElement>) {
-  const _label = `${label ?? "Nome"}${error ? "*" : ""}`;
+  const _label = `${label ?? "Nome"}`;
   return (
     <Box className="flex-col gap-1.5 flex-1">
       <Label className={cn("flex-1", error ? "text-red-400" : "")}>

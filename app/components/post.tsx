@@ -6,6 +6,7 @@ import { DateFormatter } from "~/utils/date-formatter";
 import { cn } from "~/lib/utils";
 import type { EmployeePostAPIProps, UserPostAPIProps } from "~/interfaces/post";
 import { Image } from "./ui/image";
+import { formatPostNetworks } from "~/utils/get-user-networks";
 
 // --- Sub-components ---
 
@@ -49,7 +50,7 @@ function PostNetworks({
 }: SubComponentProps & { post: { social: string } }) {
   if (!post.social) return null;
 
-  const [ig, fb] = post.social.split(";");
+  const [ig, fb] = formatPostNetworks(post.social);
 
   if (!ig && !fb) return null;
 

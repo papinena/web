@@ -34,7 +34,7 @@ export function BasicInformation({
             {...register("employee.birthDate")}
           />
           <TelephoneInput
-            label="Telefone / Whatsapp"
+            label="Telefone / Whatsapp*"
             error={errors.employee?.telephone?.message}
             {...register("employee.telephone")}
           />
@@ -78,6 +78,7 @@ export function BasicInformation({
         {!isEditing && (
           <Item>
             <EmailInput
+              label="Email*"
               error={errors.employee?.email?.message}
               {...register("employee.email")}
             />

@@ -58,7 +58,11 @@ export function PostImage({ filename, alt, className }: PostImageProps) {
   const { buildUrl } = useImageReadToken();
   return (
     <PostImageRoot className={className}>
-      <PostImageSrc src={buildUrl(filename)} alt={alt} />
+      <PostImageSrc
+        className="object-cover"
+        src={buildUrl(filename)}
+        alt={alt}
+      />
       <PostImageFallback />
     </PostImageRoot>
   );

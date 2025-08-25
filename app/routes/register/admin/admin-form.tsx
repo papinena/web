@@ -101,7 +101,7 @@ export default function AdminForm() {
     <FormProvider {...methods}>
       <Form onSubmit={methods.handleSubmit(onSave)}>
         <Box className="flex-1 flex-col w-full">
-          <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-green-primary border-2">
+          <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg">
             <Box className="flex-col gap-5 mx-auto">
               <Box className="flex-col gap-5">
                 <Text variant="title">Cadastro da Administração</Text>
@@ -114,7 +114,7 @@ export default function AdminForm() {
                   </Box>
                   <Box className="flex-col max-w-64 flex-1 gap-3">
                     <NameInput
-                      label="Nome"
+                      label="Nome*"
                       {...methods.register("employee.name", { required: true })}
                       error={methods.formState.errors.employee?.name?.message}
                     />
@@ -158,7 +158,11 @@ export default function AdminForm() {
               <ErrorMessage className="mx-auto" show={mutation.isError}>
                 {(mutation.error as Error)?.message}
               </ErrorMessage>
-              <ButtonWithSpinner type="submit" loading={mutation.isPending}>
+              <ButtonWithSpinner
+                className="bg-blue-primary hover:bg-blue-primary/90"
+                type="submit"
+                loading={mutation.isPending}
+              >
                 Enviar
               </ButtonWithSpinner>
             </Box>

@@ -30,6 +30,8 @@ import { useImageReadToken } from "~/hooks/useImageReadToken";
 import { RouteContainer } from "~/components/route-container";
 
 import { useAuth } from "~/hooks/useAuth";
+import { useToastStore } from "~/stores/toast";
+import { Form } from "react-router";
 
 function useAdminEdit() {
   const { setAuthEmployeeData } = useAuth();
@@ -38,6 +40,7 @@ function useAdminEdit() {
     queryKey: ["admin-edit-info"],
     queryFn: getAdminEditInfo,
   });
+  const addToast = useToastStore((s) => s.addToast);
 
   const mutation = useMutation({
     mutationKey: ["UPDATE_ADMIN"],
@@ -104,9 +107,9 @@ function useAdminEdit() {
       }
     },
     onSuccess: (data) => {
-      console.log(data.data.employee.data);
       queryClient.invalidateQueries({ queryKey: ["admin-edit-info"] });
       setAuthEmployeeData(data.data.employee.data);
+      addToast({ title: "Sucesso!", description: "Informações salvas" });
     },
   });
 
@@ -195,68 +198,69 @@ export default function EditAdmin() {
   return (
     <RouteContainer>
       <FormProvider {...methods}>
-        <Box className="flex-1 flex-col w-full">
-          <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-green-primary border-2">
-            <Box className="flex-col gap-5 mx-auto">
-              <Box className="flex-col gap-5">
-                <Text variant="title">Cadastro Administração</Text>
-                <Box className="gap-5">
-                  <Box className="flex-col rounded-2xl">
-                    <UploadPhotoInput
-                      preview={preview}
-                      handleFileChange={handleFileChange}
-                    />
-                  </Box>
-                  <Box className="flex-col max-w-64 flex-1">
-                    <Text className="text-2xl font-bold">{employee?.name}</Text>
-                    {isSyndic ? (
-                      <Text className="text-green-primary">
-                        Síndico com Condomínio {condominium?.name}
-                      </Text>
-                    ) : (
-                      <Text className="text-green-primary">
-                        Condomínio {condominium?.name}
-                      </Text>
-                    )}
-                  </Box>
-                </Box>
-              </Box>
-              <BasicInformation isEditing />
-              {isSyndic && (
-                <>
-                  <CondominiumInformation />
-                  <SectionContainer>
-                    <SectionTitle>
-                      Inclua informações úteis para o condomínio
-                    </SectionTitle>
-                    <Item className="w-full">
-                      <Textarea
-                        className="min-h-20"
-                        {...methods.register("condominium.usefulInformation")}
+        <Form onSubmit={methods.handleSubmit(onSave)}>
+          <Box className="flex-1 flex-col w-full">
+            <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg border-green-primary border-2">
+              <Box className="flex-col gap-5 mx-auto">
+                <Box className="flex-col gap-5">
+                  <Text variant="title">Cadastro Administração</Text>
+                  <Box className="gap-5">
+                    <Box className="flex-col rounded-2xl">
+                      <UploadPhotoInput
+                        preview={preview}
+                        handleFileChange={handleFileChange}
                       />
-                    </Item>
-                  </SectionContainer>
-                </>
-              )}
-              {hasErrors && (
-                <Box className="border-red-400 text-center p-3 border rounded-lg">
-                  <Text className="text-red-400">
-                    Os campos em vermelho são de preenchimento obrigatório.
-                  </Text>
+                    </Box>
+                    <Box className="flex-col max-w-64 flex-1">
+                      <Text className="text-2xl font-bold">
+                        {employee?.name}
+                      </Text>
+                      {isSyndic ? (
+                        <Text className="text-green-primary">
+                          Síndico com Condomínio {condominium?.name}
+                        </Text>
+                      ) : (
+                        <Text className="text-green-primary">
+                          Condomínio {condominium?.name}
+                        </Text>
+                      )}
+                    </Box>
+                  </Box>
                 </Box>
-              )}
-              <ErrorMessage className="mx-auto" show={mutation.isError}>
-                {(mutation.error as Error)?.message}
-              </ErrorMessage>
-              <ButtonWithSpinner
-                loading={mutation.isPending}
-                onClick={methods.handleSubmit(onSave)}
-              >
-                Salvar Alterações
-              </ButtonWithSpinner>
+                <BasicInformation isEditing />
+                {isSyndic && (
+                  <>
+                    <CondominiumInformation />
+                    <SectionContainer>
+                      <SectionTitle>
+                        Inclua informações úteis para o condomínio
+                      </SectionTitle>
+                      <Item className="w-full">
+                        <Textarea
+                          className="min-h-20"
+                          {...methods.register("condominium.usefulInformation")}
+                        />
+                      </Item>
+                    </SectionContainer>
+                  </>
+                )}
+                {hasErrors && (
+                  <Box className="border-red-400 text-center p-3 border rounded-lg">
+                    <Text className="text-red-400">
+                      Os campos em vermelho são de preenchimento obrigatório.
+                    </Text>
+                  </Box>
+                )}
+                <ErrorMessage className="mx-auto" show={mutation.isError}>
+                  {(mutation.error as Error)?.message}
+                </ErrorMessage>
+                <ButtonWithSpinner type="submit" loading={mutation.isPending}>
+                  Salvar Alterações
+                </ButtonWithSpinner>
+              </Box>
             </Box>
           </Box>
-        </Box>
+        </Form>
       </FormProvider>
     </RouteContainer>
   );

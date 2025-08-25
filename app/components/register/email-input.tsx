@@ -13,7 +13,7 @@ export function EmailInput({
   label?: string;
   error?: string;
 }) {
-  const _label = `${label ?? "Email"}${error ? "*" : ""}`;
+  const _label = `${label ?? "Email"}`;
 
   return (
     <Box className="flex-col gap-1.5 flex-1">

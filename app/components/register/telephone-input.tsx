@@ -28,7 +28,7 @@ export const TelephoneInput = forwardRef<
   HTMLInputElement,
   InputHTMLAttributes<HTMLInputElement> & { label?: string; error?: string }
 >(({ label, error, onChange, ...props }, ref) => {
-  const _label = `${label ?? "Telefone"}${error ? "*" : ""}`;
+  const _label = `${label ?? "Telefone"}`;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Format the input value

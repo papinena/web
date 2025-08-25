@@ -5,10 +5,16 @@ import { Avatar } from "./avatar";
 import { SearchInput } from "./search-input";
 import { AdminHamburguerMenu } from "./admin-menu";
 import { UserHamburguerMenu } from "./user-menu";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export function Header() {
   const { isAuthenticated, isUser } = useAuth();
+  const navigate = useNavigate();
+
+  function onAvatarClick() {
+    const url = isUser() ? "/user/edit" : "/admin/edit";
+    navigate(url);
+  }
 
   return (
     <Box className="w-full px-3 min-h-12 bg-white flex items-center justify-between">
@@ -22,7 +28,11 @@ export function Header() {
             <SearchInput placeholder="Buscar..." />
           </Box>
           <Box className="items-center justify-center">
-            <Avatar size={32} className="ml-auto" />
+            <Avatar
+              onClick={onAvatarClick}
+              size={32}
+              className="ml-auto cursor-pointer"
+            />
             {isUser() ? <UserHamburguerMenu /> : <AdminHamburguerMenu />}
           </Box>
         </>

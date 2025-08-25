@@ -11,6 +11,7 @@ import { Separator } from "~/components/ui/separator";
 import { Button } from "~/components/ui/button";
 import { Link } from "react-router";
 import { RouteContainer } from "~/components/route-container";
+import { formatPostNetworks } from "~/utils/get-user-networks";
 
 export default function Home() {
   const { useListPosts } = usePost();
@@ -61,18 +62,18 @@ export default function Home() {
         <Box className="gap-4 flex-col">
           {adminPosts.map((post) => (
             <Post
-              className="border-2 border-green-primary bg-white rounded-4xl"
+              className="border-2 border-green-primary bg-white rounded-2xl"
               key={post.id}
               post={post}
               to={`/post/admin/${post.id}`}
             >
               <Box className="w-full flex-col">
-                <Box className="px-5 flex-col pt-2 pb-1.5 gap-3">
+                <Box className="p-3 flex-col gap-3">
                   <Post.CreatedAt format="Pp" post={post} />
                   <Box className="gap-3">
                     {post.media.length > 0 && (
                       <PostImage
-                        className="rounded-lg size-32"
+                        className="rounded-2xl size-32"
                         filename={post.media[0].filename}
                         alt={post.title}
                       />
@@ -98,12 +99,12 @@ export default function Home() {
             </Post>
           ))}
           {userPosts.map((post) => (
-            <Post className="bg-white rounded-4xl" key={post.id} post={post}>
+            <Post className="bg-white rounded-2xl" key={post.id} post={post}>
               <Box className="w-full flex-col">
-                <Box className="px-5 py-10 gap-3">
+                <Box className="p-3 gap-3">
                   {post.media.length > 0 && (
                     <PostImage
-                      className="rounded-lg size-32"
+                      className="rounded-2xl size-32"
                       filename={post.media[0].filename}
                       alt={post.title}
                     />
@@ -112,7 +113,7 @@ export default function Home() {
                     <PostAuthor className="items-start">
                       <PostAuthor.Avatar
                         style={{ width: 50, height: 50 }}
-                        className="!rounded-lg"
+                        className="!rounded-lg mb-1.5"
                         fallbackProps={{
                           className: "!rounded-lg",
                         }}
@@ -120,15 +121,28 @@ export default function Home() {
                       />
                       <Box className="flex-col">
                         <Box className="flex-col">
-                          <PostAuthor.Name author={post.author} />
-                          <PostAuthor.Block author={post.author} />
+                          <PostAuthor.Name
+                            className="text-sm"
+                            author={post.author}
+                          />
+                          {post.author.block && (
+                            <PostAuthor.Block
+                              className="text-xs"
+                              author={post.author}
+                            />
+                          )}
                         </Box>
                       </Box>
                     </PostAuthor>
-                    <Post.CreatedAt post={post} />
+                    <Post.CreatedAt
+                      className="font-normal"
+                      post={{ createdAt: post.createdAt }}
+                    />
                     <Post.Title post={post} />
                     <Post.Resume post={post} />
-                    <Post.Networks post={post} />
+                    {formatPostNetworks(post.social).map((n) => (
+                      <Text>{n}</Text>
+                    ))}
                   </Box>
                 </Box>
               </Box>

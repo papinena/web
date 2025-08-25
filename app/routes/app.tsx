@@ -65,20 +65,18 @@ export function App() {
       <Box className="flex-1 flex flex-col">
         <Outlet />
       </Box>
-      <Box>
-        <Box className="bg-white min-h-12 relative w-full items-center justify-center">
-          {isAuth && (
-            <Button
-              asChild
-              variant={"outline"}
-              className="size-14 absolute rounded-full bottom-3"
-            >
-              <Link to={to ?? null}>
-                <PlusIcon color={"#94C56F"} className="size-14" />
-              </Link>
-            </Button>
-          )}
-        </Box>
+      <Box className="bg-white min-h-12 relative w-full items-center justify-center">
+        {isAuth && (
+          <Button
+            asChild
+            variant={"outline"}
+            className="size-14 absolute rounded-full bottom-3"
+          >
+            <Link to={to ?? null}>
+              <PlusIcon color={"#94C56F"} className="size-14" />
+            </Link>
+          </Button>
+        )}
       </Box>
     </Box>
   );
