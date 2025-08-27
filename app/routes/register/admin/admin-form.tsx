@@ -79,10 +79,20 @@ function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
 
 export default function AdminForm() {
   const navigate = useNavigate();
+  const {
+    fields,
+    resetLocalStorageFields,
+    setFields,
+    preview,
+    file,
+    handleFileChange,
+  } = useAdminForm();
   const { mutation } = useRegisterAdmin({
-    onSuccess: () => navigate("/register/admin/submitted"),
+    onSuccess: () => {
+      navigate("/register/admin/submitted");
+      resetLocalStorageFields();
+    },
   });
-  const { fields, setFields, preview, file, handleFileChange } = useAdminForm();
   const methods = useForm({
     defaultValues: {
       ...fields,

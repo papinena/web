@@ -58,5 +58,16 @@ export function useAdminForm() {
     setLocalStorageFields(f);
   }
 
-  return { fields, setFields: _setFields, preview, file, handleFileChange };
+  function resetLocalStorageFields() {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  return {
+    fields,
+    setFields: _setFields,
+    preview,
+    file,
+    handleFileChange,
+    resetLocalStorageFields,
+  };
 }

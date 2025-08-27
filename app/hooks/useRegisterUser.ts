@@ -149,6 +149,10 @@ export function useRegisterUser({
     mutate(dataToSave);
   });
 
+  function resetLocalStorageFields() {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
   return {
     methods,
     onSave,
@@ -159,5 +163,6 @@ export function useRegisterUser({
     handleSelectedTheme,
     preview,
     handleFileChange,
+    resetLocalStorageFields,
   };
 }
