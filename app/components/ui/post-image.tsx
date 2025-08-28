@@ -56,13 +56,13 @@ interface PostImageProps {
 
 export function PostImage({ filename, alt, className }: PostImageProps) {
   const { buildUrl } = useImageReadToken();
+  const isExternalUrl =
+    filename?.startsWith("http") || filename?.startsWith("https");
+  const avatarUrl = isExternalUrl ? filename : buildUrl(filename);
+
   return (
     <PostImageRoot className={className}>
-      <PostImageSrc
-        className="object-cover"
-        src={buildUrl(filename)}
-        alt={alt}
-      />
+      <PostImageSrc className="object-cover" src={avatarUrl} alt={alt} />
       <PostImageFallback />
     </PostImageRoot>
   );

@@ -20,6 +20,8 @@ export function ErrorBoundary() {
     navigate("/login");
   }
 
+  console.error(error);
+
   const errorMessage =
     error instanceof Error ? error.message : "Um erro inesperado aconteceu.";
 

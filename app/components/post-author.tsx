@@ -31,17 +31,21 @@ function PostAuthorAvatar({
   fallbackProps,
 }: AvatarProps) {
   const { buildUrl } = useImageReadToken();
+  const isExternalUrl =
+    author?.avatar?.startsWith("http") || author?.avatar?.startsWith("https");
+  const avatarUrl = author?.avatar
+    ? isExternalUrl
+      ? author.avatar
+      : buildUrl(author?.avatar)
+    : undefined;
+
   return (
     <UIAvatar
       style={{ width: 40, height: 40, ...style }}
       aria-label={author?.name || "Avatar"}
       className={className}
     >
-      <AvatarImage
-        className="object-cover"
-        src={buildUrl(author?.avatar ?? "")}
-        {...imageProps}
-      />
+      <AvatarImage className="object-cover" src={avatarUrl} {...imageProps} />
       <AvatarFallback {...fallbackProps}>{author?.name?.[0]}</AvatarFallback>
     </UIAvatar>
   );

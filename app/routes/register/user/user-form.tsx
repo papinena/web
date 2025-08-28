@@ -96,7 +96,7 @@ export default function UserForm() {
                       error={methods.formState.errors.name?.message}
                     />
                     <InputWithLabel
-                      label="Sobrenome"
+                      label="Sobrenome*"
                       error={methods.formState.errors.lastName?.message}
                       {...methods.register("lastName", { required: true })}
                     />
