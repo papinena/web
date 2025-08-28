@@ -48,6 +48,10 @@ export default [
         ...prefix("user", [
           route("/", "./routes/register/user/user.tsx"),
           route("/form", "./routes/register/user/user-form.tsx"),
+          route(
+            "/social/form",
+            "./routes/register/user/user-google-social-form.tsx"
+          ),
           route("/submitted", "./routes/register/user/submitted.tsx"),
         ]),
         ...prefix("admin", [

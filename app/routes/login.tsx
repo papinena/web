@@ -19,6 +19,8 @@ import { firebaseService } from "~/lib/firebase";
 import { saveFcmToken } from "~/services/save-fcm-token";
 import { RouteContainer } from "~/components/route-container";
 import { BoxWithImage } from "~/components/register/box-with-image";
+import { useGoogleLogin } from "@react-oauth/google";
+import { socialLogin } from "~/services/social-login";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -65,6 +67,55 @@ export default function Login() {
     },
     onError: (error) => {
       setFormError(error.message);
+    },
+  });
+
+  const socialLoginMutation = useMutation({
+    mutationFn: async (token: string) => {
+      const { error, data } = await socialLogin(token);
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    onSuccess: async (result: any) => {
+      if (result.error) {
+        setFormError(result.error.message);
+      } else {
+        if (result.isNew) {
+          return navigate("/register/user/social/form", {
+            state: { ...result.profile },
+          });
+        }
+        // Store authentication data in localStorage and update state
+        authLogin(result);
+        const token = await firebaseService.setup();
+
+        if (token) {
+          await saveFcmToken(token);
+        }
+
+        if (result.userType === "employee") {
+          return navigate("/admin/dashboard");
+        }
+
+        if (result.userType === "user") {
+          return navigate("/");
+        }
+
+        // Redirect to dashboard or home page
+        // You can change this to the appropriate route
+      }
+    },
+    onError: (error) => {
+      setFormError(error.message);
+    },
+  });
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      socialLoginMutation.mutate(tokenResponse.access_token);
+    },
+    onError: () => {
+      setFormError("Failed to login with Google");
     },
   });
 
@@ -139,6 +190,25 @@ export default function Login() {
           <Separator className="flex-1" />
           <Text>ou</Text>
           <Separator className="flex-1" />
+        </Box>
+
+        <Box className="max-w-72 mx-auto w-full">
+          <Button
+            type="button"
+            variant={"outline"}
+            className="w-full"
+            onClick={() => googleLogin()}
+            disabled={socialLoginMutation.isPending}
+          >
+            {socialLoginMutation.isPending ? (
+              <Box className="flex items-center gap-2">
+                <Spinner size="sm" />
+                <Text>Entrando...</Text>
+              </Box>
+            ) : (
+              "Entrar com Google"
+            )}
+          </Button>
         </Box>
 
         <Button

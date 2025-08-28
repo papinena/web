@@ -8,6 +8,8 @@ import { TanstackQueryProvider } from "./query-client";
 import "~/utils/sentry";
 import { App } from "./routes/app";
 import { ToastManager } from "./components/toast-manager";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 export { ErrorBoundary } from "./components/sentry-error-boundary";
 
 export const links: Route.LinksFunction = () => [
@@ -50,9 +52,11 @@ export default function Root() {
   }
 
   return (
-    <TanstackQueryProvider>
-      <App />
-      <ToastManager />
-    </TanstackQueryProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <TanstackQueryProvider>
+        <App />
+        <ToastManager />
+      </TanstackQueryProvider>
+    </GoogleOAuthProvider>
   );
 }

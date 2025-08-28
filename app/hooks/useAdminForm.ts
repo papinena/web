@@ -20,7 +20,7 @@ const defaultValues = {
   condominiumAdministrator: {
     name: "",
   },
-  employees: [],
+  employees: undefined,
 } as CreateAdminType;
 
 const STORAGE_KEY = "admin-form-fields";

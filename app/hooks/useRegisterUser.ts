@@ -33,18 +33,24 @@ const defaultValues: Omit<UserFormType, "condominiumId"> & {
 const STORAGE_KEY = "user-form-fields";
 
 export function useRegisterUser({
+  initialValues,
   onSuccess,
-}: { onSuccess?: () => void } = {}) {
+}: {
+  onSuccess?: () => void;
+  initialValues?: Partial<typeof defaultValues>;
+} = {}) {
   const [fields, setFields] = useState<UserFormType>(() => {
     if (typeof window === "undefined") return defaultValues;
     const storedValues = localStorage.getItem(STORAGE_KEY);
-    if (!storedValues) return defaultValues;
+    if (!storedValues) return { ...defaultValues, ...initialValues };
 
     return JSON.parse(storedValues);
   });
 
   const [selectedTheme, setSelectedTheme] = useState<Tag[]>([]);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(
+    initialValues?.photo ?? null
+  );
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {

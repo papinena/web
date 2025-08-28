@@ -15,6 +15,9 @@ export function Avatar({ onClick, size = 40, className = "" }: AvatarProps) {
   const data =
     authData?.userType === "user" ? authData.user : authData?.employee;
 
+  const isExternalUrl = data.avatar?.startsWith("http");
+  const avatarUrl = isExternalUrl ? data.avatar : buildUrl(data.avatar);
+
   return (
     <AvatarUI
       onClick={onClick}
@@ -22,7 +25,7 @@ export function Avatar({ onClick, size = 40, className = "" }: AvatarProps) {
       style={{ width: size, height: size }}
       aria-label={data.name || data.email || "Avatar"}
     >
-      <AvatarImage className="object-cover" src={buildUrl(data.avatar)} />
+      <AvatarImage className="object-cover" src={avatarUrl} />
       <AvatarFallback>{data.email[0]}</AvatarFallback>
     </AvatarUI>
   );

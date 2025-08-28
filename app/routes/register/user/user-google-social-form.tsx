@@ -3,11 +3,7 @@ import { Box } from "~/components/ui/box";
 import { Controller, FormProvider } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
 import { NameInput } from "~/components/register/name-input";
-import { UploadPhotoInput } from "~/components/register/upload-photo-input";
-import { EmailInput } from "~/components/register/email-input";
-import { PasswordInput } from "~/components/register/password-input";
 import { TelephoneInput } from "~/components/register/telephone-input";
-import { useRegisterUser } from "~/hooks/useRegisterUser";
 import { Item } from "~/components/register/item";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
@@ -18,61 +14,52 @@ import { BirthDateInput } from "~/components/birth-date-input";
 import type { Condominium } from "~/interfaces/condominium";
 import type { Tag } from "~/interfaces/tag";
 import { ThemeItem } from "~/components/theme-item";
-import { Form, useNavigate } from "react-router";
+import { Form, useLocation, useNavigate } from "react-router";
 import { ErrorMessage } from "~/components/error-message";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
-import { useEffect, useRef, useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { Image } from "~/components/ui/image";
+import { useRegisterSocialUser } from "~/hooks/useRegisterSocialUser";
+import { EmailInput } from "~/components/register/email-input";
+import { useTags } from "~/hooks/useTags";
+import { firebaseService } from "~/lib/firebase";
+import { saveUnauthenticatedFcmToken } from "~/services/save-unauthenticated-fcm-token";
 
-export default function UserForm() {
+export default function UserGoogleSocialForm() {
+  const location = useLocation();
+  const socialUser = location.state;
   const navigate = useNavigate();
-  const {
-    methods,
-    onSave,
-    error,
-    isError,
-    isPending,
-    preview,
-    handleFileChange,
-    resetLocalStorageFields,
-  } = useRegisterUser({
-    onSuccess: () => {
+  const { methods, onSave, error, isError, isPending } = useRegisterSocialUser({
+    onSuccess: async (data) => {
+      if (data?.email) {
+        try {
+          const fcmToken = await firebaseService.setupForUnauthenticatedUser();
+          if (fcmToken) {
+            await saveUnauthenticatedFcmToken(fcmToken, data.email);
+          }
+        } catch (error) {
+          console.error(
+            "Failed to setup or save FCM token on registration:",
+            error
+          );
+        }
+      }
       navigate("/register/user/submitted");
-      resetLocalStorageFields();
+    },
+    initialValues: {
+      name: socialUser?.name,
+      email: socialUser?.email,
+      providerId: socialUser.googleId,
+      provider: "google",
     },
   });
-  const { data, isLoading, isSuccess } = useUserRegisterData();
-  const [tags, setTags] = useState(data?.tags ?? []);
-  const ref = useRef<HTMLInputElement>(null);
+  const { data, isLoading } = useUserRegisterData();
+  const { tags, onAddCustomTag, tagInputRef } = useTags(data?.tags);
 
   const condominiums = data?.condominiums;
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
-
-  useEffect(() => {
-    if (isSuccess && data) setTags(data.tags);
-  }, [isSuccess, data]);
-
-  function onAddCustomTag() {
-    const label = ref.current?.value.toLowerCase();
-
-    if (!label) return;
-
-    setTags((s) => {
-      const i = s.findIndex((i) => i.label.toLowerCase() === label);
-
-      if (i > -1) return s;
-
-      const id = s.length;
-
-      return [...s, { id, label }];
-    });
-
-    if (!ref.current) return;
-
-    ref.current.value = "";
-  }
 
   return (
     <FormProvider {...methods}>
@@ -81,12 +68,13 @@ export default function UserForm() {
           <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg">
             <Box className="flex-col gap-5 mx-auto">
               <Box className="flex-col gap-5">
-                <Text variant="title">Seu cadastro</Text>
+                <Text variant="title">Complete seu cadastro</Text>
                 <Box className="gap-5">
                   <Box className="flex-col rounded-2xl">
-                    <UploadPhotoInput
-                      preview={preview}
-                      handleFileChange={handleFileChange}
+                    <Image
+                      src={socialUser.avatar ?? null}
+                      alt="photo"
+                      className="size-32  rounded-2xl"
                     />
                   </Box>
                   <Box className="flex-col max-w-64 flex-1 gap-3">
@@ -148,25 +136,9 @@ export default function UserForm() {
                   <Item>
                     <EmailInput
                       label="Email*"
+                      disabled
                       error={methods.formState.errors.email?.message}
                       {...methods.register("email")}
-                    />
-                    <EmailInput
-                      label="Confirme seu email*"
-                      {...methods.register("confirmEmail")}
-                      error={methods.formState.errors.confirmEmail?.message}
-                    />
-                  </Item>
-                  <Item>
-                    <PasswordInput
-                      label="Crie uma senha*"
-                      {...methods.register("password")}
-                      error={methods.formState.errors.password?.message}
-                    />
-                    <PasswordInput
-                      label="Confirme sua senha*"
-                      {...methods.register("confirmPassword")}
-                      error={methods.formState.errors.confirmPassword?.message}
                     />
                   </Item>
                 </Box>
@@ -191,9 +163,11 @@ export default function UserForm() {
                         {tags.map((t: Tag, i) => (
                           <ThemeItem
                             key={i}
-                            isSelected={field.value.some(
-                              (st) => st.id === t.id
-                            )}
+                            isSelected={
+                              field.value
+                                ? field.value.some((st) => st.id === t.id)
+                                : false
+                            }
                             onClick={() => {
                               const arr = field.value ?? [];
                               const index = arr.findIndex((i) => i.id === t.id);
@@ -215,7 +189,7 @@ export default function UserForm() {
                                 onAddCustomTag();
                               }
                             }}
-                            ref={ref}
+                            ref={tagInputRef}
                           />
                           <Button type="button" onClick={onAddCustomTag}>
                             Adicionar
