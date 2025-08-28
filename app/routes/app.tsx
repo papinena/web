@@ -13,6 +13,7 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   const isLoginPage = url.pathname === "/login";
   const isRegisterPage = url.pathname.startsWith("/register");
   const isAuthenticated = authUtils.isAuthenticated();
+  const authData = authUtils.getAuthData();
 
   await firebaseService.setupForUnauthenticatedUser();
 
@@ -24,7 +25,7 @@ export const clientLoader = async ({ request }: { request: Request }) => {
 
   await firebaseService.setup();
 
-  const storedImageReadToken = localStorage.getItem("image-read-token");
+  let storedImageReadToken = localStorage.getItem("image-read-token");
 
   if (!storedImageReadToken) {
     const { data, error } = await getImageReadToken();
@@ -33,9 +34,8 @@ export const clientLoader = async ({ request }: { request: Request }) => {
       throw error;
     }
 
-    localStorage.setItem("image-read-token", JSON.stringify(data));
-
-    return null;
+    storedImageReadToken = JSON.stringify(data);
+    localStorage.setItem("image-read-token", storedImageReadToken);
   }
 
   const imageReadToken = JSON.parse(storedImageReadToken);
@@ -47,7 +47,13 @@ export const clientLoader = async ({ request }: { request: Request }) => {
       throw error;
     }
 
-    localStorage.setItem("image-read-token", JSON.stringify(data));
+    storedImageReadToken = JSON.stringify(data);
+    localStorage.setItem("image-read-token", storedImageReadToken);
+  }
+
+  if (["/login"].includes(url.pathname)) {
+    if (authData?.userType === "user") return redirect("/");
+    if (authData?.userType === "employee") return redirect("/admin/dashboard");
   }
 
   return null;
