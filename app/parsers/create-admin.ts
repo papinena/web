@@ -14,7 +14,7 @@ export const CreateAdminSchema = z
           "O telefone deve estar no formato (XX) XXXXX-XXXX"
         ),
       position: z.string().min(2, { error: "Mínimo de 2 caracteres" }),
-      isResident: z.boolean({ error: "Obrigatório" }).or(z.undefined()),
+      isResident: z.boolean({ error: "Obrigatório" }),
       block: z.string().optional(),
       apartment: z.string().optional(),
       email: z

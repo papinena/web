@@ -129,7 +129,7 @@ export default function AdminForm() {
                       error={methods.formState.errors.employee?.name?.message}
                     />
                     <InputWithLabel
-                      label="Sobrenome"
+                      label="Sobrenome*"
                       error={
                         methods.formState.errors.employee?.lastName?.message
                       }
