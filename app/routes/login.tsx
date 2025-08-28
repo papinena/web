@@ -203,25 +203,21 @@ export default function Login() {
               </Text>
             </Link>
           </Button>
-        </form>
-        <Box className="w-full flex-1 items-center gap-3 max-w-76 mx-auto">
-          <Separator className="flex-1" />
-          <Text>ou</Text>
-          <Separator className="flex-1" />
-        </Box>
+          <Box className="w-full h-auto items-center gap-3 max-w-76 mx-auto">
+            <Separator className="flex-1" />
+            <Text>ou</Text>
+            <Separator className="flex-1" />
+          </Box>
 
-        <Button
-          asChild
-          variant={"outline"}
-          className="max-w-72 mx-auto py-8 border-blue-primary cursor-pointer"
-        >
-          <Link to="/register/user">
-            <Text className="text-wrap text-blue-primary">
-              Quer um condomínio mais eficiente? Saiba como o Vizis facilita a
-              sua vida!
-            </Text>
-          </Link>
-        </Button>
+          <Button
+            asChild
+            className="max-w-72 w-full mx-auto border-blue-primary !bg-blue-primary cursor-pointer"
+          >
+            <Link to="/register/user">
+              <Text className="text-wrap text-white">Cadastre-se</Text>
+            </Link>
+          </Button>
+        </form>
       </BoxWithImage>
     </RouteContainer>
   );
