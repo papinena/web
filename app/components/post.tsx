@@ -59,13 +59,13 @@ function PostNetworks({
       {ig && (
         <Box className="flex items-center gap-1.5">
           <Image src="/instagram.svg" className="size-5" />
-          <Text>{ig}</Text>
+          <Text>{ig.label}</Text>
         </Box>
       )}
       {ig && (
         <Box className="flex items-center gap-1.5">
           <Image src="/facebook.svg" className="size-5" />
-          <Text>{fb}</Text>
+          <Text>{fb.label}</Text>
         </Box>
       )}
     </Box>
