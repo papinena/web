@@ -21,6 +21,7 @@ import { RouteContainer } from "~/components/route-container";
 import { BoxWithImage } from "~/components/register/box-with-image";
 import { useGoogleLogin } from "@react-oauth/google";
 import { socialLogin } from "~/services/social-login";
+import { GoogleIcon } from "~/components/google-icon";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -131,7 +132,24 @@ export default function Login() {
         images={<Image className="w-full" src="/Group 55.svg" />}
       >
         <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
-
+        <Box className="w-full justify-center">
+          <Button
+            type="button"
+            variant={"outline"}
+            className="w-fit cursor-pointer"
+            onClick={() => googleLogin()}
+            disabled={socialLoginMutation.isPending}
+          >
+            {socialLoginMutation.isPending ? (
+              <Box className="flex items-center gap-2">
+                <Spinner size="sm" />
+                <Text>Entrando...</Text>
+              </Box>
+            ) : (
+              <GoogleIcon />
+            )}
+          </Button>
+        </Box>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 w-full"
@@ -190,25 +208,6 @@ export default function Login() {
           <Separator className="flex-1" />
           <Text>ou</Text>
           <Separator className="flex-1" />
-        </Box>
-
-        <Box className="max-w-72 mx-auto w-full">
-          <Button
-            type="button"
-            variant={"outline"}
-            className="w-full"
-            onClick={() => googleLogin()}
-            disabled={socialLoginMutation.isPending}
-          >
-            {socialLoginMutation.isPending ? (
-              <Box className="flex items-center gap-2">
-                <Spinner size="sm" />
-                <Text>Entrando...</Text>
-              </Box>
-            ) : (
-              "Entrar com Google"
-            )}
-          </Button>
         </Box>
 
         <Button
