@@ -141,7 +141,16 @@ export default function Home() {
                     <Post.Title post={post} />
                     <Post.Resume post={post} />
                     {formatPostNetworks(post.social).map((n) => (
-                      <Text>{n}</Text>
+                      <Button
+                        className="justify-start h-auto align-start p-0 m-0"
+                        variant={"link"}
+                        asChild
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <a className="!text-base" href={n.url}>
+                          {n.social}/{n.label}
+                        </a>
+                      </Button>
                     ))}
                   </Box>
                 </Box>

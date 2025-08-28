@@ -15,6 +15,7 @@ import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
 import { PostImage } from "~/components/ui/post-image";
 import { RouteContainer } from "~/components/route-container";
+import { formatPostNetworks } from "~/utils/get-user-networks";
 
 function RecommendedPost({ post }: { post: UserPostAPIProps }) {
   return (
@@ -36,16 +37,35 @@ function RecommendedPost({ post }: { post: UserPostAPIProps }) {
 
 function PostNetworks({ social }: { social?: string }) {
   if (!social) return;
-  const [ig, fb] = social.split(";");
+  const [ig, fb] = formatPostNetworks(social);
+
   return (
     <Box className="flex-col">
       <Box className="flex items-center gap-1.5">
         <Image src="/instagram.svg" className="size-5" />
-        <Text>{ig}</Text>
+        <Button
+          className="justify-start h-auto align-start p-0 m-0"
+          variant={"link"}
+          asChild
+          onClick={(e) => e.stopPropagation()}
+        >
+          <a className="!text-base" href={ig.url}>
+            {ig.social}/{ig.label}
+          </a>
+        </Button>
       </Box>
       <Box className="flex items-center gap-1.5">
         <Image src="/facebook.svg" className="size-5" />
-        <Text>{fb}</Text>
+        <Button
+          className="justify-start h-auto align-start p-0 m-0"
+          variant={"link"}
+          asChild
+          onClick={(e) => e.stopPropagation()}
+        >
+          <a className="!text-base" href={fb.url}>
+            {fb.social}/{fb.label}
+          </a>
+        </Button>
       </Box>
     </Box>
   );
