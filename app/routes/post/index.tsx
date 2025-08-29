@@ -41,32 +41,36 @@ function PostNetworks({ social }: { social?: string }) {
 
   return (
     <Box className="flex-col">
-      <Box className="flex items-center gap-1.5">
-        <Image src="/instagram.svg" className="size-5" />
-        <Button
-          className="justify-start h-auto align-start p-0 m-0"
-          variant={"link"}
-          asChild
-          onClick={(e) => e.stopPropagation()}
-        >
-          <a className="!text-base" href={ig.url}>
-            {ig.social}/{ig.label}
-          </a>
-        </Button>
-      </Box>
-      <Box className="flex items-center gap-1.5">
-        <Image src="/facebook.svg" className="size-5" />
-        <Button
-          className="justify-start h-auto align-start p-0 m-0"
-          variant={"link"}
-          asChild
-          onClick={(e) => e.stopPropagation()}
-        >
-          <a className="!text-base" href={fb.url}>
-            {fb.social}/{fb.label}
-          </a>
-        </Button>
-      </Box>
+      {ig && (
+        <Box className="flex items-center gap-1.5">
+          <Image src="/instagram.svg" className="size-5" />
+          <Button
+            className="justify-start h-auto align-start p-0 m-0"
+            variant={"link"}
+            asChild
+            onClick={(e) => e.stopPropagation()}
+          >
+            <a className="!text-base" href={ig.url}>
+              {ig.social}/{ig.label}
+            </a>
+          </Button>
+        </Box>
+      )}
+      {fb && (
+        <Box className="flex items-center gap-1.5">
+          <Image src="/facebook.svg" className="size-5" />
+          <Button
+            className="justify-start h-auto align-start p-0 m-0"
+            variant={"link"}
+            asChild
+            onClick={(e) => e.stopPropagation()}
+          >
+            <a className="!text-base" href={fb.url}>
+              {fb.social}/{fb.label}
+            </a>
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }
