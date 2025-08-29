@@ -134,10 +134,6 @@ export default function Home() {
                         </Box>
                       </Box>
                     </PostAuthor>
-                    <Post.CreatedAt
-                      className="font-normal"
-                      post={{ createdAt: post.createdAt }}
-                    />
                     <Post.Title post={post} />
                     <Post.Resume post={post} />
                     {formatPostNetworks(post.social).map((n) => (
