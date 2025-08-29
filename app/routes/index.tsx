@@ -131,7 +131,9 @@ export default function Home() {
                                 <PostAuthor.Apartment
                                   className="text-xs"
                                   author={{
-                                    apartment: post.author.apartment + ", ",
+                                    apartment:
+                                      post.author.apartment +
+                                      (post.author.block ? ", " : ""),
                                   }}
                                 />
                               )}
