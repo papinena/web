@@ -59,6 +59,10 @@ function PostAuthorBlock({ author, className }: SubComponentProps) {
   return <Text className={className}>Bloco: {author?.block}</Text>;
 }
 
+function PostAuthorAparment({ author, className }: SubComponentProps) {
+  return <Text className={className}>Apartamento: {author?.apartment}</Text>;
+}
+
 // --- Main Component ---
 
 interface PostAuthorPropsWithChildren {
@@ -70,6 +74,7 @@ interface PostAuthorComposition {
   Avatar: typeof PostAuthorAvatar;
   Name: typeof PostAuthorName;
   Block: typeof PostAuthorBlock;
+  Apartment: typeof PostAuthorAparment;
 }
 
 export const PostAuthor: React.FC<PostAuthorPropsWithChildren> &
@@ -80,3 +85,4 @@ export const PostAuthor: React.FC<PostAuthorPropsWithChildren> &
 PostAuthor.Avatar = PostAuthorAvatar;
 PostAuthor.Name = PostAuthorName;
 PostAuthor.Block = PostAuthorBlock;
+PostAuthor.Apartment = PostAuthorAparment;

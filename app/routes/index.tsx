@@ -125,11 +125,23 @@ export default function Home() {
                             className="text-sm"
                             author={post.author}
                           />
-                          {post.author.block && (
-                            <PostAuthor.Block
-                              className="text-xs"
-                              author={post.author}
-                            />
+                          {(post.author.apartment || post.author.block) && (
+                            <Box className="gap-1.5">
+                              {post.author.apartment && (
+                                <PostAuthor.Apartment
+                                  className="text-xs"
+                                  author={{
+                                    apartment: post.author.apartment + ", ",
+                                  }}
+                                />
+                              )}
+                              {post.author.block && (
+                                <PostAuthor.Block
+                                  className="text-xs"
+                                  author={post.author}
+                                />
+                              )}
+                            </Box>
                           )}
                         </Box>
                       </Box>
