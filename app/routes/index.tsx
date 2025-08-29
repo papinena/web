@@ -73,7 +73,7 @@ export default function Home() {
                   <Box className="gap-3">
                     {post.media.length > 0 && (
                       <PostImage
-                        className="rounded-2xl size-32"
+                        className="rounded-2xl size-[88px]"
                         filename={post.media[0].filename}
                         alt={post.title}
                       />
@@ -104,7 +104,7 @@ export default function Home() {
                 <Box className="p-3 gap-3">
                   {post.media.length > 0 && (
                     <PostImage
-                      className="rounded-2xl size-32"
+                      className="rounded-2xl size-[88px]"
                       filename={post.media[0].filename}
                       alt={post.title}
                     />
