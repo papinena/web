@@ -59,7 +59,13 @@ function PostAuthorBlock({ author, className }: SubComponentProps) {
   return <Text className={className}>Bloco: {author?.block}</Text>;
 }
 
-function PostAuthorAparment({ author, className }: SubComponentProps) {
+function PostAuthorAparment({
+  author,
+  className,
+}: {
+  author: { apartment: string };
+  className?: string;
+}) {
   return <Text className={className}>Apartamento: {author?.apartment}</Text>;
 }
 

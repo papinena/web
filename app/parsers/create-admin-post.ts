@@ -23,7 +23,7 @@ export const CreateAdminPostSchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
   resume: z.string().min(1, "Resumo é obrigatório"),
   description: z.string().optional(),
-  important: z.boolean().optional(),
+  priority: z.enum(["LOW", "NORMAL", "HIGH"]).default("NORMAL").optional(),
   photos: z.array(fileSchema).max(5, "Máximo de 5 imagens").optional(),
 });
 

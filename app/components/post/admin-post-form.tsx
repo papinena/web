@@ -124,15 +124,15 @@ export function AdminPostForm({
               </Label>
               <Box className="gap-12">
                 <Controller
-                  name="important"
+                  name="priority"
                   control={control}
                   render={({ field }) => (
                     <Box className="flex gap-12">
                       <Box className="flex items-center gap-2">
                         <Checkbox
                           id="notify-sim"
-                          checked={field.value === true}
-                          onCheckedChange={() => field.onChange(true)}
+                          checked={field.value === "HIGH"}
+                          onCheckedChange={() => field.onChange("HIGH")}
                           className="h-7 w-7"
                         />
                         <Label htmlFor="notify-sim">Sim</Label>
@@ -140,8 +140,8 @@ export function AdminPostForm({
                       <Box className="flex items-center gap-2">
                         <Checkbox
                           id="notify-nao"
-                          checked={field.value === false}
-                          onCheckedChange={() => field.onChange(false)}
+                          checked={field.value === "NORMAL"}
+                          onCheckedChange={() => field.onChange("NORMAL")}
                           className="h-7 w-7"
                         />
                         <Label htmlFor="notify-nao">Não</Label>
@@ -150,8 +150,8 @@ export function AdminPostForm({
                   )}
                 ></Controller>
               </Box>
-              <ErrorMessage show={!!errors.important}>
-                {errors.important?.message}
+              <ErrorMessage show={!!errors.priority}>
+                {errors.priority?.message}
               </ErrorMessage>
             </Box>
           </Item>
