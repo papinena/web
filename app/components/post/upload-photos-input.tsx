@@ -20,7 +20,7 @@ export function UploadPhotosInput({
     <>
       <Label
         htmlFor="photo-upload-input"
-        className="h-40 w-full rounded-2xl border border-gray-300 cursor-pointer flex flex-wrap justify-center items-center gap-2 p-2"
+        className="aspect-square max-w-sm rounded-2xl border border-gray-300 cursor-pointer flex flex-wrap justify-center items-center gap-2 p-2"
       >
         {previews.length > 0 ? (
           previews.map((preview, index) => (

@@ -63,7 +63,6 @@ interface PostFormProps {
 export function PostForm({
   onSave,
   initialValues,
-  isLoading,
   previews: initialPreviews = [],
 }: PostFormProps) {
   const {
