@@ -39,7 +39,7 @@ export async function createAdmin(data: CreateAdminType) {
 
   const body = {
     ...data,
-    employees: data.employees.map((e) => ({
+    employees: data.employees?.map((e) => ({
       last_name: "",
       telephone: "",
       position: "",

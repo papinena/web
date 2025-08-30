@@ -51,7 +51,9 @@ export const clientLoader = async ({ request }: { request: Request }) => {
     localStorage.setItem("image-read-token", storedImageReadToken);
   }
 
-  if (isLoginPage || isRegisterPage) {
+  const isFulFillPage = url.pathname.endsWith("fulfill");
+
+  if (!isFulFillPage && (isLoginPage || isRegisterPage)) {
     if (authData?.userType === "user") return redirect("/");
     if (authData?.userType === "employee") return redirect("/admin/dashboard");
   }

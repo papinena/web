@@ -22,6 +22,7 @@ import { BoxWithImage } from "~/components/register/box-with-image";
 import { useGoogleLogin } from "@react-oauth/google";
 import { socialLogin } from "~/services/social-login";
 import { GoogleIcon } from "~/components/google-icon";
+import { EmployeeMapper } from "~/mappers/employee";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -45,25 +46,32 @@ export default function Login() {
     onSuccess: async (result: any) => {
       if (result.error) {
         setFormError(result.error.message);
-      } else {
-        // Store authentication data in localStorage and update state
-        authLogin(result);
-        const token = await firebaseService.setup();
+        return;
+      }
 
-        if (token) {
-          await saveFcmToken(token);
-        }
+      const isEmployee = result.userType === "employee";
+      const isUser = result.userType === "user";
+      authLogin(result);
 
-        if (result.userType === "employee") {
-          return navigate("/admin/dashboard");
-        }
+      if (isEmployee && !result.employee.is_register_completed) {
+        return navigate("/register/admin/fulfill", {
+          state: { ...result, employee: EmployeeMapper.toUI(result.employee) },
+        });
+      }
 
-        if (result.userType === "user") {
-          return navigate("/");
-        }
+      // Store authentication data in localStorage and update state
+      const token = await firebaseService.setup();
 
-        // Redirect to dashboard or home page
-        // You can change this to the appropriate route
+      if (token) {
+        await saveFcmToken(token);
+      }
+
+      if (isEmployee) {
+        return navigate("/admin/dashboard");
+      }
+
+      if (isUser) {
+        return navigate("/");
       }
     },
     onError: (error) => {

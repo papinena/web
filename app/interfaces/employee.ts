@@ -16,6 +16,7 @@ export interface EmployeeAPIProps {
   created_at: string;
   updated_at: string;
   permission: string;
+  password?: string;
 }
 
 export interface EmployeeUIProps {
@@ -36,4 +37,5 @@ export interface EmployeeUIProps {
   createdAt: string;
   updatedAt: string;
   permission: string;
+  password?: string;
 }

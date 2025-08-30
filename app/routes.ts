@@ -57,6 +57,7 @@ export default [
         ...prefix("admin", [
           route("/", "./routes/register/admin/admin.tsx"),
           route("/form", "./routes/register/admin/admin-form.tsx"),
+          route("/fulfill", "./routes/register/admin/fulfill-form.tsx"),
           route("/submitted", "./routes/register/admin/submitted.tsx"),
         ]),
         route("error", "./routes/register/error.tsx"),

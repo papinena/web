@@ -17,88 +17,29 @@ import { NameInput } from "~/components/register/name-input";
 import { Item } from "~/components/register/item";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { useAdminForm } from "~/hooks/useAdminForm";
-import { useMutation } from "@tanstack/react-query";
-import { createAdmin } from "~/services/create-admin";
-import { getSasToken } from "~/services/get-sas-token";
-import { uploadImage } from "~/services/upload-image";
-import { deleteImage } from "~/services/delete-image";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { ErrorMessage } from "~/components/error-message";
 import { Form, useNavigate } from "react-router";
-
-function useRegisterAdmin({ onSuccess }: { onSuccess: () => void }) {
-  const mutation = useMutation({
-    mutationKey: ["CREATE-ADMIN"],
-    mutationFn: async (data: { form: CreateAdminType; file: File | null }) => {
-      let filename = "";
-      let tokenData,
-        tokenError: { status: string; message: string } | undefined;
-
-      if (data.file) {
-        const sasTokenData = await getSasToken();
-        tokenData = sasTokenData.data;
-        tokenError = sasTokenData.error;
-
-        if (tokenError) throw new Error(tokenError.message);
-
-        if (tokenData) {
-          filename = await uploadImage(
-            tokenData.containerUri,
-            tokenData.sasToken,
-            data.file
-          );
-        }
-      }
-
-      const dataToSave = {
-        ...data.form,
-        employee: {
-          ...data.form.employee,
-          photo: filename,
-        },
-      };
-
-      const res = await createAdmin(dataToSave);
-
-      if (res?.error?.status === "error") {
-        tokenData &&
-          filename &&
-          (await deleteImage(
-            tokenData.containerUri,
-            tokenData.sasToken,
-            filename
-          ));
-        throw new Error(res?.error?.message);
-      }
-    },
-    onSuccess,
-  });
-
-  return { mutation };
-}
+import { usePhoto } from "~/hooks/use-photo";
+import { useEmployee } from "~/hooks/use-employee";
 
 export default function AdminForm() {
   const navigate = useNavigate();
-  const {
-    fields,
-    resetLocalStorageFields,
-    setFields,
-    preview,
-    file,
-    handleFileChange,
-  } = useAdminForm();
-  const { mutation } = useRegisterAdmin({
-    onSuccess: () => {
+  const { fields, resetLocalStorageFields, setFields } = useAdminForm();
+  const { createAdminMutation: mutation } = useEmployee({
+    onCreateSuccess() {
       navigate("/register/admin/submitted");
       resetLocalStorageFields();
     },
   });
+
   const methods = useForm({
     defaultValues: {
       ...fields,
     },
     resolver: zodResolver(CreateAdminSchema),
   });
+  const { file, handleFileChange, preview } = usePhoto();
 
   const onSave = async (data: CreateAdminType) => {
     setFields(data);

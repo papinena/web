@@ -21,6 +21,8 @@ export default function NewAdminPostPreview() {
     return <RouteContainer>No post data found.</RouteContainer>;
   }
 
+  console.log(post);
+
   const onPublish = () => {
     createAdminPostMutation.mutate(
       { form: post },

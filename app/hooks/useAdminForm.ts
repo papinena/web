@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import { type CreateAdminType } from "~/parsers/create-admin";
 
 const defaultValues = {
@@ -34,21 +34,6 @@ export function useAdminForm() {
     return JSON.parse(storedValues);
   });
 
-  const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      setFile(file);
-    }
-  };
-
   function setLocalStorageFields(f: typeof fields) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(f));
   }
@@ -65,9 +50,6 @@ export function useAdminForm() {
   return {
     fields,
     setFields: _setFields,
-    preview,
-    file,
-    handleFileChange,
     resetLocalStorageFields,
   };
 }

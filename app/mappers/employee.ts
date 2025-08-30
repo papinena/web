@@ -46,6 +46,8 @@ export class EmployeeMapper {
       email: employee.email,
       birth_date: employee.birthDate?.toString(),
       avatar: employee.avatar,
+      password: employee.password,
+      is_register_completed: employee.isRegisterCompleted,
     };
   }
 }
