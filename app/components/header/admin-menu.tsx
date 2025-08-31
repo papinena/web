@@ -4,15 +4,19 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Image } from "../ui/image";
 import { MenuItemText } from "./menu-item-text";
 import { HamburguerMenuIcon } from "./hamburguer-menu-icon";
 import { LogoImage } from "./logo-image";
 import { TextMenuItem } from "./text-menu-item";
 import { IconMenuItem } from "./icon-menu-item";
+import { MenuLink } from "./menu-link";
+import { PlusIcon } from "lucide-react";
+import { Box } from "../ui/box";
+import { BulletPoint } from "./bullet-point";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -31,50 +35,77 @@ export function AdminHamburguerMenu({
       <DropdownMenuTrigger>
         <HamburguerMenuIcon className={className} ariaLabel={ariaLabel} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="p-3">
-        <DropdownMenuItem>
+      <DropdownMenuContent className="p-3 min-w-66">
+        <DropdownMenuLabel className="p-1.5">
           <LogoImage />
-        </DropdownMenuItem>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <IconMenuItem to="/home" iconSrc="/image 120.svg">
+        <DropdownMenuItem asChild>
+          <MenuLink
+            to="/post/admin/create"
+            className="w-full flex items-center"
+          >
+            <PlusIcon
+              color={"#94C56F"}
+              className="size-6 border rounded-full border-gray-300"
+            />
+            <MenuItemText>Nova Publicação</MenuItemText>
+          </MenuLink>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <IconMenuItem to="/" iconSrc="/image 120.svg">
             Home
           </IconMenuItem>
         </DropdownMenuItem>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <IconMenuItem to="/admin/dashboard" iconSrc="/image 118.svg">
-              Meu painel
+          <DropdownMenuItem asChild>
+            <IconMenuItem to="/admin/dashboard" iconSrc="/image 136.svg">
+              Gestão do condomínio
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem to="/admin/edit">Meu Cadastro</TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/admin/edit">
+                Cadastro do condomínio
+              </TextMenuItem>
+            </Box>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem to="/post/admin/my-publications">
-              Minhas publicações
-            </TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/post/admin/my-publications">
+                Publicações do Condomínio
+              </TextMenuItem>
+            </Box>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/post/admin/my-publications">
+                Gerenciar Moradores
+              </TextMenuItem>
+            </Box>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <IconMenuItem to="/posts/condominium" iconSrc="/image 119.svg">
+              Mural do condomínio
+            </IconMenuItem>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <IconMenuItem to="/help" iconSrc="/image 129.svg">
               Ajuda
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <TextMenuItem to="/faq">FAQ</TextMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <TextMenuItem to="/contact">Fale com o Vizis</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <IconMenuItem to="/admin/dashboard" iconSrc="/image 136.svg">
-            Gestão do condomínio
-          </IconMenuItem>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleLogout}

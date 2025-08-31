@@ -1,15 +1,19 @@
-import { Link } from "react-router";
+import { Link, type LinkProps } from "react-router";
+import React from "react";
 
-interface MenuLinkProps {
-  to: string;
+interface MenuLinkProps extends LinkProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export function MenuLink({ to, children, className }: MenuLinkProps) {
-  return (
-    <Link to={to} className={className}>
-      {children}
-    </Link>
-  );
-}
+export const MenuLink = React.forwardRef<HTMLAnchorElement, MenuLinkProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <Link {...props} ref={ref}>
+        {children}
+      </Link>
+    );
+  }
+);
+
+MenuLink.displayName = "MenuLink";

@@ -15,6 +15,10 @@ import {
   DropdownMenuGroup,
   DropdownMenuLabel,
 } from "@radix-ui/react-dropdown-menu";
+import { MenuLink } from "./menu-link";
+import { PlusIcon } from "lucide-react";
+import { Box } from "../ui/box";
+import { BulletPoint } from "./bullet-point";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -38,50 +42,63 @@ export function UserHamburguerMenu({
           <LogoImage />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <MenuLink to="/post/create" className="w-full flex items-center">
+            <PlusIcon
+              color={"#94C56F"}
+              className="size-6 border rounded-full border-gray-300"
+            />
+            <MenuItemText>Nova Publicação</MenuItemText>
+          </MenuLink>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <IconMenuItem to="/" iconSrc="/image 120.svg">
             Home
           </IconMenuItem>
         </DropdownMenuItem>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <IconMenuItem to="/user/dashboard" iconSrc="/image 118.svg">
               Meu painel
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem to="/user/edit">Meu Cadastro</TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/user/edit">Meu Cadastro</TextMenuItem>
+            </Box>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem to="/post/my-publications">
-              Minhas publicações
-            </TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/post/my-publications">
+                Minhas publicações
+              </TextMenuItem>
+            </Box>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem to="/user/condominium">Meu condomínio</TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/user/condominium">Meu condomínio</TextMenuItem>
+            </Box>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <IconMenuItem to="/posts/condominium" iconSrc="/image 119.svg">
             Mural do condomínio
           </IconMenuItem>
         </DropdownMenuItem>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <IconMenuItem to="/help" iconSrc="/image 129.svg">
               Ajuda
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <TextMenuItem to="/faq">FAQ</TextMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <TextMenuItem to="/contact">Fale com o Vizis</TextMenuItem>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <IconMenuItem to="/admin/dashboard" iconSrc="/image 136.svg">
-              Gestão do condomínio
-            </IconMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
