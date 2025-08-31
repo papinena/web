@@ -12,7 +12,13 @@ import { Item } from "~/components/register/item";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
 import { useUserRegisterData } from "~/hooks/useUserRegisterData";
-import { Select } from "~/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Label } from "~/components/ui/label";
 import { BirthDateInput } from "~/components/birth-date-input";
 import type { Condominium } from "~/interfaces/condominium";
@@ -42,7 +48,7 @@ export default function UserForm() {
       resetLocalStorageFields();
     },
   });
-  const { data, isLoading, isSuccess } = useUserRegisterData();
+  const { data, isSuccess } = useUserRegisterData();
   const [tags, setTags] = useState(data?.tags ?? []);
   const ref = useRef<HTMLInputElement>(null);
 
@@ -108,18 +114,33 @@ export default function UserForm() {
                 <Box className="flex-col gap-3">
                   <Item className="flex-col gap-2">
                     <Label>Condomínio</Label>
-                    <Select {...methods.register("condominiumId")}>
-                      {isLoading && <option>Carregando...</option>}
-                      {condominiums?.map((condo: Condominium) => (
-                        <option
-                          className="text-body"
-                          key={condo.id}
-                          value={condo.id}
-                        >
-                          {condo.name}
-                        </option>
-                      ))}
-                    </Select>
+                    <Controller
+                      name="condominiumId"
+                      control={methods.control}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecione o condomínio" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {condominiums?.map((condo: Condominium) => (
+                              <SelectItem
+                                key={condo.id}
+                                value={String(condo.id)}
+                              >
+                                {condo.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    <ErrorMessage
+                      className="mx-auto"
+                      show={Boolean(methods.formState.errors.condominiumId)}
+                    >
+                      {methods.formState.errors.condominiumId?.message}
+                    </ErrorMessage>
                   </Item>
                   <Item>
                     <InputWithLabel

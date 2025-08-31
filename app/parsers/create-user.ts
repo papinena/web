@@ -15,7 +15,9 @@ export const CreateUserSchema = z
       .transform((val) => val.toLowerCase()),
     password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
     confirmPassword: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
-    condominiumId: z.string().min(1, "Condomínio é obrigatório"),
+    condominiumId: z
+      .string({ error: "Condomínio é obrigatório" })
+      .min(1, "Condomínio é obrigatório"),
     tags: z
       .array(z.object({ id: z.number(), label: z.string() }))
       .min(3, { error: "Mínimo de 3 temas" }),
