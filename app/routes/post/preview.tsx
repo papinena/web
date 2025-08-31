@@ -51,7 +51,7 @@ export default function NewPostPreview() {
   }
 
   const onPublish = () => {
-    createPostMutatron.mutate(
+    createPostMutation.mutate(
       { form: post, files },
       {
         onSuccess: (postId) => {
