@@ -55,7 +55,15 @@ function PostAuthorName({ author, className }: SubComponentProps) {
   return <Text className={cn("font-bold", className)}>{author?.name}</Text>;
 }
 
-function PostAuthorBlock({ author, className }: SubComponentProps) {
+function PostAuthorBlock({
+  author,
+  className,
+}: {
+  author: { block?: string };
+  className?: string;
+}) {
+  if (!author?.block) return null;
+
   return <Text className={className}>Bloco: {author?.block}</Text>;
 }
 

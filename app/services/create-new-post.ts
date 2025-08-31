@@ -1,5 +1,7 @@
 import { api, apiRequest } from "~/utils/api";
 import { z } from "zod";
+import type { UserPostAPIProps } from "~/interfaces/post";
+import type { ApiResponse } from "~/interfaces/api-response";
 
 const PostMediaType = ["IMAGE", "VIDEO"] as const;
 const PostPriority = ["HIGH", "MEDIUM", "LOW", "NORMAL"] as const;
@@ -7,10 +9,7 @@ const PostPriority = ["HIGH", "MEDIUM", "LOW", "NORMAL"] as const;
 const CreateNewPostSchema = z.object({
   title: z.string(),
   resume: z.string(),
-  description: z
-    .string()
-    .optional()
-    .transform((val) => val ?? null),
+  description: z.string().optional(),
   expiresOn: z.coerce.date(),
   social: z.string(),
   priority: z.enum(PostPriority).optional(),
@@ -28,49 +27,6 @@ const CreateNewPostSchema = z.object({
 
 type CreateNewPostType = z.infer<typeof CreateNewPostSchema>;
 
-interface ApiResponse<T> {
-  status: "success" | "error";
-  message: string;
-  data?: T;
-}
-
-type PostMediaProps = {
-  id: string;
-  filename: string;
-  type: "IMAGE" | "VIDEO";
-  postId: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type PostCategoryProps = {
-  id: number;
-  name: string;
-  is_default: boolean;
-};
-
-type PostTypeProps = {
-  id: number;
-  name: string;
-  is_default: boolean;
-};
-
-type PostAPIProps = {
-  id: string;
-  title: string;
-  resume: string;
-  description?: string;
-  expiresOn: string;
-  social: string;
-  priority: string;
-  authorId: string;
-  createdAt: string;
-  updatedAt: string;
-  types: PostTypeProps[];
-  categories: PostCategoryProps[];
-  media: PostMediaProps[];
-};
-
 export async function createNewPost(data: CreateNewPostType) {
   try {
     const { BASE_URL } = api();
@@ -81,7 +37,7 @@ export async function createNewPost(data: CreateNewPostType) {
       body: JSON.stringify(data),
     });
 
-    const responseData: ApiResponse<PostAPIProps> = await response.json();
+    const responseData: ApiResponse<UserPostAPIProps> = await response.json();
 
     return responseData;
   } catch (error) {

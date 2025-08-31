@@ -51,7 +51,7 @@ export default function NewPostPreview() {
   }
 
   const onPublish = () => {
-    createPostMutation.mutate(
+    createPostMutatron.mutate(
       { form: post, files },
       {
         onSuccess: (postId) => {
@@ -103,7 +103,7 @@ export default function NewPostPreview() {
             </Avatar>
             <Box className="flex-col">
               <Text>{author?.name}</Text>
-              <Text>Bloco: {author?.block}</Text>
+              {author.block && <Text>Bloco: {author?.block}</Text>}
             </Box>
           </Box>
           <PostNetworks social={`${post.instagram};${post.facebook}`} />

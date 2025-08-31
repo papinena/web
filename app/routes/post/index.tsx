@@ -114,7 +114,7 @@ export default function Post({ params }: Route.ComponentProps) {
               <PostAuthor.Avatar author={author} />
               <Box className="flex-col">
                 <PostAuthor.Name author={author} />
-                <PostAuthor.Block author={author} />
+                <PostAuthor.Block author={{ block: author?.block }} />
               </Box>
             </PostAuthor>
             <PostNetworks social={post?.social} />

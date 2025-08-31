@@ -125,7 +125,7 @@ export function usePost() {
 
       const res = await createNewPost({
         ...data.form,
-        description: data.form.description ?? null,
+        description: data.form.description,
         media: filenames,
         social: `${data.form.instagram};${data.form.facebook}`,
       });
