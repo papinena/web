@@ -32,13 +32,14 @@ export default [
     ...prefix("/posts", [
       route("/condominium", "./routes/post/condominium.tsx"),
     ]),
-    route("login", "./routes/login.tsx"),
     ...prefix("user", [
+      route("login", "./routes/user/login.tsx"),
       route("dashboard", "./routes/user/dashboard.tsx"),
       route("edit", "./routes/user/edit.tsx"),
       route("condominium", "./routes/user/condominium.tsx"),
     ]),
     ...prefix("admin", [
+      route("login", "./routes/admin/login.tsx"),
       route("dashboard", "./routes/admin/dashboard.tsx"),
       route("edit", "./routes/admin/edit.tsx"),
       route("residents", "./routes/admin/residents.tsx"),

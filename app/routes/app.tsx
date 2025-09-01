@@ -10,7 +10,7 @@ import { firebaseService } from "~/lib/firebase";
 
 export const clientLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
-  const isLoginPage = url.pathname === "/login";
+  const isLoginPage = ["/user/login", "/admin/login"].includes(url.pathname);
   const isRegisterPage = url.pathname.startsWith("/register");
   const isAuthenticated = authUtils.isAuthenticated();
   const authData = authUtils.getAuthData();

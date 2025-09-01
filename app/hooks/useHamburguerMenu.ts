@@ -2,12 +2,13 @@ import { useNavigate } from "react-router";
 import { useAuth } from "./useAuth";
 
 export function useHamburguerMenu() {
-  const { logout } = useAuth();
+  const { logout, authData } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    if (authData?.userType === "user") return navigate("/user/login");
+    return navigate("/admin/login");
   };
 
   return { handleLogout };
