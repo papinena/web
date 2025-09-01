@@ -18,7 +18,7 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   await firebaseService.setupForUnauthenticatedUser();
 
   if (!isAuthenticated && !isLoginPage && !isRegisterPage) {
-    return redirect("/login");
+    return redirect("/user/login");
   }
 
   if (!isAuthenticated) return null;
