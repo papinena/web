@@ -8,8 +8,9 @@ import { useAuthStore } from "~/stores/auth";
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  const { logout } = useAuthStore();
+  const { logout, authData } = useAuthStore();
   const navigate = useNavigate();
+  const type = authData?.userType ?? "user";
 
   useEffect(() => {
     Sentry.captureException(error);
@@ -17,7 +18,7 @@ export function ErrorBoundary() {
 
   function onClick() {
     logout();
-    navigate("/login");
+    navigate(`/${type}/login`);
   }
 
   console.error(error);
