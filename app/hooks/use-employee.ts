@@ -18,16 +18,33 @@ import {
 } from "~/parsers/update-employee";
 import type { CreateAdminType } from "~/parsers/create-admin";
 import { createAdmin } from "~/services/create-admin";
+import { createEmployees } from "~/services/create-employees";
 
 type Props = {
   onFulFillSuccess?(data: any): void;
   onCreateSuccess?(data: any): void;
+  onCreateEmployeesSuccess?(data: any): void;
+  onCreateEmployeesError?(data: any): void;
 };
 
-export function useEmployee({ onFulFillSuccess, onCreateSuccess }: Props = {}) {
+export function useEmployee({
+  onFulFillSuccess,
+  onCreateSuccess,
+  onCreateEmployeesSuccess,
+  onCreateEmployeesError,
+}: Props = {}) {
   const { setAuthEmployeeData } = useAuth();
   const addToast = useToastStore((s) => s.addToast);
   const queryClient = useQueryClient();
+
+  const createEmployeesMutation = useMutation({
+    mutationFn: createEmployees,
+    onSuccess: (data) => {
+      onCreateEmployeesSuccess && onCreateEmployeesSuccess(data);
+      addToast({ title: "Sucesso!", description: "Funcionário criado" });
+    },
+    onError: onCreateEmployeesError,
+  });
 
   const createAdminMutation = useMutation({
     mutationKey: ["CREATE-ADMIN"],
@@ -216,5 +233,6 @@ export function useEmployee({ onFulFillSuccess, onCreateSuccess }: Props = {}) {
     useUpdateForm,
     fulFillEmployeeMutation,
     createAdminMutation,
+    createEmployeesMutation,
   };
 }

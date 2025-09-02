@@ -7,7 +7,7 @@ import { Widget } from "~/components/ui/widget";
 import { RouteContainer } from "~/components/route-container";
 
 export default function Dashboard() {
-  const { authData, isEmployeeAdmin } = useAuth();
+  const { authData } = useAuth();
 
   const employee = authData?.employee;
 
@@ -24,8 +24,8 @@ export default function Dashboard() {
             <Text>
               Olá,
               <strong className="text-blue-primary">@{employee?.name}</strong>,
-              por aqui você pode acessar todas as informações relacionadas a conta
-              do condomínio!
+              por aqui você pode acessar todas as informações relacionadas a
+              conta do condomínio!
             </Text>
           </Widget>
           {
@@ -33,13 +33,15 @@ export default function Dashboard() {
               <Widget className="border-green-primary">
                 <Widget.Title
                   className=""
-                  icon={<Image src="/image 113.svg" className={iconClassName} />}
+                  icon={
+                    <Image src="/image 113.svg" className={iconClassName} />
+                  }
                 >
                   Cadastro da Administração
                 </Widget.Title>
                 <Text>
-                  Edite, remova ou inclua novas informações sobre a administração
-                  do condomínio
+                  Edite, remova ou inclua novas informações sobre a
+                  administração do condomínio
                 </Text>
               </Widget>
             </Link>
@@ -54,6 +56,23 @@ export default function Dashboard() {
               <Text>Aprove ou remova os moradores do seu condomínio</Text>
             </Widget>
           </Link>
+          {employee?.permission === "ADMIN" && (
+            <Link to="/admin/employees">
+              <Widget className="border-green-primary">
+                <Widget.Title
+                  icon={
+                    <Image src="/image 113.svg" className={iconClassName} />
+                  }
+                >
+                  Gerenciar Equipe Administração
+                </Widget.Title>
+                <Text>
+                  Inclua ou remova funcionários aptos a publicar em nome do
+                  condomínio.
+                </Text>
+              </Widget>
+            </Link>
+          )}
           <Widget className="border-green-primary">
             <Widget.Title
               icon={<Image src="/image 112.svg" className={iconClassName} />}
