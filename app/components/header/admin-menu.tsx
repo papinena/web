@@ -103,7 +103,7 @@ export function AdminHamburguerMenu({
             <TextMenuItem to="/faq">FAQ</TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <TextMenuItem to="/contact">Fale com o Vizis</TextMenuItem>
+            <TextMenuItem to="/vizis/contact">Fale com o Vizis</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

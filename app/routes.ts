@@ -15,6 +15,7 @@ export default [
     route("/search", "./routes/search.tsx"),
     index("./routes/index.tsx"),
     route("/faq", "./routes/faq.tsx"),
+    route("/vizis/contact", "./routes/contact.tsx"),
     ...prefix("/post", [
       route("/:postId", "./routes/post/index.tsx"),
       route("/create", "./routes/post/new-post.tsx"),
