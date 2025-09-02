@@ -30,7 +30,7 @@ export function UserAvatar({
     <UIAvatar className={cn("h-12 w-12", containerClassName)}>
       <AvatarImage
         src={buildUrl(avatarUrl ?? "")}
-        className={imageClassName}
+        className={cn("object-cover", imageClassName)}
         {...imageProps}
       />
       <AvatarFallback {...fallbackProps}>

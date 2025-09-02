@@ -6,7 +6,12 @@ import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { useAuth } from "~/hooks/useAuth";
 import { useToastStore } from "~/stores/toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type InvalidateQueryFilters,
+} from "@tanstack/react-query";
 import type { UpdateAdminType } from "~/parsers/update-admin";
 import { DateFormatter } from "~/utils/date-formatter";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +24,8 @@ import {
 import type { CreateAdminType } from "~/parsers/create-admin";
 import { createAdmin } from "~/services/create-admin";
 import { createEmployees } from "~/services/create-employees";
+import { getCondominiumEmployees } from "~/services/get-condominium-employees";
+import { updateEmployees } from "~/services/update-employees";
 
 type Props = {
   onFulFillSuccess?(data: any): void;
@@ -36,6 +43,27 @@ export function useEmployee({
   const { setAuthEmployeeData } = useAuth();
   const addToast = useToastStore((s) => s.addToast);
   const queryClient = useQueryClient();
+
+  const updateEmployeesMutation = useMutation({
+    mutationFn: async ({
+      ids,
+      data,
+    }: {
+      ids: string[];
+      data: { active: boolean };
+    }) => {
+      return await updateEmployees({ ids, data });
+    },
+  });
+
+  const getCondominiumEmployeesQuery = () =>
+    useQuery({
+      queryFn: async () => {
+        const { data } = await getCondominiumEmployees();
+        return data;
+      },
+      queryKey: ["CONDOMINIUM-EMPLOYEES"],
+    });
 
   const createEmployeesMutation = useMutation({
     mutationFn: createEmployees,
@@ -228,11 +256,18 @@ export function useEmployee({
     },
   });
 
+  function handleInvalidateQuery(key: any) {
+    queryClient.invalidateQueries(key);
+  }
+
   return {
     updateAdminDashBoard,
     useUpdateForm,
     fulFillEmployeeMutation,
     createAdminMutation,
     createEmployeesMutation,
+    getCondominiumEmployeesQuery,
+    updateEmployeesMutation,
+    handleInvalidateQuery,
   };
 }
