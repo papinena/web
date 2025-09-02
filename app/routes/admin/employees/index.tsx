@@ -8,7 +8,7 @@ export default function AdminEmployeesIndex() {
     <RouteContainer>
       <Button variant={"admin"} asChild>
         <Link to="add">
-          <Text className="text-neutral-200">Adicionar novo funcionários</Text>
+          <Text className="text-neutral-200">Adicionar novo funcionário</Text>
         </Link>
       </Button>
       <Button variant={"admin"} asChild>

@@ -62,7 +62,7 @@ function PostNetworks({
           <Text>{ig.label}</Text>
         </Box>
       )}
-      {ig && (
+      {fb && (
         <Box className="flex items-center gap-1.5">
           <Image src="/facebook.svg" className="size-5" />
           <Text>{fb.label}</Text>
