@@ -11,10 +11,17 @@ import { Separator } from "~/components/ui/separator";
 import { RouteContainer } from "~/components/route-container";
 import { BoxWithImage } from "~/components/register/box-with-image";
 import { useLogin } from "~/hooks/use-login";
+import { GoogleIcon } from "~/components/google-icon";
 
 export default function Login() {
-  const { formError, methods, adminLoginMutation, onAdminLoginSubmit } =
-    useLogin();
+  const {
+    formError,
+    adminSocialLoginMutation,
+    methods,
+    adminGoogleLogin,
+    adminLoginMutation,
+    onAdminLoginSubmit,
+  } = useLogin();
 
   const { formState, register, handleSubmit } = methods;
   const { errors } = formState;
@@ -26,6 +33,24 @@ export default function Login() {
         images={<Image className="w-full" src="/Group 55.svg" />}
       >
         <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
+        <Box className="w-full justify-center">
+          <Button
+            type="button"
+            variant={"outline"}
+            className="w-fit cursor-pointer"
+            onClick={() => adminGoogleLogin()}
+            disabled={adminSocialLoginMutation.isPending}
+          >
+            {adminSocialLoginMutation.isPending ? (
+              <Box className="flex items-center gap-2">
+                <Spinner size="sm" />
+                <Text>Entrando...</Text>
+              </Box>
+            ) : (
+              <GoogleIcon />
+            )}
+          </Button>
+        </Box>
         <form
           onSubmit={handleSubmit(onAdminLoginSubmit)}
           className="flex flex-col gap-5 w-full"

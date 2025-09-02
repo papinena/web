@@ -87,9 +87,39 @@ export function useLogin() {
     },
   });
 
+  const adminSocialLoginMutation = useMutation({
+    mutationFn: async (token: string) => {
+      const { error, data } = await socialLogin({ token, type: "employee" });
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    onSuccess: async (result: any) => {
+      if (result.error) {
+        setFormError(result.error.message);
+      } else {
+        if (result.isNew) {
+          return navigate("/register/user/social/form", {
+            state: { ...result.profile },
+          });
+        }
+        // Store authentication data in localStorage and update state
+        authLogin(result);
+        const token = await firebaseService.setup();
+
+        if (token) {
+          await saveFcmToken(token);
+        }
+
+        return navigate("/admin/dashboard");
+      }
+    },
+    onError: (error) => {
+      setFormError(error.message);
+    },
+  });
   const userSocialLoginMutation = useMutation({
     mutationFn: async (token: string) => {
-      const { error, data } = await socialLogin(token);
+      const { error, data } = await socialLogin({ token });
       if (error) throw new Error(error.message);
       return data;
     },
@@ -126,6 +156,14 @@ export function useLogin() {
       setFormError("Failed to login with Google");
     },
   });
+  const adminGoogleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      adminSocialLoginMutation.mutate(tokenResponse.access_token);
+    },
+    onError: () => {
+      setFormError("Failed to login with Google");
+    },
+  });
 
   const onUserLoginSubmit = (data: LoginType) => {
     setFormError("");
@@ -140,6 +178,8 @@ export function useLogin() {
     userSocialLoginMutation,
     formError,
     methods,
+    adminGoogleLogin,
     onAdminLoginSubmit,
+    adminSocialLoginMutation,
   };
 }

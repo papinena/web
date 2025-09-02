@@ -3,11 +3,18 @@ import { api, apiRequest } from "~/utils/api";
 
 const { BASE_URL } = api();
 
-export async function socialLogin(token: string) {
+export async function socialLogin({
+  token,
+  type = "user",
+}: {
+  token: string;
+  type?: "user" | "employee";
+}) {
   const url = new URL(BASE_URL + "/auth/google");
 
   const body = {
     token,
+    type,
   };
 
   const res = await apiRequest(
