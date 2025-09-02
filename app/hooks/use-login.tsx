@@ -95,23 +95,30 @@ export function useLogin() {
     },
     onSuccess: async (result: any) => {
       if (result.error) {
-        setFormError(result.error.message);
-      } else {
-        if (result.isNew) {
-          return navigate("/register/user/social/form", {
-            state: { ...result.profile },
-          });
-        }
-        // Store authentication data in localStorage and update state
-        authLogin(result);
-        const token = await firebaseService.setup();
-
-        if (token) {
-          await saveFcmToken(token);
-        }
-
-        return navigate("/admin/dashboard");
+        return setFormError(result.error.message);
       }
+
+      authLogin(result);
+
+      if (!result.employee.is_register_completed) {
+        return navigate("/register/admin/fulfill", {
+          state: { ...result, employee: EmployeeMapper.toUI(result.employee) },
+        });
+      }
+
+      if (result.isNew) {
+        return navigate("/register/user/social/form", {
+          state: { ...result.profile },
+        });
+      }
+      // Store authentication data in localStorage and update state
+      const token = await firebaseService.setup();
+
+      if (token) {
+        await saveFcmToken(token);
+      }
+
+      return navigate("/admin/dashboard");
     },
     onError: (error) => {
       setFormError(error.message);

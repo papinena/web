@@ -8,10 +8,15 @@ import { Item } from "~/components/register/item";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
 import { BirthDateInput } from "~/components/birth-date-input";
-import { Form, useLocation, useNavigate } from "react-router";
+import {
+  Form,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import { ErrorMessage } from "~/components/error-message";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
-import { Image } from "~/components/ui/image";
 import { EmailInput } from "~/components/register/email-input";
 import { firebaseService } from "~/lib/firebase";
 import { saveUnauthenticatedFcmToken } from "~/services/save-unauthenticated-fcm-token";
@@ -24,15 +29,19 @@ import { usePhoto } from "~/hooks/use-photo";
 
 export default function AdminFulfillForm() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const state = location.state as {
     token: string;
     tokenId: string;
     userType: "employee";
     employee: EmployeeUIProps;
   };
+  const employee =
+    state.employee ?? JSON.parse(searchParams.get("employee") ?? "");
+
   const { file, handleFileChange, preview } = usePhoto({
     defaultValues: {
-      preview: state.employee.avatar,
+      preview: state.employee?.avatar ?? employee.avatar,
     },
   });
   const { useUpdateForm, fulFillEmployeeMutation: update } = useEmployee({
@@ -55,7 +64,7 @@ export default function AdminFulfillForm() {
   });
   const methods = useUpdateForm({
     defaultValues: {
-      ...state.employee,
+      ...employee,
       birthDate: "",
       password: "",
       confirmPassword: "",

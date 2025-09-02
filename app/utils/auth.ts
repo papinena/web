@@ -7,7 +7,7 @@ export interface AuthData {
   tokenId: string;
   userType: "user" | "employee";
   user?: any;
-  employee?: z.infer<typeof EmployeeSchema>;
+  employee?: z.infer<typeof EmployeeSchema> & { avatar?: string };
 }
 
 export const authUtils = {

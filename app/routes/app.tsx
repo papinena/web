@@ -58,6 +58,13 @@ export const clientLoader = async ({ request }: { request: Request }) => {
     if (authData?.userType === "employee") return redirect("/admin/dashboard");
   }
 
+  if (!isFulFillPage && !authData?.employee?.is_register_completed) {
+    const searchParams = new URLSearchParams();
+    console.log(authData?.employee);
+    searchParams.set("employee", JSON.stringify(authData?.employee));
+    return redirect("/register/admin/fulfill?" + searchParams.toString());
+  }
+
   return null;
 };
 

@@ -7,9 +7,11 @@ type Props = {
   };
 };
 
-export function usePhoto({}: Props = {}) {
-  const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
+export function usePhoto({ defaultValues }: Props = { defaultValues: {} }) {
+  const [preview, setPreview] = useState<string | null>(
+    defaultValues?.preview ?? null
+  );
+  const [file, setFile] = useState<File | null>(defaultValues?.file ?? null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

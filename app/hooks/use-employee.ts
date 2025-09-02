@@ -6,12 +6,7 @@ import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { useAuth } from "~/hooks/useAuth";
 import { useToastStore } from "~/stores/toast";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  type InvalidateQueryFilters,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UpdateAdminType } from "~/parsers/update-admin";
 import { DateFormatter } from "~/utils/date-formatter";
 import { zodResolver } from "@hookform/resolvers/zod";
