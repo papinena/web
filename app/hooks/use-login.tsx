@@ -73,12 +73,6 @@ export function useLogin() {
 
       authLogin(result);
 
-      if (!result.employee.is_register_completed) {
-        return navigate("/register/admin/fulfill", {
-          state: { ...result, employee: EmployeeMapper.toUI(result.employee) },
-        });
-      }
-
       // Store authentication data in localStorage and update state
       const token = await firebaseService.setup();
 
@@ -86,7 +80,7 @@ export function useLogin() {
         await saveFcmToken(token);
       }
 
-      return navigate("/admin/dashboard");
+      return navigate("/");
     },
     onError: (error) => {
       setFormError(error.message);
