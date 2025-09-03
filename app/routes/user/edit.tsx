@@ -36,7 +36,11 @@ export default function EditUser() {
     updateUserMutation,
   } = useUser({
     onSuccess: () => {
-      addToast({ title: "Sucesso!", description: "Informações salvas" });
+      addToast({
+        title: "Sucesso!",
+        description: "Informações salvas",
+        position: "top-center",
+      });
     },
   });
   const query = useUserEditInfo();

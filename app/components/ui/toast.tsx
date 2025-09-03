@@ -4,7 +4,7 @@ import { cn } from "~/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const toastVariants = cva(
-  "fixed z-50 w-full max-w-sm p-4 rounded-lg shadow-lg border",
+  "w-full max-w-sm p-4 rounded-lg shadow-lg border",
   {
     variants: {
       variant: {
@@ -12,24 +12,21 @@ const toastVariants = cva(
         destructive: "bg-red-500 text-white border-red-600",
         success: "bg-green-500 text-white border-green-600",
       },
-      position: {
-        "top-left": "top-5 left-5",
-        "top-center": "top-5 left-1/2 -translate-x-1/2",
-        "top-right": "top-5 right-5",
-        "bottom-left": "bottom-5 left-5",
-        "bottom-center": "bottom-5 left-1/2 -translate-x-1/2",
-        "bottom-right": "bottom-5 right-5",
-      },
     },
     defaultVariants: {
       variant: "default",
-      position: "bottom-center",
     },
   }
 );
 
 type ToastVariant = VariantProps<typeof toastVariants>["variant"];
-type ToastPosition = VariantProps<typeof toastVariants>["position"];
+export type ToastPosition =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
 
 const ToastContext = React.createContext<{
   onClose: () => void;
@@ -61,10 +58,10 @@ const ToastProvider = ({
 const Toast = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof toastVariants>
->(({ className, variant, position, ...props }, ref) => (
+>(({ className, variant, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(toastVariants({ variant, position }), className)}
+    className={cn(toastVariants({ variant }), className)}
     {...props}
   />
 ));
@@ -149,4 +146,3 @@ export {
   ToastClose,
   ToastProvider,
 };
-export type { ToastPosition };

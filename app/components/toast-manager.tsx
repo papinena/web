@@ -7,21 +7,45 @@ import {
   ToastHeader,
   ToastTitle,
   ToastProvider,
+  type ToastPosition,
 } from "~/components/ui/toast";
+import { cn } from "~/lib/utils";
+
+const positionClasses: Record<ToastPosition, string> = {
+  "top-left": "top-5 left-5",
+  "top-center": "top-5 left-1/2 -translate-x-1/2",
+  "top-right": "top-5 right-5",
+  "bottom-left": "bottom-5 left-5",
+  "bottom-center": "bottom-5 left-1/2 -translate-x-1/2",
+  "bottom-right": "bottom-5 right-5",
+};
 
 export function ToastManager() {
-  const { toasts, removeToast } = useToastStore();
+  const { toasts } = useToastStore();
+
+  const groupedToasts = toasts.reduce((acc, toast) => {
+    const position = toast.position ?? "bottom-center";
+    if (!acc[position]) {
+      acc[position] = [];
+    }
+    acc[position].push(toast);
+    return acc;
+  }, {} as Record<ToastPosition, ToastMessage[]>);
 
   return (
     <>
-      {toasts.map((toast) => (
-        <ToastProvider
-          key={toast.id}
-          onClose={() => removeToast(toast.id)}
-          variant={toast.variant ?? "default"}
+      {Object.entries(groupedToasts).map(([position, toasts]) => (
+        <div
+          key={position}
+          className={cn(
+            "fixed z-50 min-w-80 flex flex-col gap-2",
+            positionClasses[position as ToastPosition]
+          )}
         >
-          <ToastComponent toast={toast} />
-        </ToastProvider>
+          {toasts.map((toast) => (
+            <ToastComponent key={toast.id} toast={toast} />
+          ))}
+        </div>
       ))}
     </>
   );
@@ -41,12 +65,17 @@ function ToastComponent({ toast }: { toast: ToastMessage }) {
   }, [toast.id, removeToast]);
 
   return (
-    <Toast variant={toast.variant} position={toast.position}>
-      <ToastHeader>
-        <ToastTitle>{toast.title}</ToastTitle>
-        <ToastClose />
-      </ToastHeader>
-      <ToastDescription>{toast.description}</ToastDescription>
-    </Toast>
+    <ToastProvider
+      onClose={() => removeToast(toast.id)}
+      variant={toast.variant ?? "default"}
+    >
+      <Toast variant={toast.variant}>
+        <ToastHeader>
+          <ToastTitle>{toast.title}</ToastTitle>
+          <ToastClose />
+        </ToastHeader>
+        <ToastDescription>{toast.description}</ToastDescription>
+      </Toast>
+    </ToastProvider>
   );
 }
