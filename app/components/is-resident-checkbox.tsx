@@ -13,7 +13,7 @@ export function IsResidentCheckbox({
   value?: boolean;
   error?: string;
 }) {
-  const _label = `É morador?${error ? "*" : ""}`;
+  const _label = "É morador?*";
   return (
     <>
       <Label className={cn("flex-1", error ? "text-red-400" : "")}>

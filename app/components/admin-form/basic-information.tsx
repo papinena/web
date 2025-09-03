@@ -41,7 +41,7 @@ export function BasicInformation({
         </Item>
         <Item>
           <InputWithLabel
-            label="Cargo no condomínio"
+            label="Cargo no condomínio*"
             {...register("employee.position")}
             error={errors.employee?.position?.message}
           />
