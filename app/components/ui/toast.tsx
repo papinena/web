@@ -1,14 +1,40 @@
 import * as React from "react";
 import { X } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+
+const toastVariants = cva(
+  "fixed z-50 w-full max-w-sm p-4 rounded-lg shadow-lg border",
+  {
+    variants: {
+      variant: {
+        default: "bg-blue-primary border-blue-primary text-white",
+        destructive: "bg-red-500 text-white border-red-600",
+        success: "bg-green-500 text-white border-green-600",
+      },
+      position: {
+        "top-left": "top-5 left-5",
+        "top-center": "top-5 left-1/2 -translate-x-1/2",
+        "top-right": "top-5 right-5",
+        "bottom-left": "bottom-5 left-5",
+        "bottom-center": "bottom-5 left-1/2 -translate-x-1/2",
+        "bottom-right": "bottom-5 right-5",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      position: "bottom-center",
+    },
+  }
+);
+
+type ToastVariant = VariantProps<typeof toastVariants>["variant"];
+type ToastPosition = VariantProps<typeof toastVariants>["position"];
 
 const ToastContext = React.createContext<{
   onClose: () => void;
+  variant: ToastVariant;
 } | null>(null);
-
-const ToastProvider = ({ children, onClose }: { children: React.ReactNode, onClose: () => void }) => (
-  <ToastContext.Provider value={{ onClose }}>{children}</ToastContext.Provider>
-);
 
 const useToast = () => {
   const context = React.useContext(ToastContext);
@@ -18,17 +44,27 @@ const useToast = () => {
   return context;
 };
 
+const ToastProvider = ({
+  children,
+  onClose,
+  variant,
+}: {
+  children: React.ReactNode;
+  onClose: () => void;
+  variant: ToastVariant;
+}) => (
+  <ToastContext.Provider value={{ onClose, variant }}>
+    {children}
+  </ToastContext.Provider>
+);
+
 const Toast = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof toastVariants>
+>(({ className, variant, position, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "fixed top-5 right-5 z-50 w-full max-w-sm p-4 rounded-lg shadow-lg bg-white border border-gray-200",
-      "animate-in slide-in-from-top-5",
-      className
-    )}
+    className={cn(toastVariants({ variant, position }), className)}
     {...props}
   />
 ));
@@ -49,38 +85,50 @@ ToastHeader.displayName = "ToastHeader";
 const ToastTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-lg font-semibold", className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <p
+      ref={ref}
+      className={cn("text-lg font-semibold text-white", className)}
+      {...props}
+    />
+  );
+});
 ToastTitle.displayName = "ToastTitle";
 
 const ToastDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm text-gray-600 mt-1", className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  return (
+    <p
+      ref={ref}
+      className={cn("text-sm mt-1 text-white/90", className)}
+      {...props}
+    />
+  );
+});
 ToastDescription.displayName = "ToastDescription";
 
 const ToastClose = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
 >(({ className, ...props }, ref) => {
-  const { onClose } = useToast();
+  const { onClose, variant } = useToast();
   return (
     <button
       ref={ref}
       type="button"
       className={cn(
-        "p-1 rounded-full text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400",
+        "p-1 rounded-full bg-white focus:outline-none focus:ring-2",
+        {
+          "text-blue-primary hover:bg-blue-100 focus:ring-blue-400":
+            variant === "default",
+          "text-red-500 hover:bg-red-100 focus:ring-red-400":
+            variant === "destructive",
+          "text-green-500 hover:bg-green-100 focus:ring-green-400":
+            variant === "success",
+        },
         className
       )}
       onClick={onClose}
@@ -101,3 +149,4 @@ export {
   ToastClose,
   ToastProvider,
 };
+export type { ToastPosition };

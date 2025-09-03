@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useToastStore } from "~/stores/toast";
+import { useEffect } from "react";
+import { useToastStore, type ToastMessage } from "~/stores/toast";
 import {
   Toast,
   ToastClose,
@@ -15,7 +15,11 @@ export function ToastManager() {
   return (
     <>
       {toasts.map((toast) => (
-        <ToastProvider key={toast.id} onClose={() => removeToast(toast.id)}>
+        <ToastProvider
+          key={toast.id}
+          onClose={() => removeToast(toast.id)}
+          variant={toast.variant ?? "default"}
+        >
           <ToastComponent toast={toast} />
         </ToastProvider>
       ))}
@@ -23,7 +27,7 @@ export function ToastManager() {
   );
 }
 
-function ToastComponent({ toast }: { toast: { id: string, title: string, description: string } }) {
+function ToastComponent({ toast }: { toast: ToastMessage }) {
   const { removeToast } = useToastStore();
 
   useEffect(() => {
@@ -37,7 +41,7 @@ function ToastComponent({ toast }: { toast: { id: string, title: string, descrip
   }, [toast.id, removeToast]);
 
   return (
-    <Toast>
+    <Toast variant={toast.variant} position={toast.position}>
       <ToastHeader>
         <ToastTitle>{toast.title}</ToastTitle>
         <ToastClose />

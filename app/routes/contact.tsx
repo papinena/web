@@ -12,9 +12,14 @@ export default function Contact() {
           <br />É só entrar em contato:
         </Text>
         <Text>
+          📱 WhatsApp:{" "}
+          <a href="https://tinyurl.com/contatovizis" className="underline">
+            https://tinyurl.com/contatovizis
+          </a>
+          <br />
           📧 E-mail:{" "}
           <a type="email" href="contato@vizis.com.br" className="underline">
-            contato@vizis.com.br
+            contato@vizis.co
           </a>
           <br /> Será um prazer te ajudar 💚
         </Text>

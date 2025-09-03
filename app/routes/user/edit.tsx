@@ -28,7 +28,6 @@ export default function EditUser() {
   const {
     handleFileChange,
     handleRemoveImage,
-    file,
     selectedTheme,
     setSelectedTheme,
     updateUserForm,
