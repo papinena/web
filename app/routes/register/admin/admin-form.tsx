@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { Box } from "~/components/ui/box";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
@@ -22,6 +22,7 @@ import { ErrorMessage } from "~/components/error-message";
 import { Form, useNavigate } from "react-router";
 import { usePhoto } from "~/hooks/use-photo";
 import { useEmployee } from "~/hooks/use-employee";
+import { Terms } from "~/components/terms-of-use";
 
 export default function AdminForm() {
   const navigate = useNavigate();
@@ -99,6 +100,17 @@ export default function AdminForm() {
                   descarte de pilhas/baterias e remédios, horário da adm, etc
                 </Text>
               </SectionContainer>
+              <Controller
+                name="terms"
+                control={methods.control}
+                render={({ field }) => (
+                  <Terms
+                    value={Boolean(field.value)}
+                    onChange={field.onChange}
+                    error={methods.formState.errors.terms?.message}
+                  />
+                )}
+              />
               {hasErrors && (
                 <Box className="border-red-400 text-center p-3 border rounded-lg">
                   <Text className="text-red-400">

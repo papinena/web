@@ -56,6 +56,7 @@ export const CreateAdminSchema = z
       doorKeeperChief: z.string().optional(),
       receptionTelephone: z.string().optional(),
     }),
+    terms: z.boolean({ error: "Termos de uso obrigatório" }),
     employees: z
       .array(
         z.object({
@@ -64,6 +65,10 @@ export const CreateAdminSchema = z
         })
       )
       .optional(),
+  })
+  .refine((schema) => schema.terms, {
+    message: "Termo de uso obrigatório",
+    path: ["terms"],
   })
   .refine(
     (schema) => schema.employee.password === schema.employee.confirmPassword,
