@@ -39,7 +39,8 @@ export default function EditUser() {
       addToast({
         title: "Sucesso!",
         description: "Informações salvas",
-        position: "top-center",
+        position: "bottom-center",
+        variant: "success",
       });
     },
   });

@@ -47,9 +47,9 @@ export default function EditAdmin() {
   });
 
   useEffect(() => {
-    if (query.isSuccess) {
+    if (query.isSuccess && query.data) {
       const { employee, condominium, condominiumAdministrator } = query.data;
-      methods.reset({
+      const obj = {
         employee: {
           name: employee.name,
           lastName: employee.lastName,
@@ -62,26 +62,32 @@ export default function EditAdmin() {
           apartment: employee.apartment,
           birthDate: DateFormatter.format(employee.birthDate),
         },
-        condominium: {
-          name: condominium?.name,
-        },
-        condominiumAdministrator: {
-          name: condominiumAdministrator?.name,
-          contact: condominiumAdministrator?.contact,
-          address: condominiumAdministrator?.address,
-          telephone: condominiumAdministrator?.telephone,
-          counsil: condominiumAdministrator?.counsil,
-          doorKeeperChief: condominiumAdministrator?.doorKeeperChief,
-          receptionTelephone: condominiumAdministrator?.receptionTelephone,
-          email: condominiumAdministrator?.email,
-        } /*
-        employees: employees
-          ?.filter((e) => e.id !== employee.id)
-          .map((e) => ({
-            name: e.name,
-            email: e.email,
-          })),*/,
-      });
+      };
+
+      if (condominiumAdministrator) {
+        Object.assign(obj, {
+          condominiumAdministrator: {
+            name: condominiumAdministrator?.name,
+            contact: condominiumAdministrator?.contact,
+            address: condominiumAdministrator?.address,
+            telephone: condominiumAdministrator?.telephone,
+            counsil: condominiumAdministrator?.counsil,
+            doorKeeperChief: condominiumAdministrator?.doorKeeperChief,
+            receptionTelephone: condominiumAdministrator?.receptionTelephone,
+            email: condominiumAdministrator?.email,
+          },
+        });
+      }
+
+      if (condominium) {
+        Object.assign(obj, {
+          condominium: {
+            name: condominium?.name,
+          },
+        });
+      }
+
+      methods.reset(obj);
     }
   }, [query.isSuccess, methods.reset, query.data]);
 

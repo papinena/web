@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { ToastPosition } from "~/components/ui/toast";
 
-export type ToastVariant = "default" | "destructive" | "success";
+export type ToastVariant = "default" | "destructive" | "success" | "admin";
 
 export interface ToastMessage {
   id: string;

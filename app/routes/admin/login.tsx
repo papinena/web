@@ -114,7 +114,7 @@ export default function Login() {
             asChild
             className="max-w-72 w-full mx-auto border-green-primary !bg-green-primary cursor-pointer"
           >
-            <Link to="/register/user">
+            <Link to="/register/admin">
               <Text className="text-wrap text-white">Cadastre-se</Text>
             </Link>
           </Button>

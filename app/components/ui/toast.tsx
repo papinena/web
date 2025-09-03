@@ -3,21 +3,19 @@ import { X } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const toastVariants = cva(
-  "w-full max-w-sm p-4 rounded-lg shadow-lg border",
-  {
-    variants: {
-      variant: {
-        default: "bg-blue-primary border-blue-primary text-white",
-        destructive: "bg-red-500 text-white border-red-600",
-        success: "bg-green-500 text-white border-green-600",
-      },
+const toastVariants = cva("w-full max-w-sm p-4 rounded-lg shadow-lg border", {
+  variants: {
+    variant: {
+      default: "bg-blue-primary border-blue-primary text-white",
+      destructive: "bg-red-500 text-white border-red-600",
+      success: "bg-green-500 text-white border-green-600",
+      admin: "bg-green-primary text-white border-green-primary",
     },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
 type ToastVariant = VariantProps<typeof toastVariants>["variant"];
 export type ToastPosition =
@@ -125,6 +123,8 @@ const ToastClose = React.forwardRef<
             variant === "destructive",
           "text-green-500 hover:bg-green-100 focus:ring-green-400":
             variant === "success",
+          "text-slate-400 hover:bg-slate-100 focus:ring-slate-400":
+            variant === "admin",
         },
         className
       )}

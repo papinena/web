@@ -90,7 +90,7 @@ export function UserHamburguerMenu({
         </DropdownMenuItem>
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <IconMenuItem to="/help" iconSrc="/image 129.svg">
+            <IconMenuItem to="/faq" iconSrc="/image 129.svg">
               Ajuda
             </IconMenuItem>
           </DropdownMenuItem>

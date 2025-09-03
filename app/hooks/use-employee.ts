@@ -248,7 +248,11 @@ export function useEmployee({
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["admin-edit-info"] });
       setAuthEmployeeData(data.data.employee.data);
-      addToast({ title: "Sucesso!", description: "Informações salvas" });
+      addToast({
+        title: "Sucesso!",
+        description: "Informações salvas",
+        variant: "admin",
+      });
     },
   });
 
