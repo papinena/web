@@ -23,6 +23,7 @@ export function ButtonWithSpinner({
   size,
   loading,
   children,
+  variant = "admin",
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
@@ -31,12 +32,10 @@ export function ButtonWithSpinner({
   }) {
   return (
     <Button
-      className={cn(
-        "mx-20 cursor-pointer bg-green-primary hover:bg-green-primary/90",
-        className
-      )}
+      className={cn("mx-20 cursor-pointer", className)}
       size={size ?? "lg"}
       disabled={loading}
+      variant={variant}
       {...props}
     >
       {loading ? <Spinner /> : children || "Enviar"}

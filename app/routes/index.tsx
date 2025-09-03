@@ -12,6 +12,7 @@ import { Button } from "~/components/ui/button";
 import { Link } from "react-router";
 import { RouteContainer } from "~/components/route-container";
 import { formatPostNetworks } from "~/utils/get-user-networks";
+import { FeedbackDialog } from "~/components/feedback-dialog";
 
 export default function Home() {
   const { useListPosts } = usePost();
@@ -58,6 +59,11 @@ export default function Home() {
 
   return (
     <RouteContainer>
+      <FeedbackDialog
+        triggerProps={{
+          className: "absolute right-0 top-30",
+        }}
+      />
       <Box className="flex-1 p-3 flex-col gap-3">
         <Box className="gap-4 flex-col">
           {adminPosts.map((post) => (
