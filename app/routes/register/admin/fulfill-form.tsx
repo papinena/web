@@ -59,7 +59,7 @@ export default function AdminFulfillForm() {
           );
         }
       }
-      navigate("/login");
+      return navigate("/admin/login");
     },
   });
   const methods = useUpdateForm({
@@ -75,7 +75,7 @@ export default function AdminFulfillForm() {
   const { error, isError, isPending, mutate } = update;
 
   function onSave(form: FulFillEmployeeType) {
-    mutate({ form, file });
+    mutate({ form, file, token: state.token });
   }
 
   const { errors } = methods.formState;

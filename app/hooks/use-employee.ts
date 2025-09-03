@@ -131,9 +131,11 @@ export function useEmployee({
     mutationFn: async ({
       form,
       file,
+      token,
     }: {
       form: FulFillEmployeeType;
       file: File | null;
+      token?: string;
     }) => {
       let avatarFilename: string | undefined | null = undefined;
       let tokenData: { containerUri: string; sasToken: string } | undefined,
@@ -164,7 +166,7 @@ export function useEmployee({
           isRegisterCompleted: true,
         });
 
-        return await fulfillAdmin(payload);
+        return await fulfillAdmin(payload, { token });
         // call service
       } catch (error) {
         if (tokenData && avatarFilename) {
@@ -179,7 +181,6 @@ export function useEmployee({
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["admin-edit-info"] });
-      setAuthEmployeeData(data);
       addToast({ title: "Sucesso!", description: "Informações salvas" });
       onFulFillSuccess && onFulFillSuccess(data);
     },

@@ -32,14 +32,13 @@ export function useLogin() {
         return;
       }
 
-      authLogin(result);
-
       if (!result.employee.is_register_completed) {
         return navigate("/register/admin/fulfill", {
           state: { ...result, employee: EmployeeMapper.toUI(result.employee) },
         });
       }
 
+      authLogin(result);
       // Store authentication data in localStorage and update state
       const token = await firebaseService.setup();
 
@@ -98,14 +97,13 @@ export function useLogin() {
         return setFormError(result.error.message);
       }
 
-      authLogin(result);
-
       if (!result.employee.is_register_completed) {
         return navigate("/register/admin/fulfill", {
           state: { ...result, employee: EmployeeMapper.toUI(result.employee) },
         });
       }
 
+      authLogin(result);
       if (result.isNew) {
         return navigate("/register/user/social/form", {
           state: { ...result.profile },
