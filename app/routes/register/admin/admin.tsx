@@ -19,8 +19,7 @@ export default function AdminIndex() {
         }
       >
         <Text className="text-green-primary">
-          Olá, <strong>Administração do Condomínio XXX</strong>, sejam
-          bem-vindos(as) ao Vizis!
+          Olá, administrador do condomínio. Seja bem-vindo(a) ao Vizis!
         </Text>
         <Text className="font-bold">
           O Vizis tem uma área exclusiva para você e seu time!

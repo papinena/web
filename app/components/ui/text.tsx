@@ -7,14 +7,27 @@ const variants = {
   subtitle: "font-title text-xl font-semibold text-primary",
 };
 
+const colors = {
+  admin: "text-green-primary",
+  user: "text-blue-primary",
+  default: "",
+};
+
 export function Text({
   children,
   className,
   variant = "default",
+  color = "default",
   ...props
-}: React.ComponentProps<"p"> & { variant?: keyof typeof variants }) {
+}: React.ComponentProps<"p"> & {
+  variant?: keyof typeof variants;
+  color?: keyof typeof colors;
+}) {
   return (
-    <p className={cn("", variants[variant], className)} {...props}>
+    <p
+      className={cn("", variants[variant], colors[color], className)}
+      {...props}
+    >
       {children}
     </p>
   );

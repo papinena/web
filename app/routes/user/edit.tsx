@@ -80,6 +80,7 @@ export default function EditUser() {
   const user = query.data?.user;
   const condominium = query.data?.condominium;
   const preview = buildUrl(user?.avatar) ?? null;
+  console.log(preview);
 
   return (
     <RouteContainer>

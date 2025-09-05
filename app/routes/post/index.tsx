@@ -103,8 +103,18 @@ export default function Post({ params }: Route.ComponentProps) {
       <Box className="flex-1 flex-col gap-5">
         <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
           {hasMedia && <ImageGallery media={post.media} buildUrl={buildUrl} />}
+          {post?.title && (
+            <Text variant="title" color="user" className="font-bold">
+              {post.title}
+            </Text>
+          )}
+          {post?.resume && <Text>{post.resume}</Text>}
           {post?.description && (
-            <MarkdownEditor markdown={post.description} readOnly />
+            <MarkdownEditor
+              contentEditableClassName="!p-0"
+              markdown={post.description}
+              readOnly
+            />
           )}
           <Text className="font-bold">
             Se interessou? Entre em contato direto com o seu vizinho.

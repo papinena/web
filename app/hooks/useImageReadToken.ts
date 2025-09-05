@@ -17,6 +17,12 @@ export function useImageReadToken() {
 
   function buildUrl(filename?: string) {
     if (!filename) return "#";
+
+    const isExternalUrl =
+      filename.startsWith("http") || filename.startsWith("https");
+
+    if (isExternalUrl) return filename;
+
     return `${state.containerUri}/${filename}?${state.sasToken}`;
   }
 
