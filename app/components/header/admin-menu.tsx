@@ -82,7 +82,7 @@ export function AdminHamburguerMenu({
           <DropdownMenuItem asChild>
             <Box>
               <BulletPoint />
-              <TextMenuItem to="/post/admin/my-publications">
+              <TextMenuItem to="/admin/residents">
                 Gerenciar Moradores
               </TextMenuItem>
             </Box>
