@@ -1,9 +1,9 @@
 import { cn } from "~/lib/utils";
 
 const variants = {
-  body: "font-body text-primary",
-  default: "font-body text-primary",
-  title: "font-title text-2xl text-primary font-semibold",
+  body: "font-body text-base text-primary",
+  default: "font-body text-base text-primary",
+  title: "font-title text-title text-primary font-semibold",
   subtitle: "font-title text-xl font-semibold text-primary",
 };
 

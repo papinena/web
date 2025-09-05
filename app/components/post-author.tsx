@@ -52,7 +52,9 @@ function PostAuthorAvatar({
 }
 
 function PostAuthorName({ author, className }: SubComponentProps) {
-  return <Text className={cn("font-bold", className)}>{author?.name}</Text>;
+  return (
+    <Text className={cn("text-sm font-bold", className)}>{author?.name}</Text>
+  );
 }
 
 function PostAuthorBlock({
@@ -74,7 +76,11 @@ function PostAuthorAparment({
   author: { apartment: string };
   className?: string;
 }) {
-  return <Text className={className}>Apartamento: {author?.apartment}</Text>;
+  return (
+    <Text className={cn("text-sm", className)}>
+      Apartamento: {author?.apartment}
+    </Text>
+  );
 }
 
 // --- Main Component ---

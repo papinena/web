@@ -135,7 +135,6 @@ export default function Home() {
                             <Box className="gap-1.5">
                               {post.author.apartment && (
                                 <PostAuthor.Apartment
-                                  className="text-xs"
                                   author={{
                                     apartment:
                                       post.author.apartment +

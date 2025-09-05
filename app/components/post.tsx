@@ -20,7 +20,10 @@ function PostTitle({
   className,
 }: SubComponentProps & { post: { title: string } }) {
   return (
-    <Text className={cn("text-md font-bold text-blue-primary", className)}>
+    <Text
+      variant="title"
+      className={cn("font-bold text-blue-primary", className)}
+    >
       {post.title}
     </Text>
   );
