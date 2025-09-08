@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "~/stores/auth";
 
 export function useAuth() {
@@ -11,6 +12,11 @@ export function useAuth() {
     setAuthUserData,
     setAuthEmployeeData,
   } = useAuthStore();
+  const queryClient = useQueryClient();
+
+  function _logout() {
+    queryClient.removeQueries();
+  }
 
   return {
     authData,
