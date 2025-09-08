@@ -162,7 +162,7 @@ export default function Home() {
                         asChild
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <a className="!text-base" href={n.url}>
+                        <a className="!text-base underline" href={n.url}>
                           {n.social}/{n.label}
                         </a>
                       </Button>

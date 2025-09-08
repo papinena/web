@@ -17,6 +17,7 @@ import { MenuLink } from "./menu-link";
 import { PlusIcon } from "lucide-react";
 import { Box } from "../ui/box";
 import { BulletPoint } from "./bullet-point";
+import { useState } from "react";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -29,9 +30,10 @@ export function AdminHamburguerMenu({
   ariaLabel = "Open menu",
 }: HamburgerMenuProps) {
   const { handleLogout } = useHamburguerMenu();
+  const [open, setOpen] = useState(false);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
         <HamburguerMenuIcon className={className} ariaLabel={ariaLabel} />
       </DropdownMenuTrigger>
@@ -63,29 +65,23 @@ export function AdminHamburguerMenu({
               Gestão do condomínio
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Box>
-              <BulletPoint />
-              <TextMenuItem to="/admin/edit">
-                Cadastro do condomínio
-              </TextMenuItem>
-            </Box>
+          <DropdownMenuItem>
+            <BulletPoint />
+            <TextMenuItem setOpen={setOpen} to="/admin/edit">
+              Cadastro do condomínio
+            </TextMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Box>
-              <BulletPoint />
-              <TextMenuItem to="/post/admin/my-publications">
-                Publicações do Condomínio
-              </TextMenuItem>
-            </Box>
+          <DropdownMenuItem>
+            <BulletPoint />
+            <TextMenuItem setOpen={setOpen} to="/post/admin/my-publications">
+              Publicações do Condomínio
+            </TextMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Box>
-              <BulletPoint />
-              <TextMenuItem to="/admin/residents">
-                Gerenciar Moradores
-              </TextMenuItem>
-            </Box>
+          <DropdownMenuItem>
+            <BulletPoint />
+            <TextMenuItem setOpen={setOpen} to="/admin/residents">
+              Gerenciar Moradores
+            </TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuGroup>
@@ -99,11 +95,15 @@ export function AdminHamburguerMenu({
               Ajuda
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <TextMenuItem to="/faq">FAQ</TextMenuItem>
+          <DropdownMenuItem>
+            <TextMenuItem setOpen={setOpen} to="/faq">
+              FAQ
+            </TextMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <TextMenuItem to="/vizis/contact">Fale com o Vizis</TextMenuItem>
+          <DropdownMenuItem>
+            <TextMenuItem setOpen={setOpen} to="/vizis/contact">
+              Fale com o Vizis
+            </TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
