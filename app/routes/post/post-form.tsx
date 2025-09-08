@@ -77,6 +77,7 @@ export function PostForm({
   const methods = useForm<CreatePostType>({
     resolver: zodResolver(CreatePostSchema),
     defaultValues: initialValues,
+    mode: "onChange",
   });
 
   const {
