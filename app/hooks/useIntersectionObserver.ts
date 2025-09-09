@@ -11,8 +11,11 @@ export function useIntersectionObserver(
 ) {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [entry, setEntry] = useState<IntersectionObserverEntry | null>(null);
+  const [node, setNode] = useState<HTMLElement | null>(null);
   const observer = useRef<IntersectionObserver | null>(null);
-  const ref = useRef<HTMLDivElement | null>(null);
+  const ref = (currentNode: HTMLElement | null) => {
+    setNode(currentNode);
+  };
 
   useEffect(() => {
     if (observer.current) {
@@ -25,14 +28,14 @@ export function useIntersectionObserver(
     }, options);
 
     const { current: currentObserver } = observer;
-    if (ref.current) {
-      currentObserver.observe(ref.current);
+    if (node) {
+      currentObserver.observe(node);
     }
 
     return () => {
       currentObserver.disconnect();
     };
-  }, [options.root, options.rootMargin, options.threshold]);
+  }, [node, options.root, options.rootMargin, options.threshold]);
 
   return { ref, isIntersecting, entry };
 }
