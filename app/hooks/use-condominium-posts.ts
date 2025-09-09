@@ -7,7 +7,7 @@ export const useCondominiumPosts = () => {
     queryFn: ({ pageParam = 1 }) => getCondominiumPosts({ page: pageParam }),
     getNextPageParam: (lastPage, allPages) => {
       // If the last page has no data, there are no more pages
-      if (lastPage.data.length === 0) {
+      if (!lastPage.pagination.hasNextPage) {
         return undefined;
       }
       // Otherwise, increment the page number

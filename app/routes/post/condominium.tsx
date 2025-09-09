@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Post } from "~/components/post";
 import { RouteContainer } from "~/components/route-container";
 import { Box } from "~/components/ui/box";
-import { Button } from "~/components/ui/button";
 import { PostImage } from "~/components/ui/post-image";
 import { Spinner } from "~/components/ui/spinner";
 import { Text } from "~/components/ui/text";
@@ -45,6 +44,7 @@ export default function CondominiumPost() {
       <Box className="flex-col gap-3">
         {posts.map((post) => (
           <Post
+            ref={ref}
             className="border-2 py-3 border-green-primary bg-white rounded-4xl"
             key={post.id}
             post={post}
@@ -75,8 +75,7 @@ export default function CondominiumPost() {
         ))}
 
         {/* Trigger element for infinite scroll */}
-        <Box ref={ref} className="h-10" />
-        {isFetchingNextPage && <Spinner />}
+        {isFetchingNextPage && <Spinner className="mx-auto" />}
       </Box>
     </RouteContainer>
   );

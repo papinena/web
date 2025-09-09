@@ -1,22 +1,16 @@
 import type { EmployeePostAPIProps, UserPostAPIProps } from "~/interfaces/post";
 import { api, apiRequest } from "~/utils/api";
-import type { Pagination } from "~/interfaces/pagination";
+import type {
+  ApiResponseMessage,
+  ApiResponseStatus,
+  PaginatedApiResponse,
+} from "~/interfaces/api-response";
 
-interface ApiResponse {
-  status: "success" | "error";
-  message: string;
-  userPosts: {
-    status: string;
-    message: string;
-    data: UserPostAPIProps[];
-    pagination: Pagination;
-  };
-  employeesPosts: {
-    status: string;
-    message: string;
-    data: EmployeePostAPIProps[];
-    pagination: Pagination;
-  };
+interface GetHomePostsResponse {
+  status: ApiResponseStatus;
+  message: ApiResponseMessage;
+  userPosts: PaginatedApiResponse<UserPostAPIProps[]>;
+  employeesPosts: PaginatedApiResponse<EmployeePostAPIProps[]>;
 }
 
 export async function getHomePosts({ pageParam = 1, limit = 5 }) {
@@ -29,7 +23,7 @@ export async function getHomePosts({ pageParam = 1, limit = 5 }) {
     url.searchParams.append("limit", String(limit));
 
     const response = await apiRequest(url.toString());
-    const responseData: ApiResponse = await response.json();
+    const responseData: GetHomePostsResponse = await response.json();
 
     if (responseData.status === "error" || !response.ok) {
       throw new Error(responseData.message || "Failed to fetch home posts");

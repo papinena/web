@@ -1,4 +1,4 @@
-import type { ApiResponse } from "~/interfaces/api-response";
+import type { PaginatedApiResponse } from "~/interfaces/api-response";
 import type { EmployeePostAPIProps } from "~/interfaces/post";
 import { api, apiRequest } from "~/utils/api";
 
@@ -17,7 +17,7 @@ export async function getCondominiumPosts({
     url.searchParams.append("limit", String(limit));
 
     const response = await apiRequest(url.toString());
-    const responseData: ApiResponse<EmployeePostAPIProps[]> =
+    const responseData: PaginatedApiResponse<EmployeePostAPIProps[]> =
       await response.json();
 
     if (responseData.status === "error" || !response.ok) {

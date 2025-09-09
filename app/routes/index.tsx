@@ -27,8 +27,6 @@ export default function Home() {
 
   const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0.1 });
 
-  console.log(isIntersecting);
-
   useEffect(() => {
     if (isIntersecting && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
