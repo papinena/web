@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { forwardRef, type ComponentProps, type ReactNode } from "react";
 import { Link } from "react-router";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
@@ -77,7 +77,7 @@ function PostNetworks({
 
 // --- Main Component ---
 
-interface PostProps {
+interface PostProps extends Omit<ComponentProps<typeof Link>, "to"> {
   post: UserPostAPIProps | EmployeePostAPIProps;
   children: ReactNode;
   className?: string;
@@ -91,18 +91,24 @@ interface PostComposition {
   Networks: typeof PostNetworks;
 }
 
-export const Post: React.FC<PostProps> & PostComposition = ({
-  post,
-  children,
-  className,
-  to,
-}) => {
-  return (
-    <Link to={to ?? `/post/${post.id}`} className={cn("w-full", className)}>
-      {children}
-    </Link>
-  );
-};
+const PostWithRef = forwardRef<HTMLAnchorElement, PostProps>(
+  ({ post, children, className, to, ...props }, ref) => {
+    return (
+      <Link
+        ref={ref}
+        to={to ?? `/post/${post.id}`}
+        className={cn("w-full", className)}
+        {...props}
+      >
+        {children}
+      </Link>
+    );
+  }
+);
+
+PostWithRef.displayName = "Post";
+
+export const Post = PostWithRef as typeof PostWithRef & PostComposition;
 
 Post.Title = PostTitle;
 Post.Resume = PostResume;
