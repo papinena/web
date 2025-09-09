@@ -1,5 +1,6 @@
 import type { EmployeePostAPIProps, UserPostAPIProps } from "~/interfaces/post";
 import { api, apiRequest } from "~/utils/api";
+import type { Pagination } from "~/interfaces/pagination";
 
 interface ApiResponse {
   status: "success" | "error";
@@ -8,15 +9,17 @@ interface ApiResponse {
     status: string;
     message: string;
     data: UserPostAPIProps[];
+    pagination: Pagination;
   };
   employeesPosts: {
     status: string;
     message: string;
     data: EmployeePostAPIProps[];
+    pagination: Pagination;
   };
 }
 
-export async function getHomePosts({ pageParam = 1, limit = 10 }) {
+export async function getHomePosts({ pageParam = 1, limit = 5 }) {
   try {
     const { BASE_URL } = api();
     const url = new URL(`${BASE_URL}/home`);

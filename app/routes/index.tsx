@@ -27,6 +27,8 @@ export default function Home() {
 
   const { ref, isIntersecting } = useIntersectionObserver({ threshold: 0.1 });
 
+  console.log(isIntersecting);
+
   useEffect(() => {
     if (isIntersecting && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -105,7 +107,12 @@ export default function Home() {
             </Post>
           ))}
           {userPosts.map((post) => (
-            <Post className="bg-white rounded-2xl" key={post.id} post={post}>
+            <Post
+              ref={ref}
+              className="bg-white rounded-2xl"
+              key={post.id}
+              post={post}
+            >
               <Box className="w-full flex-col">
                 <Box className="p-3 gap-3">
                   {post.media.length > 0 && (
@@ -173,9 +180,7 @@ export default function Home() {
             </Post>
           ))}
         </Box>
-        {/* Trigger element for infinite scroll */}
-        <Box ref={ref} className="h-10" />
-        {isFetchingNextPage && <Spinner />}
+        {isFetchingNextPage && <Spinner className="mx-auto" />}
       </Box>
     </RouteContainer>
   );

@@ -23,10 +23,11 @@ export function usePost() {
       initialPageParam: 1,
       getNextPageParam: (lastPage, allPages) => {
         // If the last page has no data, there are no more pages
-        if (lastPage.userPosts.data.length === 0) {
+
+        if (!lastPage.userPosts.pagination.hasNextPage) {
           return undefined;
         }
-        // Otherwise, increment the page number
+
         return allPages.length + 1;
       },
     });
