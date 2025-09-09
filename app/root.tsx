@@ -23,6 +23,37 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap",
   },
+  {
+    rel: "apple-touch-icon",
+    sizes: "180x180",
+    href: "/favicons/apple-touch-icon.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "32x32",
+    href: "/favicons/favicon-32x32.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "16x16",
+    href: "/favicons/favicon-16x16.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "192x192",
+    href: "/favicons/android-chrome-192x192.png",
+  },
+  {
+    rel: "icon",
+    type: "image/png",
+    sizes: "512x512",
+    href: "/favicons/android-chrome-512x512.png",
+  },
+  { rel: "manifest", href: "/manifest.json" },
+  { rel: "shortcut icon", href: "/favicons/favicon.ico" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -31,7 +62,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="manifest" href="/manifest.json" />
         <Meta />
         <Links />
       </head>
