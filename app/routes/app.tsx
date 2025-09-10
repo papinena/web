@@ -70,11 +70,11 @@ export function App() {
   return (
     <Box className="min-h-dvh w-full h-full flex-col">
       <Header />
-      <Box className="flex-1 flex flex-col">
+      <Box className="flex-1 mb-10 flex flex-col">
         <Outlet />
       </Box>
-      <Box className="bg-white min-h-12 relative w-full items-center justify-center">
-        {isAuth && (
+      {isAuth ? (
+        <Box className="bg-white bottom-0 fixed min-h-12 w-full items-center justify-center">
           <Button
             asChild
             variant={"outline"}
@@ -84,8 +84,10 @@ export function App() {
               <PlusIcon color={"#94C56F"} className="size-14" />
             </Link>
           </Button>
-        )}
-      </Box>
+        </Box>
+      ) : (
+        <Box className="bg-white bottom-0 fixed min-h-12 w-full items-center justify-center" />
+      )}
     </Box>
   );
 }
