@@ -19,8 +19,12 @@ export function InputWithLabel({
       <Label className={cn("flex-1", error ? "text-red-400" : "")}>
         {_label}
       </Label>
+      {error && (
+        <Text variant="legend" className="text-red-500">
+          {error}
+        </Text>
+      )}
       <Input {...props} />
-      {error && <Text className="text-red-500 text-sm">{error}</Text>}
     </Box>
   );
 }

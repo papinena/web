@@ -114,6 +114,13 @@ export default function UserForm() {
                 <Box className="flex-col gap-3">
                   <Item className="flex-col gap-2">
                     <Label>Condomínio</Label>
+                    <ErrorMessage
+                      className="mr-auto"
+                      textVariant="legend"
+                      show={Boolean(methods.formState.errors.condominiumId)}
+                    >
+                      {methods.formState.errors.condominiumId?.message}
+                    </ErrorMessage>
                     <Controller
                       name="condominiumId"
                       control={methods.control}
@@ -143,12 +150,6 @@ export default function UserForm() {
                         </Select>
                       )}
                     />
-                    <ErrorMessage
-                      className="mx-auto"
-                      show={Boolean(methods.formState.errors.condominiumId)}
-                    >
-                      {methods.formState.errors.condominiumId?.message}
-                    </ErrorMessage>
                   </Item>
                   <Item>
                     <InputWithLabel

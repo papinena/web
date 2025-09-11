@@ -4,6 +4,7 @@ import {
   parse as parseFns,
   parseISO,
   type FormatDistanceFnOptions,
+  isValid,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -23,6 +24,17 @@ export class DateFormatter {
   static format(date: string | Date, formatStr: string = "dd/MM/yyyy"): string {
     const dateObj = typeof date === "string" ? parseISO(date) : date;
     return formatFns(dateObj, formatStr, { locale: ptBR });
+  }
+
+  /**
+   * Parses a date string using a specified format.
+   * Defaults to the "dd/MM/yyyy" format.
+   * @param dateString - The date string to parse.
+   * @param formatStr - The format of the date string.
+   * @returns The parsed Date object.
+   */
+  static isValid(date: unknown): boolean {
+    return isValid(date);
   }
 
   /**
