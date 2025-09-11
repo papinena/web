@@ -30,6 +30,7 @@ import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { PageTitle } from "~/components/page-title";
 
 export default function UserForm() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ export default function UserForm() {
           <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg">
             <Box className="flex-col gap-5 mx-auto">
               <Box className="flex-col gap-5">
-                <Text variant="title">Seu cadastro</Text>
+                <PageTitle>Seu cadastro</PageTitle>
                 <Box className="gap-5">
                   <Box className="flex-col rounded-2xl">
                     <UploadPhotoInput

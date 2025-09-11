@@ -18,6 +18,8 @@ import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { Item } from "~/components/post/item";
 import { ItemLabel } from "~/components/post/item-label";
 import { UploadPhotosInput } from "~/components/post/upload-photos-input";
+import { SectionTitle } from "~/components/section-title";
+import { PageTitle } from "~/components/page-title";
 
 interface Category {
   id: number;
@@ -157,8 +159,10 @@ export function PostForm({
 
   return (
     <FormProvider {...methods}>
-      <Box className="bg-white flex-1 rounded-xl pt-3 px-3 pb-10 flex-col">
-        <Text>{initialValues ? "Atualizar" : "Cadastre a sua"} publicação</Text>
+      <Box className="bg-white gap-5 flex-1 rounded-xl pt-3 px-3 pb-10 flex-col">
+        <PageTitle>
+          {initialValues ? "Atualizar" : "Cadastre a sua"} publicação
+        </PageTitle>
         <form
           onSubmit={handleSubmit(handleSave)}
           className="flex-col gap-5 flex"
@@ -173,10 +177,10 @@ export function PostForm({
           </Item>
           <Item>
             <ItemLabel>Título da publicação*</ItemLabel>
-            <Input {...register("title")} />
-            <ErrorMessage show={!!errors.title}>
+            <ErrorMessage textVariant="legend" show={!!errors.title}>
               {errors.title?.message}
             </ErrorMessage>
+            <Input {...register("title")} />
           </Item>
           <Item>
             <ItemLabel>
@@ -185,10 +189,10 @@ export function PostForm({
                 (informações mais importantes da publicação)
               </strong>
             </ItemLabel>
-            <Input {...register("resume")} />
-            <ErrorMessage show={!!errors.resume}>
+            <ErrorMessage textVariant="legend" show={!!errors.resume}>
               {errors.resume?.message}
             </ErrorMessage>
+            <Input {...register("resume")} />
           </Item>
           <Item>
             <ItemLabel>Mais detalhes da publicação </ItemLabel>
@@ -205,9 +209,10 @@ export function PostForm({
             />
           </Item>
           <Item>
-            <ItemLabel className="text-lg font-bold">
-              Selecione a(s) categoria(s)*
-            </ItemLabel>
+            <SectionTitle>Selecione a(s) categoria(s)*</SectionTitle>
+            <ErrorMessage textVariant="legend" show={!!errors.categories}>
+              {errors.categories?.message}
+            </ErrorMessage>
             <Box className="flex-wrap gap-2">
               {isLoadingCategories && <Text>Carregando categories...</Text>}
               {categories.map((category) => (
@@ -222,14 +227,12 @@ export function PostForm({
                 </ThemeItem>
               ))}
             </Box>
-            <ErrorMessage show={!!errors.categories}>
-              {errors.categories?.message}
-            </ErrorMessage>
           </Item>
           <Item>
-            <ItemLabel className="text-lg font-bold">
-              Selecione o tipo*
-            </ItemLabel>
+            <SectionTitle>Selecione o tipo*</SectionTitle>
+            <ErrorMessage textVariant="legend" show={!!errors.postTypes}>
+              {errors.postTypes?.message}
+            </ErrorMessage>
             <Box className="flex-wrap gap-2">
               {isLoadingCategories && <Text>Carregando tipos...</Text>}
               {postTypes.map((postType) => (
@@ -244,12 +247,12 @@ export function PostForm({
                 </ThemeItem>
               ))}
             </Box>
-            <ErrorMessage show={!!errors.postTypes}>
-              {errors.postTypes?.message}
-            </ErrorMessage>
           </Item>
           <Item>
-            <Text className="text-lg font-bold">Prazo de validade*</Text>
+            <SectionTitle>Prazo de validade*</SectionTitle>
+            <ErrorMessage textVariant="legend" show={!!errors.expiresOn}>
+              {errors.expiresOn?.message}
+            </ErrorMessage>
             <Box className="w-full justify-between">
               <ExpireDateInput
                 label="3 meses"
@@ -267,14 +270,9 @@ export function PostForm({
                 onChange={() => handleExpiresOnChange("Indeterminado")}
               />
             </Box>
-            <ErrorMessage show={!!errors.expiresOn}>
-              {errors.expiresOn?.message}
-            </ErrorMessage>
           </Item>
           <Item>
-            <Text className="text-lg font-bold">
-              Redes Sociais relacionadas a publicação
-            </Text>
+            <SectionTitle>Redes Sociais relacionadas a publicação</SectionTitle>
             <Box className="w-full gap-20">
               <Box className="flex-col gap-1.5">
                 <Image src="/instagram.svg" className="size-5" />
