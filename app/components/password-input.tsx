@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Box } from "~/components/ui/box";
-import { Text } from "~/components/ui/text";
+import { Button } from "./ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -24,14 +25,19 @@ export function PasswordInput({
         className={className}
         {...props}
       />
-      <Box
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="absolute right-0 h-full px-3"
         onClick={() => setShowPassword(!showPassword)}
       >
-        <Text className="text-gray-500 text-sm">
-          {showPassword ? "Ocultar" : "Mostrar"}
-        </Text>
-      </Box>
+        {showPassword ? (
+          <EyeOff className="h-4 w-4" />
+        ) : (
+          <Eye className="h-4 w-4" />
+        )}
+      </Button>
     </Box>
   );
 }

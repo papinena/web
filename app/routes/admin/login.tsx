@@ -12,6 +12,7 @@ import { RouteContainer } from "~/components/route-container";
 import { BoxWithImage } from "~/components/register/box-with-image";
 import { useLogin } from "~/hooks/use-login";
 import { GoogleIcon } from "~/components/google-icon";
+import { LoginTitle } from "~/components/login/title";
 
 export default function Login() {
   const {
@@ -32,7 +33,7 @@ export default function Login() {
         imageContainerClassName="-mt-18"
         images={<Image className="w-full" src="/Group 55.svg" />}
       >
-        <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
+        <LoginTitle />
         <Box className="w-full justify-center">
           <Button
             type="button"
@@ -81,23 +82,20 @@ export default function Login() {
 
           <Button
             type="submit"
-            className="bg-green-primary max-w-72 mx-auto w-full"
+            className="max-w-72 mx-auto w-full"
+            variant="admin"
             disabled={adminLoginMutation.isPending}
           >
             {adminLoginMutation.isPending ? (
               <Box className="flex items-center gap-2">
                 <Spinner size="sm" />
-                <Text>Entrando...</Text>
+                Entrando...
               </Box>
             ) : (
               "Entrar"
             )}
           </Button>
-          <Button
-            asChild
-            variant={"link"}
-            className="mx-auto border-green-primary cursor-pointer"
-          >
+          <Button asChild variant={"link"} className="mx-auto cursor-pointer">
             <Link to="/password/forgot">
               <Text className="text-wrap text-gray-400">
                 Esqueci minha senha
@@ -110,10 +108,7 @@ export default function Login() {
             <Separator className="flex-1" />
           </Box>
 
-          <Button
-            asChild
-            className="max-w-72 w-full mx-auto border-green-primary !bg-green-primary cursor-pointer"
-          >
+          <Button asChild variant="admin" className="max-w-72 w-full mx-auto">
             <Link to="/register/admin">
               <Text className="text-wrap text-white">Cadastre-se</Text>
             </Link>

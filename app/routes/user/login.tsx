@@ -12,6 +12,7 @@ import { RouteContainer } from "~/components/route-container";
 import { BoxWithImage } from "~/components/register/box-with-image";
 import { GoogleIcon } from "~/components/google-icon";
 import { useLogin } from "~/hooks/use-login";
+import { LoginTitle } from "~/components/login/title";
 
 export default function Login() {
   const {
@@ -32,7 +33,7 @@ export default function Login() {
         imageContainerClassName="-mt-18"
         images={<Image className="w-full" src="/Group 55.svg" />}
       >
-        <Text className="font-bold mr-auto font-lg">Acesse sua conta</Text>
+        <LoginTitle />
         <Box className="w-full justify-center">
           <Button
             type="button"
@@ -81,13 +82,13 @@ export default function Login() {
 
           <Button
             type="submit"
-            className="bg-blue-primary max-w-72 mx-auto w-full"
+            className="max-w-72 mx-auto w-full"
             disabled={userLoginMutation.isPending}
           >
             {userLoginMutation.isPending ? (
               <Box className="flex items-center gap-2">
                 <Spinner size="sm" />
-                <Text>Entrando...</Text>
+                Entrando...
               </Box>
             ) : (
               "Entrar"
