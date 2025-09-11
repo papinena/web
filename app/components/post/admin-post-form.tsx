@@ -30,7 +30,6 @@ export function AdminPostForm({
   initialValues,
   previews: initialPreviews = [],
 }: PostFormProps) {
-  const [previews, setPreviews] = useState<string[]>(initialPreviews);
   const [files, setFiles] = useState<File[]>(initialValues?.photos ?? []);
 
   const methods = useForm<CreateAdminPostType>({
@@ -44,25 +43,6 @@ export function AdminPostForm({
     handleSubmit,
     formState: { errors },
   } = methods;
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files).slice(0, 5);
-      setFiles(newFiles);
-      const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
-      setPreviews(newPreviews);
-    }
-  };
-
-  const handleRemoveImage = (index: number) => {
-    URL.revokeObjectURL(previews[index]);
-
-    const newFiles = files.filter((_, i) => i !== index);
-    const newPreviews = previews.filter((_, i) => i !== index);
-
-    setFiles(newFiles);
-    setPreviews(newPreviews);
-  };
 
   const handleSave = (data: CreateAdminPostType) => {
     onSave({ ...data, photos: files });
@@ -79,9 +59,8 @@ export function AdminPostForm({
           <Item>
             <ItemLabel>Fotos</ItemLabel>
             <UploadPhotosInput
-              previews={previews}
-              handleFileChange={handleFileChange}
-              handleRemoveImage={handleRemoveImage}
+              onFilesChange={setFiles}
+              initialPreviews={initialPreviews}
             />
           </Item>
           <Item>
