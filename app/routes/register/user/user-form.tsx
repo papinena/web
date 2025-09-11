@@ -82,7 +82,7 @@ export default function UserForm() {
 
   return (
     <FormProvider {...methods}>
-      <Form onSubmit={onSave}>
+      <Form id="user-register-form" onSubmit={onSave}>
         <Box className="flex-1 flex-col w-full">
           <Box className="flex-col px-2 pb-9 pt-1.5 flex-1 bg-white rounded-lg">
             <Box className="flex-col gap-5 mx-auto">
@@ -118,11 +118,19 @@ export default function UserForm() {
                       name="condominiumId"
                       control={methods.control}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={String(field.value)}
+                        >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecione o condomínio" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent
+                            container={
+                              document.getElementById("user-register-form") ??
+                              undefined
+                            }
+                          >
                             {condominiums?.map((condo: Condominium) => (
                               <SelectItem
                                 key={condo.id}
