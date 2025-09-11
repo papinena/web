@@ -16,7 +16,7 @@ export function ThemeItem({
     <Box
       onClick={onClick}
       className={cn(
-        "border cursor-pointer justify-center items-center basis-[calc((100%-1rem)/3)] p-2 text-center border-gray-200 rounded-lg",
+        "border cursor-pointer items-center basis-[calc((100%-1rem)/3)] p-2 text-center border-gray-200 rounded-lg",
         isSelected ? "bg-gray-300" : ""
       )}
     >
