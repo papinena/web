@@ -21,10 +21,15 @@ export const CreateUserSchema = z
     tags: z
       .array(z.object({ id: z.number(), label: z.string() }))
       .min(3, { error: "Mínimo de 3 temas" }),
+    terms: z.boolean({ error: "Termos de uso obrigatório" }),
   })
   .refine((data) => data.email === data.confirmEmail, {
     message: "Emails não conferem",
     path: ["confirmEmail"],
+  })
+  .refine((schema) => schema.terms, {
+    message: "Termo de uso obrigatório",
+    path: ["terms"],
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Senhas não conferem",

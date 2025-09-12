@@ -31,6 +31,7 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { PageTitle } from "~/components/page-title";
+import { Terms } from "~/components/terms-of-use";
 
 export default function UserForm() {
   const navigate = useNavigate();
@@ -257,6 +258,17 @@ export default function UserForm() {
                   />
                 )}
               </SectionContainer>
+              <Controller
+                name="terms"
+                control={methods.control}
+                render={({ field }) => (
+                  <Terms
+                    value={Boolean(field.value)}
+                    onChange={field.onChange}
+                    error={methods.formState.errors.terms?.message}
+                  />
+                )}
+              />
               {hasErrors && (
                 <Box className="border-red-400 text-center p-3 border rounded-lg">
                   <Text className="text-red-400">
