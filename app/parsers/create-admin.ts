@@ -3,7 +3,7 @@ import z from "zod";
 export const CreateAdminSchema = z
   .object({
     employee: z.object({
-      name: z.string().min(4, "Mínimo de 4 caracteres"),
+      name: z.string().min(1, "Mínimo de 4 caracteres"),
       lastName: z.string().min(4, "Mínimo de 4 caracteres"),
       birthDate: z.string().optional(),
       photo: z.string().optional(),
@@ -60,7 +60,7 @@ export const CreateAdminSchema = z
     employees: z
       .array(
         z.object({
-          name: z.string().min(2, { error: "Mínimo de 2 caracters" }),
+          name: z.string().min(1, { error: "Mínimo de 2 caracters" }),
           email: z.email().transform((val) => val.toLowerCase()),
         })
       )
