@@ -144,12 +144,7 @@ export const authUtils = {
   clearAuth: (): void => {
     if (!authUtils.isClient()) return;
 
-    localStorage.removeItem(STORAGE_KEYS.TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.TOKEN_ID);
-    localStorage.removeItem(STORAGE_KEYS.USER_TYPE);
-    localStorage.removeItem(STORAGE_KEYS.USER);
-    localStorage.removeItem(STORAGE_KEYS.EMPLOYEE);
-    localStorage.removeItem(STORAGE_KEYS.FCM_TOKEN);
+    localStorage.clear();
   },
 
   /**
