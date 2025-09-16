@@ -18,7 +18,7 @@ export function ErrorBoundary() {
 
   function onClick() {
     logout();
-    navigate(`/${type}/login`);
+    navigate(`/${type === "employee" ? "admin" : "user"}/login`);
   }
 
   console.error(error);
