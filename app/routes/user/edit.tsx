@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { Box } from "~/components/ui/box";
-import { FormProvider } from "react-hook-form";
+import { Controller, FormProvider } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
 import { NameInput } from "~/components/register/name-input";
 
@@ -13,7 +13,7 @@ import type { Tag } from "~/interfaces/tag";
 import { ThemeItem } from "~/components/theme-item";
 import { useUser } from "~/hooks/useUser";
 import { Spinner } from "~/components/ui/spinner";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DateFormatter } from "~/utils/date-formatter";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { useImageReadToken } from "~/hooks/useImageReadToken";
@@ -21,6 +21,9 @@ import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { RouteContainer } from "~/components/route-container";
 import { useToastStore } from "~/stores/toast";
 import { Form } from "react-router";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 
 export default function EditUser() {
   const { buildUrl } = useImageReadToken();
@@ -28,11 +31,8 @@ export default function EditUser() {
   const {
     handleFileChange,
     handleRemoveImage,
-    selectedTheme,
-    setSelectedTheme,
     updateUserForm,
     useUserEditInfo,
-    handleSelectedTheme,
     updateUserMutation,
   } = useUser({
     onSuccess: () => {
@@ -45,24 +45,53 @@ export default function EditUser() {
     },
   });
   const query = useUserEditInfo();
-  const methods = updateUserForm({});
 
-  useEffect(() => {
-    if (query.isSuccess) {
-      methods.reset({
-        ...query.data.user,
-        birthDate: DateFormatter.format(query.data.user.birthDate),
-      });
-      setSelectedTheme(query.data.userTags);
+  const defaultValues = useMemo(() => {
+    if (!query.data) return undefined;
+    return {
+      ...query.data.user,
+      birthDate: DateFormatter.format(query.data.user.birthDate),
+      tags: query.data.userTags,
+    };
+  }, [query.data]);
+
+  const methods = updateUserForm({ values: defaultValues });
+  const ref = useRef<HTMLInputElement>(null);
+  const [customTags, setCustomTags] = useState<Tag[]>([]);
+
+  const allTags = useMemo(
+    () => [...(query.data?.tags ?? []), ...customTags],
+    [query.data?.tags, customTags]
+  );
+
+  function onAddCustomTag() {
+    const label = ref.current?.value.trim().toLowerCase();
+
+    if (!label || !ref.current) return;
+
+    const tagExists = allTags.some((t) => t.label.toLowerCase() === label);
+    if (tagExists) {
+      ref.current.value = "";
+      return;
     }
-  }, [query.isSuccess, methods.reset]);
+
+    const newTag = { id: Date.now(), label };
+
+    setCustomTags((s) => [...s, newTag]);
+
+    const currentSelectedTags = methods.getValues("tags") ?? [];
+    methods.setValue("tags", [...currentSelectedTags, newTag], {
+      shouldValidate: true,
+    });
+
+    ref.current.value = "";
+  }
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
 
   function onSave(data: any) {
     updateUserMutation.mutate({
       ...data,
-      tags: selectedTheme.map((t) => t.id),
     });
   }
 
@@ -76,11 +105,9 @@ export default function EditUser() {
     );
   }
 
-  const tags = query.data?.tags;
   const user = query.data?.user;
   const condominium = query.data?.condominium;
   const preview = buildUrl(user?.avatar) ?? null;
-  console.log(preview);
 
   return (
     <RouteContainer>
@@ -151,45 +178,63 @@ export default function EditUser() {
                         error={methods.formState.errors.telephone?.message}
                       />
                     </Item>
-                    {/* <Item>
-                  <EmailInput
-                    error={methods.formState.errors.email?.message}
-                    {...methods.register("email")}
-                  />
-                  <EmailInput
-                    label="Confirme seu email*"
-                    {...methods.register("confirmEmail")}
-                    error={methods.formState.errors.confirmEmail?.message}
-                  />
-                </Item>
-                <Item>
-                  <PasswordInput
-                    label="Nova senha"
-                    {...methods.register("password")}
-                    error={methods.formState.errors.password?.message}
-                  />
-                  <PasswordInput
-                    label="Confirme a nova senha"
-                    {...methods.register("confirmPassword")}
-                    error={methods.formState.errors.confirmPassword?.message}
-                  />
-                </Item> */}
                   </Box>
                 </SectionContainer>
                 <SectionContainer>
                   <SectionTitle>
                     Selecione temas do seu interesse*:
                   </SectionTitle>
+                  {methods.formState.errors.tags?.message && (
+                    <Text className="text-red-500 text-sm">
+                      {methods.formState.errors.tags.message}
+                    </Text>
+                  )}
                   <Box className="w-full flex flex-wrap gap-2">
-                    {tags?.map((t: Tag) => (
-                      <ThemeItem
-                        isSelected={selectedTheme.some((st) => st.id === t.id)}
-                        onClick={() => handleSelectedTheme(t)}
-                        key={t.id}
-                      >
-                        {t.label}
-                      </ThemeItem>
-                    ))}
+                    {allTags && (
+                      <Controller
+                        name="tags"
+                        control={methods.control}
+                        render={({ field }) => (
+                          <Box className="w-full flex flex-wrap gap-2">
+                            {allTags.map((t: Tag) => (
+                              <ThemeItem
+                                key={t.id}
+                                isSelected={(field.value || []).some(
+                                  (st) => st.id === t.id
+                                )}
+                                onClick={() => {
+                                  const arr = field.value ?? [];
+                                  const index = arr.findIndex(
+                                    (i) => i.id === t.id
+                                  );
+                                  if (index > -1) arr.splice(index, 1);
+                                  else arr.push(t);
+                                  return field.onChange(arr);
+                                }}
+                              >
+                                {t.label}
+                              </ThemeItem>
+                            ))}
+                            <Item className="gap-3 w-full">
+                              <Label>Outro:</Label>
+                              <Input
+                                onKeyDownCapture={(e) => {
+                                  if (e.code === "Enter") {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onAddCustomTag();
+                                  }
+                                }}
+                                ref={ref}
+                              />
+                              <Button type="button" onClick={onAddCustomTag}>
+                                Adicionar
+                              </Button>
+                            </Item>
+                          </Box>
+                        )}
+                      />
+                    )}
                   </Box>
                 </SectionContainer>
                 {hasErrors && (

@@ -40,7 +40,7 @@ function PostNetworks({ social }: { social?: string }) {
 
 export default function NewPostPreview() {
   const navigate = useNavigate();
-  const { post, files, clear } = useNewPostStore();
+  const { post, clear } = useNewPostStore();
   const { authData } = useAuth();
   const { buildUrl } = useImageReadToken();
 
@@ -52,7 +52,7 @@ export default function NewPostPreview() {
 
   const onPublish = () => {
     createPostMutation.mutate(
-      { form: post, files },
+      { form: post },
       {
         onSuccess: (postId) => {
           clear();
@@ -62,7 +62,7 @@ export default function NewPostPreview() {
     );
   };
 
-  const media = files.map((file) => ({
+  const media = post.files?.map((file) => ({
     id: file.name,
     filename: URL.createObjectURL(file),
     type: "IMAGE" as const,
@@ -74,7 +74,7 @@ export default function NewPostPreview() {
   return (
     <RouteContainer>
       <Box className="p-3 flex-1 bg-white rounded-lg flex-col gap-4">
-        <ImageGallery media={media} buildUrl={(filename) => filename} />
+        <ImageGallery media={media ?? []} buildUrl={(filename) => filename} />
         <Box className="flex-col gap-2">
           <Post.Title post={post} />
           <Post.Resume post={post} />

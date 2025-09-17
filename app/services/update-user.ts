@@ -4,7 +4,7 @@ import type { Tag } from "~/interfaces/tag";
 
 interface UpdateUserPayload {
   user: Partial<UserAPIProps>;
-  tags: number[];
+  tags: string[];
 }
 
 interface ApiResponse {

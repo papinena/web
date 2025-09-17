@@ -3,14 +3,13 @@ import type { CreatePostType } from "~/parsers/create-post";
 
 interface NewPostState {
   post?: CreatePostType;
-  files: File[];
-  setPost: (post: CreatePostType, files: File[]) => void;
+  setPost: (post: CreatePostType) => void;
   clear: () => void;
 }
 
 export const useNewPostStore = create<NewPostState>((set) => ({
   post: undefined,
   files: [],
-  setPost: (post, files) => set({ post, files }),
-  clear: () => set({ post: undefined, files: [] }),
+  setPost: (post) => set({ post }),
+  clear: () => set({ post: undefined }),
 }));

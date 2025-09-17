@@ -16,9 +16,11 @@ export const CreatePostSchema = z.object({
   postTypes: z
     .array(z.number(), { error: "Obrigatório" })
     .min(1, "Selecione ao menos um tipo"),
-  expiresOn: z.date({ error: "Selecione um prazo de validade" }),
+  includeTelephone: z.boolean().optional(),
+  expiresOn: z.number({ error: "Selecione um prazo de validade" }),
   instagram: z.string().optional(),
   facebook: z.string().optional(),
+  files: z.array(z.file()).optional(),
 });
 
 export type CreatePostType = z.infer<typeof CreatePostSchema>;

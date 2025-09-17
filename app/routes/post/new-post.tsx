@@ -8,8 +8,8 @@ export default function NewPost() {
   const navigate = useNavigate();
   const { setPost, post } = useNewPostStore();
 
-  const onSave = (data: CreatePostType, files: File[]) => {
-    setPost(data, files);
+  const onSave = (data: CreatePostType) => {
+    setPost(data);
     navigate("/post/create/preview");
   };
 

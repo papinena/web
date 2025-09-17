@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import { createUser } from "~/services/create-user";
 import { useState, type ChangeEvent } from "react";
 import { type z } from "zod";
-import type { Tag } from "~/interfaces/tag";
 import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
@@ -47,7 +46,6 @@ export function useRegisterUser({
     return JSON.parse(storedValues);
   });
 
-  const [selectedTheme, setSelectedTheme] = useState<Tag[]>([]);
   const [preview, setPreview] = useState<string | null>(
     initialValues?.photo ?? null
   );
@@ -64,14 +62,6 @@ export function useRegisterUser({
       setFile(file);
     }
   };
-
-  function handleSelectedTheme(t: Tag) {
-    setSelectedTheme((s) => {
-      const i = s.findIndex((v) => v.id === t.id);
-      if (i > -1) return s.filter((v) => v.id !== t.id);
-      return s.concat([t]);
-    });
-  }
 
   function setLocalStorageFields(f: UserFormType) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(f));
@@ -163,8 +153,6 @@ export function useRegisterUser({
     error,
     isPending,
     isError,
-    selectedTheme,
-    handleSelectedTheme,
     preview,
     handleFileChange,
     resetLocalStorageFields,

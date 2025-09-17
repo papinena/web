@@ -10,12 +10,14 @@ import { PlusIcon, XIcon } from "lucide-react";
 export function UploadPhotosInput({
   onFilesChange,
   initialPreviews = [],
+  initialFiles = [],
 }: {
   onFilesChange: (files: File[]) => void;
   initialPreviews?: string[];
+  initialFiles?: File[];
 }) {
   const [previews, setPreviews] = useState<string[]>(initialPreviews);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>(initialFiles);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {

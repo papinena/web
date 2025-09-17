@@ -101,12 +101,13 @@ export function usePost() {
 
   const createPostMutation = useMutation({
     mutationKey: ["CREATE_NEW_POST"],
-    mutationFn: async (data: { form: CreatePostType; files: File[] }) => {
+    mutationFn: async (data: { form: CreatePostType }) => {
       let filenames: { filename: string; type: "IMAGE" | "VIDEO" }[] = [];
       let tokenData: { containerUri: string; sasToken: string } | undefined,
         tokenError: { status: string; message: string } | undefined;
+      const files = data.form.files;
 
-      if (data.files.length > 0) {
+      if (files && files.length > 0) {
         const sasTokenData = await getSasToken();
         tokenData = sasTokenData.data;
         tokenError = sasTokenData.error;
@@ -114,7 +115,7 @@ export function usePost() {
         if (tokenError) throw new Error(tokenError.message);
         if (!tokenData) throw new Error("Token data is undefined");
 
-        const uploadPromises = data.files.map((file) =>
+        const uploadPromises = files.map((file) =>
           uploadImage(tokenData.containerUri, tokenData.sasToken, file)
         );
         const uploadedFilenames = await Promise.all(uploadPromises);
@@ -124,11 +125,20 @@ export function usePost() {
         }));
       }
 
+      const expiresOn = new Date();
+
+      if (data.form.expiresOn === 9999) {
+        expiresOn.setFullYear(9999, 11, 31);
+      } else {
+        expiresOn.setMonth(expiresOn.getMonth() + data.form.expiresOn);
+      }
+
       const res = await createNewPost({
         ...data.form,
         description: data.form.description,
         media: filenames,
         social: `${data.form.instagram};${data.form.facebook}`,
+        expiresOn,
       });
 
       if (res.status === "success") {

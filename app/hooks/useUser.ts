@@ -5,7 +5,6 @@ import { CreateUserSchema, type CreateUserType } from "~/parsers/create-user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import type { Tag } from "~/interfaces/tag";
 import { useAuth } from "./useAuth";
 import { UpdateUserSchema, type UpdateUserType } from "~/parsers/update-user";
 import { UserMapper } from "~/mappers/user";
@@ -18,17 +17,23 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
   const { authData, setAuthUserData } = useAuth();
   const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
-  const [selectedTheme, setSelectedTheme] = useState<Tag[]>([]);
 
   const methods = useForm<CreateUserType>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: authData?.user,
   });
 
-  const updateUserForm = ({ defaultValues }: { defaultValues?: any }) =>
+  const updateUserForm = ({
+    defaultValues,
+    values,
+  }: {
+    defaultValues?: any;
+    values?: any;
+  }) =>
     useForm<UpdateUserType>({
       resolver: zodResolver(UpdateUserSchema),
       defaultValues: defaultValues,
+      values,
     });
 
   const useUserEditInfo = () => {
@@ -67,7 +72,7 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
           }),
           avatar: avatarFilename,
         },
-        tags: selectedTheme.map((t) => t.id),
+        tags: data.tags.map((t) => t.label),
       };
 
       const res = await updateUser(payload);
@@ -109,25 +114,14 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
     setFile(null);
   };
 
-  const handleSelectedTheme = (theme: Tag) => {
-    setSelectedTheme((prev) =>
-      prev.some((t) => t.id === theme.id)
-        ? prev.filter((t) => t.id !== theme.id)
-        : [...prev, theme]
-    );
-  };
-
   return {
     methods,
     updateUserMutation,
-    selectedTheme,
-    handleSelectedTheme,
     file,
     setFile,
     handleFileChange,
     handleRemoveImage,
     useUserEditInfo,
     updateUserForm,
-    setSelectedTheme,
   };
 }

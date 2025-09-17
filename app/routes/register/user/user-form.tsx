@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { Box } from "~/components/ui/box";
-import { Controller, FormProvider, useFieldArray } from "react-hook-form";
+import { Controller, FormProvider } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
 import { NameInput } from "~/components/register/name-input";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
@@ -27,7 +27,7 @@ import { ThemeItem } from "~/components/theme-item";
 import { Form, useNavigate } from "react-router";
 import { ErrorMessage } from "~/components/error-message";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { PageTitle } from "~/components/page-title";
@@ -50,42 +50,37 @@ export default function UserForm() {
       resetLocalStorageFields();
     },
   });
-  const { append } = useFieldArray({
-    control: methods.control,
-    name: "tags",
-  });
-  const { data, isSuccess } = useUserRegisterData();
-  const [tags, setTags] = useState(data?.tags ?? []);
+  const { data } = useUserRegisterData();
+  const [customTags, setCustomTags] = useState<Tag[]>([]);
   const ref = useRef<HTMLInputElement>(null);
+
+  const allTags = useMemo(
+    () => [...(data?.tags ?? []), ...customTags],
+    [data?.tags, customTags]
+  );
 
   const condominiums = data?.condominiums;
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
 
-  useEffect(() => {
-    if (isSuccess && data) setTags(data.tags);
-  }, [isSuccess, data]);
-
   function onAddCustomTag() {
-    const label = ref.current?.value.toLowerCase();
+    const label = ref.current?.value.trim().toLowerCase();
 
-    if (!label) return;
+    if (!label || !ref.current) return;
 
-    let id = 0;
+    const tagExists = allTags.some((t) => t.label.toLowerCase() === label);
+    if (tagExists) {
+      ref.current.value = "";
+      return;
+    }
 
-    setTags((s) => {
-      const i = s.findIndex((i) => i.label.toLowerCase() === label);
+    const newTag = { id: Date.now(), label };
 
-      if (i > -1) return s;
+    setCustomTags((s) => [...s, newTag]);
 
-      id = s.length + 1;
+    const currentSelectedTags = methods.getValues("tags") ?? [];
 
-      return [...s, { id, label }];
-    });
-
-    append({ label, id });
-
-    if (!ref.current) return;
+    methods.setValue("tags", [...currentSelectedTags, newTag]);
 
     ref.current.value = "";
   }
@@ -222,15 +217,15 @@ export default function UserForm() {
                     </Text>
                   )}
                 </Box>
-                {tags && (
+                {allTags && (
                   <Controller
                     name="tags"
                     control={methods.control}
                     render={({ field }) => (
                       <Box className="w-full flex flex-wrap gap-2">
-                        {tags.map((t: Tag, i) => (
+                        {allTags.map((t: Tag) => (
                           <ThemeItem
-                            key={i}
+                            key={t.id}
                             isSelected={field.value.some(
                               (st) => st.id === t.id
                             )}

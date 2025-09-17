@@ -1,4 +1,3 @@
-import type { ChangeEvent } from "react";
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
 import { Input } from "~/components/ui/input";
@@ -11,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreatePostSchema, type CreatePostType } from "~/parsers/create-post";
 import { useUserNewPost } from "~/hooks/useUserNewPost";
 import { ThemeItem } from "~/components/theme-item";
-import { useState } from "react";
 import { ErrorMessage } from "~/components/error-message";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 
@@ -56,24 +54,17 @@ export function ExpireDateInput({
 }
 
 interface PostFormProps {
-  onSave: (data: CreatePostType, files: File[]) => void;
+  onSave: (data: CreatePostType) => void;
   initialValues?: CreatePostType;
   isLoading?: boolean;
-  previews?: string[];
 }
 
-export function PostForm({
-  onSave,
-  initialValues,
-  previews: initialPreviews = [],
-}: PostFormProps) {
+export function PostForm({ onSave, initialValues }: PostFormProps) {
   const {
     categories,
     postTypes,
     isLoading: isLoadingCategories,
   } = useUserNewPost();
-  const [files, setFiles] = useState<File[]>([]);
-  const [selectedExpire, setSelectedExpire] = useState<string | null>(``);
 
   const methods = useForm<CreatePostType>({
     resolver: zodResolver(CreatePostSchema),
@@ -92,6 +83,8 @@ export function PostForm({
 
   const selectedCategories = watch("categories");
   const selectedPostTypes = watch("postTypes");
+  const initialPreviews =
+    initialValues?.files?.map((file) => URL.createObjectURL(file as any)) ?? [];
 
   const handleSelectedCategory = (category: Category) => {
     const currentCategories = selectedCategories || [];
@@ -119,23 +112,13 @@ export function PostForm({
     }
   };
 
-  const handleExpiresOnChange = (label: string) => {
-    setSelectedExpire(label);
-    const date = new Date();
-    if (label === "3 meses") {
-      date.setMonth(date.getMonth() + 3);
-      setValue("expiresOn", date);
-    } else if (label === "6 meses") {
-      date.setMonth(date.getMonth() + 6);
-      setValue("expiresOn", date);
-    } else if (label === "Indeterminado") {
-      setValue("expiresOn", new Date("9999-12-31T00:00:00.000Z"));
-    }
+  const handleSave = (data: CreatePostType) => {
+    onSave(data);
   };
 
-  const handleSave = (data: CreatePostType) => {
-    onSave(data, files);
-  };
+  function onFilesChange(data: File[]) {
+    methods.setValue("files", data);
+  }
 
   return (
     <FormProvider {...methods}>
@@ -150,8 +133,9 @@ export function PostForm({
           <Item>
             <ItemLabel>Fotos</ItemLabel>
             <UploadPhotosInput
-              onFilesChange={setFiles}
+              onFilesChange={onFilesChange}
               initialPreviews={initialPreviews}
+              initialFiles={initialValues?.files}
             />
           </Item>
           <Item>
@@ -232,23 +216,29 @@ export function PostForm({
             <ErrorMessage textVariant="legend" show={!!errors.expiresOn}>
               {errors.expiresOn?.message}
             </ErrorMessage>
-            <Box className="w-full justify-between">
-              <ExpireDateInput
-                label="3 meses"
-                isChecked={selectedExpire === "3 meses"}
-                onChange={() => handleExpiresOnChange("3 meses")}
-              />
-              <ExpireDateInput
-                label="6 meses"
-                isChecked={selectedExpire === "6 meses"}
-                onChange={() => handleExpiresOnChange("6 meses")}
-              />
-              <ExpireDateInput
-                label="Indeterminado"
-                isChecked={selectedExpire === "Indeterminado"}
-                onChange={() => handleExpiresOnChange("Indeterminado")}
-              />
-            </Box>
+            <Controller
+              name="expiresOn"
+              control={methods.control}
+              render={({ field }) => (
+                <Box className="w-full justify-between">
+                  <ExpireDateInput
+                    label="3 meses"
+                    isChecked={field.value === 3}
+                    onChange={() => field.onChange(3)}
+                  />
+                  <ExpireDateInput
+                    label="6 meses"
+                    isChecked={field.value === 6}
+                    onChange={() => field.onChange(6)}
+                  />
+                  <ExpireDateInput
+                    label="Indeterminado"
+                    isChecked={field.value === 9999}
+                    onChange={() => field.onChange(9999)}
+                  />
+                </Box>
+              )}
+            />
           </Item>
           <Item>
             <SectionTitle>Redes Sociais relacionadas a publicação</SectionTitle>
@@ -262,6 +252,25 @@ export function PostForm({
                 <Input {...register("facebook")} />
               </Box>
             </Box>
+          </Item>
+          <Item>
+            <Controller
+              name="includeTelephone"
+              control={control}
+              render={({ field }) => (
+                <Box className="gap-1.5">
+                  <Label>
+                    <Checkbox
+                      checked={!!field.value}
+                      onCheckedChange={field.onChange}
+                      className="h-7 w-7"
+                      name="includeTelephone"
+                    />
+                    Deseja incluir o whatsapp na postagem?
+                  </Label>
+                </Box>
+              )}
+            />
           </Item>
           <ButtonWithSpinner
             type="submit"
