@@ -110,7 +110,6 @@ export function useRegisterUser({
         ...data,
         birthDate: data.birthDate ? DateFormatter.parse(data.birthDate) : null,
         photo: filename,
-        tags: selectedTheme,
       };
 
       const res = await createUser(dataToSave);
@@ -148,7 +147,6 @@ export function useRegisterUser({
   const onSave = methods.handleSubmit((data) => {
     const dataToSave = {
       ...data,
-      tags: selectedTheme,
     };
     setFields(dataToSave);
     setLocalStorageFields(dataToSave);

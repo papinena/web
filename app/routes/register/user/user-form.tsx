@@ -1,6 +1,6 @@
 import { Text } from "~/components/ui/text";
 import { Box } from "~/components/ui/box";
-import { Controller, FormProvider } from "react-hook-form";
+import { Controller, FormProvider, useFieldArray } from "react-hook-form";
 import { InputWithLabel } from "~/components/input-with-label";
 import { NameInput } from "~/components/register/name-input";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
@@ -50,6 +50,10 @@ export default function UserForm() {
       resetLocalStorageFields();
     },
   });
+  const { append } = useFieldArray({
+    control: methods.control,
+    name: "tags",
+  });
   const { data, isSuccess } = useUserRegisterData();
   const [tags, setTags] = useState(data?.tags ?? []);
   const ref = useRef<HTMLInputElement>(null);
@@ -67,15 +71,19 @@ export default function UserForm() {
 
     if (!label) return;
 
+    let id = 0;
+
     setTags((s) => {
       const i = s.findIndex((i) => i.label.toLowerCase() === label);
 
       if (i > -1) return s;
 
-      const id = s.length;
+      id = s.length + 1;
 
       return [...s, { id, label }];
     });
+
+    append({ label, id });
 
     if (!ref.current) return;
 
