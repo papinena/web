@@ -7,6 +7,7 @@ import { Button } from "~/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useAuth } from "~/hooks/useAuth";
 import { firebaseService } from "~/lib/firebase";
+import { useImageTokenStore } from "~/stores/image-token";
 
 export const clientLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -25,30 +26,19 @@ export const clientLoader = async ({ request }: { request: Request }) => {
 
   await firebaseService.setup();
 
-  let storedImageReadToken = localStorage.getItem("image-read-token");
+  const { expiresOn, sasToken, setToken } = useImageTokenStore.getState();
+  const isTokenExpired = !expiresOn || new Date() > new Date(expiresOn);
 
-  if (!storedImageReadToken) {
+  if (!sasToken || isTokenExpired) {
     const { data, error } = await getImageReadToken();
 
     if (error || !data) {
-      throw error;
+      // Handle the error appropriately, maybe redirect to an error page
+      // or log the user out if the token is critical.
+      console.error("Failed to refresh image read token:", error);
+    } else {
+      setToken(data);
     }
-
-    storedImageReadToken = JSON.stringify(data);
-    localStorage.setItem("image-read-token", storedImageReadToken);
-  }
-
-  const imageReadToken = JSON.parse(storedImageReadToken);
-
-  if (new Date() > new Date(imageReadToken.expiresOn)) {
-    const { data, error } = await getImageReadToken();
-
-    if (error || !data) {
-      throw error;
-    }
-
-    storedImageReadToken = JSON.stringify(data);
-    localStorage.setItem("image-read-token", storedImageReadToken);
   }
 
   const isFulFillPage = url.pathname.endsWith("fulfill");

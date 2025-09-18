@@ -15,9 +15,7 @@ export function Avatar({ onClick, size = 40, className = "" }: AvatarProps) {
   const data =
     authData?.userType === "user" ? authData.user : authData?.employee;
 
-  const isExternalUrl =
-    data.avatar?.startsWith("http") || data.avatar?.startsWith("https");
-  const avatarUrl = isExternalUrl ? data.avatar : buildUrl(data.avatar);
+  const avatarUrl = buildUrl(data.avatar);
 
   return (
     <AvatarUI

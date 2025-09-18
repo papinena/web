@@ -11,11 +11,15 @@ import { EmployeeMapper } from "~/mappers/employee";
 import { useNavigate } from "react-router";
 import { useAuth } from "./useAuth";
 import { useState } from "react";
+import { getImageReadToken } from "~/services/get-image-read-token";
+
+import { useImageTokenStore } from "~/stores/image-token";
 
 export function useLogin() {
   const { login: authLogin } = useAuth();
   const navigate = useNavigate();
   const [formError, setFormError] = useState<string>("");
+  const setToken = useImageTokenStore((s) => s.setToken);
   const methods = useForm<LoginType>({
     resolver: zodResolver(LoginSchema),
   });
@@ -72,6 +76,14 @@ export function useLogin() {
 
       authLogin(result);
 
+      const { data: tokenData, error: tokenError } = await getImageReadToken();
+
+      if (tokenError || !tokenData) {
+        console.error("Failed to get image read token:", tokenError);
+      } else {
+        setToken(tokenData);
+      }
+
       // Store authentication data in localStorage and update state
       const token = await firebaseService.setup();
 
@@ -97,13 +109,14 @@ export function useLogin() {
         return setFormError(result.error.message);
       }
 
-      if (!result.employee.is_register_completed) {
+      if (result.employee && !result.employee.is_register_completed) {
         return navigate("/register/admin/fulfill", {
           state: { ...result, employee: EmployeeMapper.toUI(result.employee) },
         });
       }
 
       authLogin(result);
+
       if (result.isNew) {
         return navigate("/register/user/social/form", {
           state: { ...result.profile },

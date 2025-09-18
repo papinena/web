@@ -21,6 +21,11 @@ import { createAdmin } from "~/services/create-admin";
 import { createEmployees } from "~/services/create-employees";
 import { getCondominiumEmployees } from "~/services/get-condominium-employees";
 import { updateEmployees } from "~/services/update-employees";
+import { firebaseService } from "~/lib/firebase";
+import { saveFcmToken } from "~/services/save-fcm-token";
+import { getImageReadToken } from "~/services/get-image-read-token";
+import { useImageTokenStore } from "~/stores/image-token";
+import { useNavigate } from "react-router";
 
 type Props = {
   onFulFillSuccess?(data: any): void;
@@ -37,7 +42,10 @@ export function useEmployee({
 }: Props = {}) {
   const { setAuthEmployeeData } = useAuth();
   const addToast = useToastStore((s) => s.addToast);
+  const { login: authLogin } = useAuth();
   const queryClient = useQueryClient();
+  const setToken = useImageTokenStore((s) => s.setToken);
+  const navigate = useNavigate();
 
   const updateEmployeesMutation = useMutation({
     mutationFn: async ({
@@ -112,8 +120,42 @@ export function useEmployee({
           ));
         throw new Error(res?.error?.message);
       }
+      return res;
     },
-    onSuccess: onCreateSuccess,
+    onSuccess: async (data) => {
+      const { employee, token } = data.data;
+
+      authLogin({ employee, ...token, userType: "employee" });
+
+      const { data: tokenData, error: tokenError } = await getImageReadToken();
+
+      if (tokenError || !tokenData) {
+        console.error("Failed to get image read token:", tokenError);
+      } else {
+        setToken(tokenData);
+      }
+
+      if (employee?.email) {
+        try {
+          const token = await firebaseService.setup();
+
+          if (token) {
+            await saveFcmToken(token);
+          }
+        } catch (error) {
+          console.error(
+            "Failed to setup or save FCM token on registration:",
+            error
+          );
+        }
+      }
+
+      if (onCreateSuccess) {
+        onCreateSuccess(data);
+      }
+
+      return navigate("/admin/dashboard");
+    },
   });
 
   const useUpdateForm = ({

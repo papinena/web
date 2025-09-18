@@ -29,7 +29,6 @@ export default function AdminForm() {
   const { fields, resetLocalStorageFields, setFields } = useAdminForm();
   const { createAdminMutation: mutation } = useEmployee({
     onCreateSuccess() {
-      navigate("/register/admin/submitted");
       resetLocalStorageFields();
     },
   });

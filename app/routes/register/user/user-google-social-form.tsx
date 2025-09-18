@@ -60,7 +60,7 @@ export default function UserGoogleSocialForm() {
       provider: "google",
     },
   });
-  const { data, isLoading } = useUserRegisterData();
+  const { data } = useUserRegisterData();
   const { tags, onAddCustomTag, tagInputRef } = useTags(data?.tags);
 
   const condominiums = data?.condominiums;

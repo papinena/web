@@ -10,7 +10,8 @@ import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { DateFormatter } from "~/utils/date-formatter";
 import { firebaseService } from "~/lib/firebase";
-import { saveUnauthenticatedFcmToken } from "~/services/save-unauthenticated-fcm-token";
+import { useAuth } from "./useAuth";
+import { saveFcmToken } from "~/services/save-fcm-token";
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
 
@@ -38,6 +39,7 @@ export function useRegisterUser({
   onSuccess?: () => void;
   initialValues?: Partial<typeof defaultValues>;
 } = {}) {
+  const { login: authLogin } = useAuth();
   const [fields, setFields] = useState<UserFormType>(() => {
     if (typeof window === "undefined") return defaultValues;
     const storedValues = localStorage.getItem(STORAGE_KEY);
@@ -117,11 +119,15 @@ export function useRegisterUser({
       return res.data;
     },
     onSuccess: async (data) => {
-      if (data?.email) {
+      const { token, user } = data;
+      authLogin({ user, ...token, userType: "user" });
+
+      if (user?.email) {
         try {
-          const fcmToken = await firebaseService.setupForUnauthenticatedUser();
-          if (fcmToken) {
-            await saveUnauthenticatedFcmToken(fcmToken, data.email);
+          const token = await firebaseService.setup();
+
+          if (token) {
+            await saveFcmToken(token);
           }
         } catch (error) {
           console.error(

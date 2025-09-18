@@ -8,13 +8,7 @@ import { Item } from "~/components/register/item";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
 import { BirthDateInput } from "~/components/birth-date-input";
-import {
-  Form,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router";
+import { Form, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ErrorMessage } from "~/components/error-message";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { EmailInput } from "~/components/register/email-input";
@@ -35,7 +29,10 @@ export default function AdminFulfillForm() {
     tokenId: string;
     userType: "employee";
     employee: EmployeeUIProps;
+    avatar?: string;
   };
+
+  console.log(state.avatar);
   const employee =
     state.employee ?? JSON.parse(searchParams.get("employee") ?? "");
 

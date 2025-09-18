@@ -25,5 +25,8 @@ export async function createUser(
     false
   );
 
-  return (await response.json()) as ApiResponse<UserAPIProps>;
+  return (await response.json()) as ApiResponse<{
+    user: UserAPIProps;
+    token: { token: string; tokenId: string };
+  }>;
 }

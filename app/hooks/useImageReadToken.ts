@@ -1,19 +1,7 @@
-import { useState } from "react";
-
-const STORAGE_KEY = "image-read-token";
+import { useImageTokenStore } from "~/stores/image-token";
 
 export function useImageReadToken() {
-  const [state] = useState<{
-    expiresOn: "";
-    sasToken: "";
-    containerUri: "";
-  }>(() => {
-    const data = localStorage.getItem(STORAGE_KEY);
-
-    if (!data) return { sasToken: "", containerUri: "" };
-
-    return JSON.parse(data);
-  });
+  const { containerUri, sasToken, expiresOn } = useImageTokenStore();
 
   function buildUrl(filename?: string) {
     if (!filename) return "#";
@@ -23,8 +11,14 @@ export function useImageReadToken() {
 
     if (isExternalUrl) return filename;
 
-    return `${state.containerUri}/${filename}?${state.sasToken}`;
+    if (!containerUri || !sasToken) {
+      return "";
+    }
+
+    const url = `${containerUri}/${filename}?${sasToken}`;
+
+    return url;
   }
 
-  return { buildUrl, ...state };
+  return { buildUrl, containerUri, sasToken, expiresOn };
 }

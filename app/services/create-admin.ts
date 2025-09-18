@@ -62,7 +62,7 @@ export async function createAdmin(data: CreateAdminType) {
     body: JSON.stringify(body),
   });
 
-  if (res.status >= 400 || res.status < 500) {
+  if (res.status >= 300) {
     const json = (await res.json()) as {
       status: string;
       message: string;

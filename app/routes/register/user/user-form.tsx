@@ -46,7 +46,7 @@ export default function UserForm() {
     resetLocalStorageFields,
   } = useRegisterUser({
     onSuccess: () => {
-      navigate("/register/user/submitted");
+      navigate("/");
       resetLocalStorageFields();
     },
   });
