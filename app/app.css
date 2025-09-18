@@ -165,4 +165,14 @@ a {
   body {
     @apply bg-background text-foreground;
   }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  textarea {
+    font-size: 16px !important;
+  }
 }
