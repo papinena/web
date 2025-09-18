@@ -60,6 +60,7 @@ export default function Login() {
             <Input
               placeholder="Email"
               {...register("email")}
+              type="email"
               className={errors.email ? "border-red-500" : ""}
             />
             <ErrorMessage show={!!errors.email}>

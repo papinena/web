@@ -59,6 +59,7 @@ export default function Login() {
           <Box className="flex flex-col gap-1">
             <Input
               placeholder="Email"
+              type="email"
               {...register("email")}
               className={errors.email ? "border-red-500" : ""}
             />
