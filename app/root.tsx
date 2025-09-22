@@ -9,6 +9,7 @@ import "~/utils/sentry";
 import { App } from "./routes/app";
 import { ToastManager } from "./components/toast-manager";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Box } from "./components/ui/box";
 
 export { ErrorBoundary } from "./components/sentry-error-boundary";
 
@@ -78,7 +79,11 @@ export default function Root() {
   const { width } = useWindowSize();
 
   if (width > MOBILE_BREAKPOINT) {
-    return <Text>Works better in mobile screens</Text>;
+    return (
+      <Box className="min-w-dvw min-h-dvh flex items-center justify-center">
+        <Text className="text-2xl">Works better in mobile screens</Text>
+      </Box>
+    );
   }
 
   return (
