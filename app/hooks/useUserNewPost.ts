@@ -8,8 +8,14 @@ export function useUserNewPost() {
   });
 
   return {
-    categories: data?.data?.categories.data || [],
-    postTypes: data?.data?.postTypes.data || [],
+    categories: (data?.data?.categories.data || []).map((c) => ({
+      ...c,
+      label: c.name,
+    })),
+    postTypes: (data?.data?.postTypes.data || []).map((c) => ({
+      ...c,
+      label: c.name,
+    })),
     isLoading,
     error,
   };

@@ -13,8 +13,8 @@ const CreateNewPostSchema = z.object({
   expiresOn: z.coerce.date(),
   social: z.string(),
   priority: z.enum(PostPriority).optional(),
-  types: z.array(z.number()).optional(),
-  categories: z.array(z.number()).optional(),
+  types: z.array(z.string()).optional(),
+  categories: z.array(z.string()).optional(),
   media: z
     .array(
       z.object({

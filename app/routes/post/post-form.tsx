@@ -18,16 +18,8 @@ import { ItemLabel } from "~/components/post/item-label";
 import { UploadPhotosInput } from "~/components/post/upload-photos-input";
 import { SectionTitle } from "~/components/section-title";
 import { PageTitle } from "~/components/page-title";
-
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface PostType {
-  id: number;
-  name: string;
-}
+import { useMemo, useRef, useState } from "react";
+import { Button } from "~/components/ui/button";
 
 export function ExpireDateInput({
   onChange,
@@ -68,7 +60,11 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
 
   const methods = useForm<CreatePostType>({
     resolver: zodResolver(CreatePostSchema),
-    defaultValues: initialValues,
+    defaultValues: {
+      ...initialValues,
+      categories: initialValues?.categories ?? [],
+      postTypes: initialValues?.postTypes ?? [],
+    },
     mode: "onChange",
   });
 
@@ -77,40 +73,27 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
-    setValue,
   } = methods;
 
-  const selectedCategories = watch("categories");
-  const selectedPostTypes = watch("postTypes");
   const initialPreviews =
     initialValues?.files?.map((file) => URL.createObjectURL(file as any)) ?? [];
+  const ref = useRef<HTMLInputElement>(null);
+  const addPostTypeInputRef = useRef<HTMLInputElement>(null);
+  const [customCategories, setCustomCategories] = useState<
+    { id: number; label: string }[]
+  >([]);
+  const [customTypes, setCustomTypes] = useState<
+    { id: number; label: string }[]
+  >([]);
 
-  const handleSelectedCategory = (category: Category) => {
-    const currentCategories = selectedCategories || [];
-    const isSelected = currentCategories.some((c) => c === category.id);
-    if (isSelected) {
-      setValue(
-        "categories",
-        currentCategories.filter((c) => c !== category.id)
-      );
-    } else {
-      setValue("categories", [...currentCategories, category.id]);
-    }
-  };
-
-  const handleSelectedPostType = (postType: PostType) => {
-    const currentPostTypes = selectedPostTypes || [];
-    const isSelected = currentPostTypes.some((p) => p === postType.id);
-    if (isSelected) {
-      setValue(
-        "postTypes",
-        currentPostTypes.filter((p) => p !== postType.id)
-      );
-    } else {
-      setValue("postTypes", [...currentPostTypes, postType.id]);
-    }
-  };
+  const allCategories = useMemo(
+    () => [...(categories ?? []), ...customCategories],
+    [customCategories, categories]
+  );
+  const allPostTypes = useMemo(
+    () => [...(postTypes ?? []), ...customTypes],
+    [customTypes, postTypes]
+  );
 
   const handleSave = (data: CreatePostType) => {
     onSave(data);
@@ -118,6 +101,50 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
 
   function onFilesChange(data: File[]) {
     methods.setValue("files", data);
+  }
+
+  function onAddCustomCategory() {
+    const label = ref.current?.value.trim().toLowerCase();
+
+    if (!label || !ref.current) return;
+
+    const tagExists = categories.some((t) => t.name.toLowerCase() === label);
+    if (tagExists) {
+      ref.current.value = "";
+      return;
+    }
+
+    const newCategory = { id: Date.now(), label };
+
+    setCustomCategories((s) => [...s, newCategory]);
+
+    const currentSelectedCategorys = methods.getValues("categories") ?? [];
+
+    methods.setValue("categories", [...currentSelectedCategorys, newCategory]);
+
+    ref.current.value = "";
+  }
+
+  function onAddCustomType() {
+    const label = addPostTypeInputRef.current?.value.trim().toLowerCase();
+
+    if (!label || !addPostTypeInputRef.current) return;
+
+    const typeExists = postTypes.some((t) => t.name.toLowerCase() === label);
+    if (typeExists) {
+      addPostTypeInputRef.current.value = "";
+      return;
+    }
+
+    const newType = { id: Date.now(), label };
+
+    setCustomTypes((s) => [...s, newType]);
+
+    const currentSelectedTypes = methods.getValues("postTypes") ?? [];
+
+    methods.setValue("postTypes", [...currentSelectedTypes, newType]);
+
+    addPostTypeInputRef.current.value = "";
   }
 
   return (
@@ -176,40 +203,90 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
             <ErrorMessage textVariant="legend" show={!!errors.categories}>
               {errors.categories?.message}
             </ErrorMessage>
-            <Box className="flex-wrap gap-2">
-              {isLoadingCategories && <Text>Carregando categories...</Text>}
-              {categories.map((category) => (
-                <ThemeItem
-                  key={category.id}
-                  isSelected={(selectedCategories || []).some(
-                    (c) => c === category.id
-                  )}
-                  onClick={() => handleSelectedCategory(category)}
-                >
-                  {category.name}
-                </ThemeItem>
-              ))}
-            </Box>
+            <Controller
+              name="categories"
+              render={({ field }) => (
+                <Box className="flex-wrap gap-2">
+                  {isLoadingCategories && <Text>Carregando categories...</Text>}
+                  {allCategories.map((c) => (
+                    <ThemeItem
+                      key={c.id}
+                      isSelected={field.value.some((v) => v.id === c.id)}
+                      onClick={() => {
+                        const arr = field.value ?? [];
+                        const index = arr.findIndex((i) => i.id === c.id);
+                        if (index > -1) arr.splice(index, 1);
+                        else arr.push(c);
+                        return field.onChange(arr);
+                      }}
+                    >
+                      {c.label}
+                    </ThemeItem>
+                  ))}
+                  <Item className="gap-3 w-full">
+                    <Label>Outro:</Label>
+                    <Input
+                      onKeyDownCapture={(e) => {
+                        if (e.code === "Enter") {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onAddCustomCategory();
+                        }
+                      }}
+                      ref={ref}
+                    />
+                    <Button type="button" onClick={onAddCustomCategory}>
+                      Adicionar
+                    </Button>
+                  </Item>
+                </Box>
+              )}
+            />
           </Item>
           <Item>
             <SectionTitle>Selecione o tipo*</SectionTitle>
             <ErrorMessage textVariant="legend" show={!!errors.postTypes}>
               {errors.postTypes?.message}
             </ErrorMessage>
-            <Box className="flex-wrap gap-2">
-              {isLoadingCategories && <Text>Carregando tipos...</Text>}
-              {postTypes.map((postType) => (
-                <ThemeItem
-                  key={postType.id}
-                  isSelected={(selectedPostTypes || []).some(
-                    (p) => p === postType.id
-                  )}
-                  onClick={() => handleSelectedPostType(postType)}
-                >
-                  {postType.name}
-                </ThemeItem>
-              ))}
-            </Box>
+            <Controller
+              name="postTypes"
+              render={({ field }) => (
+                <Box className="flex-wrap gap-2">
+                  {isLoadingCategories && <Text>Carregando tipos...</Text>}
+                  {allPostTypes.map((c) => (
+                    <ThemeItem
+                      key={c.id}
+                      isSelected={field.value.some((v) => v.id === c.id)}
+                      onClick={() => {
+                        const arr = field.value ?? [];
+                        const index = arr.findIndex((i) => i.id === c.id);
+                        if (index > -1) arr.splice(index, 1);
+                        else arr.push(c);
+                        return field.onChange(arr);
+                      }}
+                    >
+                      {c.label}
+                    </ThemeItem>
+                  ))}
+                  <Item className="gap-3 w-full">
+                    <Label>Outro:</Label>
+                    <Input
+                      onKeyDownCapture={(e) => {
+                        if (e.code === "Enter") {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onAddCustomType();
+                        }
+                      }}
+                      ref={addPostTypeInputRef}
+                    />
+                    <Button type="button" onClick={onAddCustomType}>
+                      Adicionar
+                    </Button>
+                  </Item>
+                </Box>
+              )}
+            />
           </Item>
           <Item>
             <SectionTitle>Prazo de validade*</SectionTitle>

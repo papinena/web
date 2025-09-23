@@ -135,6 +135,8 @@ export function usePost() {
 
       const res = await createNewPost({
         ...data.form,
+        types: data.form.postTypes.map((t) => t.label),
+        categories: data.form.categories.map((t) => t.label),
         description: data.form.description,
         media: filenames,
         social: `${data.form.instagram};${data.form.facebook}`,

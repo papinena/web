@@ -11,10 +11,20 @@ export const CreatePostSchema = z.object({
     .max(70, { error: "Máximo de 70 caracteres" }),
   description: z.string().optional(),
   categories: z
-    .array(z.number(), { error: "Obrigatório" })
+    .array(
+      z.object({
+        id: z.number(),
+        label: z.string(),
+      })
+    )
     .min(1, { error: "Selecione ao menos uma categoria" }),
   postTypes: z
-    .array(z.number(), { error: "Obrigatório" })
+    .array(
+      z.object({
+        id: z.number(),
+        label: z.string(),
+      })
+    )
     .min(1, "Selecione ao menos um tipo"),
   includeTelephone: z.boolean().optional(),
   expiresOn: z.number({ error: "Selecione um prazo de validade" }),
