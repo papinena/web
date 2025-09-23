@@ -120,6 +120,16 @@ export default function Login() {
               <Text className="text-wrap text-white">Cadastre-se</Text>
             </Link>
           </Button>
+          <Box className="w-full h-auto items-center gap-3 max-w-76 mx-auto">
+            <Separator className="flex-1" />
+            <Text>ou</Text>
+            <Separator className="flex-1" />
+          </Box>
+          <Link to="/admin/login">
+            <Text className="font-bold">
+              Se você é administrador do condomínio, acesse o Vizis por aqui.
+            </Text>
+          </Link>
         </form>
       </BoxWithImage>
     </RouteContainer>

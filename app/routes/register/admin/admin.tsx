@@ -3,6 +3,7 @@ import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
 import { Text } from "~/components/ui/text";
 import { BoxWithImage } from "~/components/register/box-with-image";
+import { Link } from "react-router";
 
 export default function AdminIndex() {
   return (
@@ -37,6 +38,11 @@ export default function AdminIndex() {
         </Text>
         <Text> Aproveite!</Text>
         <Button className="bg-green-primary" />
+        <Link to="/register/user">
+          <Text className="font-bold">
+            Se você é morador do condomínio, cadastre-se no Vizis por aqui.
+          </Text>
+        </Link>
       </BoxWithImage>
     </Box>
   );

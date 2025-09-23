@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { Button } from "~/components/register/button";
 import { Box } from "~/components/ui/box";
 import { Image } from "~/components/ui/image";
@@ -38,6 +39,12 @@ export default function UserIndex() {
             informações em tempo real sobre o que acontece em seu condominio.
           </Text>
           <Button className="bg-blue-primary" />
+          <Link to="/register/admin">
+            <Text className="font-bold">
+              Se você é administrador do condomínio, cadastre-se no Vizis por
+              aqui.
+            </Text>
+          </Link>
         </Box>
       </Box>
     </Box>
