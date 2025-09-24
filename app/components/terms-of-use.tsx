@@ -53,11 +53,11 @@ export function Terms({
           </DialogTrigger>
         </Box>
       </Box>
-      <DialogContent className="max-h-[80dvh] overflow-y-auto">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Termos de Uso</DialogTitle>
           <DialogDescription asChild>
-            <Box className="flex flex-col gap-2 text-justify">
+            <Box className="max-h-[80dvh] overflow-x-hidden overflow-y-auto flex flex-col gap-2 text-justify">
               <MarkdownEditor markdown={terms} readOnly />
             </Box>
           </DialogDescription>
