@@ -18,7 +18,7 @@ export default function Contact() {
           </a>
           <br />
           📧 E-mail:{" "}
-          <a type="email" href="contato@vizis.com.br" className="underline">
+          <a href="mailto:contato@vizis.com.br" className="underline">
             contato@vizis.co
           </a>
           <br /> Será um prazer te ajudar 💚
