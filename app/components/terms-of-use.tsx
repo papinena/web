@@ -25,7 +25,7 @@ export function Terms({
   value?: boolean;
   error?: string;
 }) {
-  const _label = "Termos de uso";
+  const _label = "Aceite os termos de uso";
   return (
     <Dialog>
       <Box className="flex-col">
