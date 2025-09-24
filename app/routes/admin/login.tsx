@@ -27,8 +27,6 @@ export default function Login() {
   const { formState, register, handleSubmit } = methods;
   const { errors } = formState;
 
-  console.log("test");
-
   return (
     <RouteContainer>
       <BoxWithImage

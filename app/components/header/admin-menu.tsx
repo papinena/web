@@ -15,9 +15,9 @@ import { TextMenuItem } from "./text-menu-item";
 import { IconMenuItem } from "./icon-menu-item";
 import { MenuLink } from "./menu-link";
 import { PlusIcon } from "lucide-react";
-import { Box } from "../ui/box";
 import { BulletPoint } from "./bullet-point";
 import { useState } from "react";
+import { useAuth } from "~/hooks/useAuth";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -31,6 +31,9 @@ export function AdminHamburguerMenu({
 }: HamburgerMenuProps) {
   const { handleLogout } = useHamburguerMenu();
   const [open, setOpen] = useState(false);
+  const { isEmployeeAdmin } = useAuth();
+
+  const isAdmin = isEmployeeAdmin();
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -83,6 +86,14 @@ export function AdminHamburguerMenu({
               Gerenciar Moradores
             </TextMenuItem>
           </DropdownMenuItem>
+          {isAdmin && (
+            <DropdownMenuItem>
+              <BulletPoint />
+              <TextMenuItem setOpen={setOpen} to="/admin/employees">
+                Gerenciar Funcionários
+              </TextMenuItem>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>

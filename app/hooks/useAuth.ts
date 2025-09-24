@@ -16,6 +16,7 @@ export function useAuth() {
 
   function _logout() {
     queryClient.removeQueries();
+    logout();
   }
 
   return {
@@ -23,7 +24,7 @@ export function useAuth() {
     setAuthUserData,
     setAuthEmployeeData,
     login,
-    logout,
+    logout: _logout,
     isAuthenticated,
     isUser,
     isEmployeeAdmin,
