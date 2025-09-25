@@ -78,21 +78,13 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
   const initialPreviews =
     initialValues?.files?.map((file) => URL.createObjectURL(file as any)) ?? [];
   const ref = useRef<HTMLInputElement>(null);
-  const addPostTypeInputRef = useRef<HTMLInputElement>(null);
   const [customCategories, setCustomCategories] = useState<
-    { id: number; label: string }[]
-  >([]);
-  const [customTypes, setCustomTypes] = useState<
     { id: number; label: string }[]
   >([]);
 
   const allCategories = useMemo(
     () => [...(categories ?? []), ...customCategories],
     [customCategories, categories]
-  );
-  const allPostTypes = useMemo(
-    () => [...(postTypes ?? []), ...customTypes],
-    [customTypes, postTypes]
   );
 
   const handleSave = (data: CreatePostType) => {
@@ -123,28 +115,6 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
     methods.setValue("categories", [...currentSelectedCategorys, newCategory]);
 
     ref.current.value = "";
-  }
-
-  function onAddCustomType() {
-    const label = addPostTypeInputRef.current?.value.trim().toLowerCase();
-
-    if (!label || !addPostTypeInputRef.current) return;
-
-    const typeExists = postTypes.some((t) => t.name.toLowerCase() === label);
-    if (typeExists) {
-      addPostTypeInputRef.current.value = "";
-      return;
-    }
-
-    const newType = { id: Date.now(), label };
-
-    setCustomTypes((s) => [...s, newType]);
-
-    const currentSelectedTypes = methods.getValues("postTypes") ?? [];
-
-    methods.setValue("postTypes", [...currentSelectedTypes, newType]);
-
-    addPostTypeInputRef.current.value = "";
   }
 
   return (
@@ -223,7 +193,7 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
                       {c.label}
                     </ThemeItem>
                   ))}
-                  <Item className="gap-3 w-full">
+                  <Item className="gap-3 flex-row justify-center items-center w-full">
                     <Label>Outro:</Label>
                     <Input
                       onKeyDownCapture={(e) => {
@@ -253,7 +223,7 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
               render={({ field }) => (
                 <Box className="flex-wrap gap-2">
                   {isLoadingCategories && <Text>Carregando tipos...</Text>}
-                  {allPostTypes.map((c) => (
+                  {postTypes.map((c) => (
                     <ThemeItem
                       key={c.id}
                       isSelected={field.value.some((v) => v.id === c.id)}
@@ -268,22 +238,6 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
                       {c.label}
                     </ThemeItem>
                   ))}
-                  <Item className="gap-3 w-full">
-                    <Label>Outro:</Label>
-                    <Input
-                      onKeyDownCapture={(e) => {
-                        if (e.code === "Enter") {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          onAddCustomType();
-                        }
-                      }}
-                      ref={addPostTypeInputRef}
-                    />
-                    <Button type="button" onClick={onAddCustomType}>
-                      Adicionar
-                    </Button>
-                  </Item>
                 </Box>
               )}
             />
