@@ -70,6 +70,7 @@ export default function NewPostPreview() {
 
   const author =
     authData?.userType === "user" ? authData.user : authData?.employee;
+  const includeTelephone = post.includeTelephone;
 
   return (
     <RouteContainer>
@@ -107,10 +108,12 @@ export default function NewPostPreview() {
             </Box>
           </Box>
           <PostNetworks social={`${post.instagram};${post.facebook}`} />
-          <Box className="flex items-center gap-1.5">
-            <Image src="/wpp-icon.svg" className="size-5" />
-            <Text>{author?.telephone}</Text>
-          </Box>
+          {includeTelephone && (
+            <Box className="flex items-center gap-1.5">
+              <Image src="/wpp-icon.svg" className="size-5" />
+              <Text>{author?.telephone}</Text>
+            </Box>
+          )}
         </Box>
         <Box className="flex gap-10 w-full">
           <Button

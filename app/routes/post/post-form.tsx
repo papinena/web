@@ -26,7 +26,9 @@ export function ExpireDateInput({
   isChecked,
   label,
   name,
+  id,
 }: {
+  id?: string;
   name?: string;
   label: string;
   onChange(): void;
@@ -35,12 +37,13 @@ export function ExpireDateInput({
   return (
     <Box className="gap-1.5">
       <Checkbox
+        id={id}
         name={name}
         className="h-7 w-7"
         checked={isChecked}
         onCheckedChange={onChange}
       />
-      <Label>{label}</Label>
+      <Label htmlFor={id}>{label}</Label>
     </Box>
   );
 }
@@ -253,16 +256,19 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
               render={({ field }) => (
                 <Box className="w-full justify-between">
                   <ExpireDateInput
+                    id="3"
                     label="3 meses"
                     isChecked={field.value === 3}
                     onChange={() => field.onChange(3)}
                   />
                   <ExpireDateInput
+                    id="6"
                     label="6 meses"
                     isChecked={field.value === 6}
                     onChange={() => field.onChange(6)}
                   />
                   <ExpireDateInput
+                    id="Indeterminado"
                     label="Indeterminado"
                     isChecked={field.value === 9999}
                     onChange={() => field.onChange(9999)}

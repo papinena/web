@@ -37,6 +37,7 @@ function RecommendedPost({ post }: { post: UserPostAPIProps }) {
 
 function PostNetworks({ social }: { social?: string }) {
   if (!social) return;
+  if (social === ";") return;
   const [ig, fb] = formatPostNetworks(social);
 
   return (
@@ -97,6 +98,7 @@ export default function Post({ params }: Route.ComponentProps) {
   const hasMedia = post?.media && post.media.length > 0;
   const author = post?.author;
   const recommendedPosts = data?.recommendedPosts;
+  const includeTelephone = post?.includeTelephone;
 
   return (
     <RouteContainer>
@@ -128,10 +130,12 @@ export default function Post({ params }: Route.ComponentProps) {
               </Box>
             </PostAuthor>
             <PostNetworks social={post?.social} />
-            <Box className="flex items-center gap-1.5">
-              <Image src="/wpp-icon.svg" className="size-5" />
-              <Text>{author?.telephone}</Text>
-            </Box>
+            {includeTelephone && (
+              <Box className="flex items-center gap-1.5">
+                <Image src="/wpp-icon.svg" className="size-5" />
+                <Text>{author?.telephone}</Text>
+              </Box>
+            )}
           </Box>
         </Box>
         <Box className="flex-col p-3 bg-white rounded-lg gap-5">

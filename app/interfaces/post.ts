@@ -68,4 +68,5 @@ export type UserPostAPIProps = {
   types: PostTypeProps[];
   categories: PostCategoryProps[];
   media: PostMediaProps[];
+  includeTelephone: boolean;
 };
