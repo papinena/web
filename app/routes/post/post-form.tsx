@@ -303,7 +303,7 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
                       className="h-7 w-7"
                       name="includeTelephone"
                     />
-                    Deseja incluir o whatsapp na postagem?
+                    Incluir seu whatsapp de cadastro na postagem
                   </Label>
                 </Box>
               )}
