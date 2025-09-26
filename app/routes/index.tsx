@@ -55,7 +55,7 @@ export default function Home() {
 
   const pages = data?.pages.flatMap((page) => page) ?? [];
   const userPosts = pages.flatMap((p) => p.userPosts.data);
-  const adminPosts = pages.flatMap((p) => p.employeesPosts.data);
+  const adminPosts = pages.flatMap((p) => p.employeesPosts?.data ?? []);
 
   return (
     <RouteContainer>

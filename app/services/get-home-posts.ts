@@ -10,7 +10,7 @@ interface GetHomePostsResponse {
   status: ApiResponseStatus;
   message: ApiResponseMessage;
   userPosts: PaginatedApiResponse<UserPostAPIProps[]>;
-  employeesPosts: PaginatedApiResponse<EmployeePostAPIProps[]>;
+  employeesPosts: PaginatedApiResponse<EmployeePostAPIProps[]> | undefined;
 }
 
 export async function getHomePosts({ pageParam = 1, limit = 5 }) {
