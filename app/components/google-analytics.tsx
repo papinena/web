@@ -3,7 +3,10 @@ import { useEffect } from "react";
 export function GoogleAnalytics({ gaId }: { gaId: string }) {
   useEffect(() => {
     // Prevent script from running in development or if it already exists
-    if (process.env.NODE_ENV !== 'production' || document.querySelector(`script[src*="${gaId}"]`)) {
+    if (
+      import.meta.env.VITE_ENVIRONMENT !== "production" ||
+      document.querySelector(`script[src*="${gaId}"]`)
+    ) {
       return;
     }
 

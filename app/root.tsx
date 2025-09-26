@@ -90,7 +90,7 @@ export default function Root() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <TanstackQueryProvider>
-        <GoogleAnalytics gaId="G-27BPM256Y8" />
+        <GoogleAnalytics gaId={import.meta.env.VITE_GOOGLE_ANALYTICS} />
         <App />
         <ToastManager />
       </TanstackQueryProvider>
