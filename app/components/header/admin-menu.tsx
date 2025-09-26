@@ -76,7 +76,7 @@ export function AdminHamburguerMenu({
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BulletPoint />
-            <TextMenuItem setOpen={setOpen} to="/post/admin/my-publications">
+            <TextMenuItem setOpen={setOpen} to="/posts/admin">
               Publicações do Condomínio
             </TextMenuItem>
           </DropdownMenuItem>

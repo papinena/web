@@ -63,11 +63,14 @@ export default function UpdatePost() {
     title: post.data.title ?? "",
     resume: post.data.resume,
     description: post.data.description ?? "",
-    categories: post.data.categories.map((c) => c.id),
-    postTypes: post.data.types.map((t) => t.id),
+    categories: post.data.categories.map((c) => ({
+      ...c,
+      label: c.name,
+    })),
+    postTypes: post.data.types.map((t) => ({ ...t, label: t.name })),
     expiresOn: new Date(post.data.expiresOn),
-    instagram: post.data.social.split(";")[0],
-    facebook: post.data.social.split(";")[1],
+    instagram: post.data.social?.split(";")[0],
+    facebook: post.data.social?.split(";")[1],
   };
 
   const previews = post

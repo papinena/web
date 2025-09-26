@@ -1,4 +1,3 @@
-import type { ChangeEvent } from "react";
 import { Box } from "~/components/ui/box";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -10,31 +9,27 @@ import {
   CreateAdminPostSchema,
   type CreateAdminPostType,
 } from "~/parsers/create-admin-post";
-import { useState } from "react";
 import { ErrorMessage } from "~/components/error-message";
 import { Button } from "~/components/ui/button";
 import { SectionTitle } from "~/components/section-title";
 import { Item } from "~/components/post/item";
 import { ItemLabel } from "~/components/post/item-label";
 import { UploadPhotosInput } from "~/components/post/upload-photos-input";
+import type { UpdateAdminPostType } from "~/parsers/update-admin-post";
 
 interface PostFormProps {
-  onSave: (data: CreateAdminPostType) => void;
+  onSave: (data: CreateAdminPostType | UpdateAdminPostType) => void;
   initialValues?: CreateAdminPostType;
   isLoading?: boolean;
   previews?: string[];
+  files?: File[];
 }
 
-export function AdminPostForm({
-  onSave,
-  initialValues,
-  previews: initialPreviews = [],
-}: PostFormProps) {
-  const [files, setFiles] = useState<File[]>(initialValues?.photos ?? []);
-
+export function AdminPostForm({ onSave, initialValues }: PostFormProps) {
   const methods = useForm<CreateAdminPostType>({
     resolver: zodResolver(CreateAdminPostSchema),
     defaultValues: initialValues,
+    values: initialValues,
   });
 
   const {
@@ -44,9 +39,16 @@ export function AdminPostForm({
     formState: { errors },
   } = methods;
 
-  const handleSave = (data: CreateAdminPostType) => {
-    onSave({ ...data, photos: files });
+  const handleSave = (data: CreateAdminPostType | UpdateAdminPostType) => {
+    onSave({ ...data });
   };
+
+  function onPhotoChange(files: File[]) {
+    methods.setValue("photos", files);
+  }
+
+  const files = initialValues?.photos;
+  const previews = files?.map((f) => URL.createObjectURL(f));
 
   return (
     <FormProvider {...methods}>
@@ -59,8 +61,9 @@ export function AdminPostForm({
           <Item>
             <ItemLabel>Fotos</ItemLabel>
             <UploadPhotosInput
-              onFilesChange={setFiles}
-              initialPreviews={initialPreviews}
+              onFilesChange={onPhotoChange}
+              initialFiles={files}
+              initialPreviews={previews}
             />
           </Item>
           <Item>

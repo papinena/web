@@ -44,7 +44,7 @@ export type EmployeePostAPIProps = {
   description?: string;
   expiresOn: string;
   social: string;
-  priority: string;
+  priority: "LOW" | "NORMAL" | "HIGH";
   authorId: string;
   createdAt: string;
   employee: PostAuthorEmployeeProps;

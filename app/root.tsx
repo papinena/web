@@ -6,6 +6,7 @@ import { MOBILE_BREAKPOINT } from "./utils/constants";
 import { Text } from "./components/ui/text";
 import { TanstackQueryProvider } from "./query-client";
 import "~/utils/sentry";
+import { GoogleAnalytics } from "./components/google-analytics";
 import { App } from "./routes/app";
 import { ToastManager } from "./components/toast-manager";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -89,6 +90,7 @@ export default function Root() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <TanstackQueryProvider>
+        <GoogleAnalytics gaId="G-27BPM256Y8" />
         <App />
         <ToastManager />
       </TanstackQueryProvider>

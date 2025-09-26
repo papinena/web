@@ -8,25 +8,7 @@ import { ImageGallery } from "~/components/image-gallery";
 import { MarkdownEditor } from "~/components/markdown-editor";
 import { Text } from "~/components/ui/text";
 import { Image } from "~/components/ui/image";
-import { PostAuthor } from "~/components/post-author";
 import { RouteContainer } from "~/components/route-container";
-
-function PostNetworks({ social }: { social?: string }) {
-  if (!social) return;
-  const [ig, fb] = social.split(";");
-  return (
-    <Box className="flex-col">
-      <Box className="flex items-center gap-1.5">
-        <Image src="/instagram.svg" className="size-5" />
-        <Text>{ig}</Text>
-      </Box>
-      <Box className="flex items-center gap-1.5">
-        <Image src="/facebook.svg" className="size-5" />
-        <Text>{fb}</Text>
-      </Box>
-    </Box>
-  );
-}
 
 export default function Post({ params }: Route.ComponentProps) {
   const { postId } = params;

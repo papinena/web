@@ -18,15 +18,18 @@ import { RouteContainer } from "~/components/route-container";
 import { formatPostNetworks } from "~/utils/get-user-networks";
 
 function RecommendedPost({ post }: { post: UserPostAPIProps }) {
+  const photo = post.media[0]?.filename;
   return (
     <Link to={`/post/${post.id}`}>
       <Box className="w-full flex-col">
-        <Box className="px-5 py-10 gap-3">
-          <PostImage
-            className="size-20"
-            alt={"first photo"}
-            filename={post.media[0]?.filename}
-          />
+        <Box className="px-3 py-6 gap-3">
+          {photo && (
+            <PostImage
+              className="size-20"
+              alt={"first photo"}
+              filename={photo}
+            />
+          )}
           <Text>{post.title}</Text>
         </Box>
         <Separator className="py-[1px] bg-gray-300 w-full" />
@@ -138,16 +141,19 @@ export default function Post({ params }: Route.ComponentProps) {
             )}
           </Box>
         </Box>
-        <Box className="flex-col p-3 bg-white rounded-lg gap-5">
-          <Box className="flex-col">
-            {recommendedPosts?.data.map((r) => (
-              <RecommendedPost post={r} />
-            ))}
+        {recommendedPosts && recommendedPosts.data.length > 0 && (
+          <Box className="flex-col p-3 bg-white rounded-lg gap-1.5">
+            <Text variant="title">Publicações Relacionadas</Text>
+            <Box className="flex-col">
+              {recommendedPosts?.data.map((r) => (
+                <RecommendedPost post={r} />
+              ))}
+            </Box>
+            <Button asChild variant={"link"} className="ml-auto underline">
+              <Link to="#">Veja mais publicações relacionadas</Link>
+            </Button>
           </Box>
-          <Button asChild variant={"link"} className="ml-auto underline">
-            <Link to="#">Veja mais publicações relacionadas</Link>
-          </Button>
-        </Box>
+        )}
       </Box>
     </RouteContainer>
   );
