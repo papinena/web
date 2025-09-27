@@ -112,7 +112,7 @@ export function AdminHamburguerMenu({
             </TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <TextMenuItem setOpen={setOpen} to="/vizis/contact">
+            <TextMenuItem setOpen={setOpen} to="/contact">
               Fale com o Vizis
             </TextMenuItem>
           </DropdownMenuItem>

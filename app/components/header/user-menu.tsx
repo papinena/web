@@ -19,7 +19,6 @@ import { MenuLink } from "./menu-link";
 import { PlusIcon } from "lucide-react";
 import { Box } from "../ui/box";
 import { BulletPoint } from "./bullet-point";
-import { useState } from "react";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -32,10 +31,9 @@ export function UserHamburguerMenu({
   ariaLabel = "Open menu",
 }: HamburgerMenuProps) {
   const { handleLogout } = useHamburguerMenu();
-  const [open, setOpen] = useState(false);
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu>
       <DropdownMenuTrigger>
         <HamburguerMenuIcon className={className} ariaLabel={ariaLabel} />
       </DropdownMenuTrigger>
@@ -64,23 +62,25 @@ export function UserHamburguerMenu({
               Meu painel
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BulletPoint />
-            <TextMenuItem setOpen={setOpen} to="/user/edit">
-              Meu Cadastro
-            </TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box className="justify-center items-center gap-2">
+              <BulletPoint />
+              <TextMenuItem to="/user/edit">Meu Cadastro</TextMenuItem>
+            </Box>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BulletPoint />
-            <TextMenuItem setOpen={setOpen} to="/post/my-publications">
-              Minhas publicações
-            </TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/post/my-publications">
+                Minhas publicações
+              </TextMenuItem>
+            </Box>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BulletPoint />
-            <TextMenuItem setOpen={setOpen} to="/user/condominium">
-              Meu condomínio
-            </TextMenuItem>
+          <DropdownMenuItem asChild>
+            <Box>
+              <BulletPoint />
+              <TextMenuItem to="/user/condominium">Meu condomínio</TextMenuItem>
+            </Box>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuItem asChild>
@@ -94,15 +94,11 @@ export function UserHamburguerMenu({
               Ajuda
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem setOpen={setOpen} to="/faq">
-              FAQ
-            </TextMenuItem>
+          <DropdownMenuItem asChild>
+            <TextMenuItem to="/faq">FAQ</TextMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem setOpen={setOpen} to="/vizis/contact">
-              Fale com o Vizis
-            </TextMenuItem>
+          <DropdownMenuItem asChild>
+            <TextMenuItem to="/contact">Fale com o Vizis</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

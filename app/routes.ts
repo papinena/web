@@ -11,11 +11,12 @@ export default [
     route("forgot", "./routes/password/forgot.tsx"),
     route("reset", "./routes/password/reset.tsx"),
   ]),
+  route("/contact", "./routes/contact.tsx"),
+  route("/privacy-policy", "./routes/privacy-policy.tsx"),
   layout("./routes/app.tsx", [
     route("/search", "./routes/search.tsx"),
     index("./routes/index.tsx"),
     route("/faq", "./routes/faq.tsx"),
-    route("/vizis/contact", "./routes/contact.tsx"),
     ...prefix("/post", [
       route("/:postId", "./routes/post/index.tsx"),
       route("/create", "./routes/post/new-post.tsx"),
