@@ -1,22 +1,38 @@
 import { z } from "zod";
 
-export const UpdateUserSchema = z.object({
-  name: z.string().min(1, "Nome é obrigatório"),
-  lastName: z.string().min(1, "Sobrenome é obrigatório"),
-  // email: z.email("Email inválido"),
-  // confirmEmail: z.email("Email inválido"),
-  birthDate: z.string({
-    error: "Data de nascimento é obrigatória",
-  }),
-  telephone: z.string().min(1, "Telefone é obrigatório"),
-  block: z.string().optional(),
-  apartment: z.string().min(1, "Apartamento é obrigatório"),
-  tags: z
-    .array(z.object({ id: z.number(), label: z.string() }))
-    .min(3, { error: "Mínimo de 3 temas" }),
-  // password: z.string().optional(),
-  // confirmPassword: z.string().optional(),
-});
+export const UpdateUserSchema = z
+  .object({
+    name: z.string().min(1, "Nome é obrigatório"),
+    lastName: z.string().min(1, "Sobrenome é obrigatório"),
+    // email: z.email("Email inválido"),
+    // confirmEmail: z.email("Email inválido"),
+    birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
+    telephone: z.string().min(1, "Telefone é obrigatório"),
+    block: z.string().optional(),
+    apartment: z.string().min(1, "Apartamento é obrigatório"),
+    tags: z
+      .array(z.object({ id: z.number(), label: z.string() }))
+      .min(3, { error: "Mínimo de 3 temas" }),
+    // password: z.string().optional(),
+    // confirmPassword: z.string().optional(),
+  })
+
+  .refine(
+    (data) => {
+      const birthDate = new Date(data.birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age >= 18;
+    },
+    {
+      message: "Você deve ter no mínimo 18 anos",
+      path: ["birthDate"],
+    }
+  );
 // .refine((data) => data.password === data.confirmPassword, {
 //   message: "As senhas não coincidem",
 //   path: ["confirmPassword"],
