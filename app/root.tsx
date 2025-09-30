@@ -79,14 +79,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function Root() {
   const { width } = useWindowSize();
 
-  if (width > MOBILE_BREAKPOINT) {
-    return (
-      <Box className="min-w-dvw min-h-dvh flex items-center justify-center">
-        <Text className="text-2xl">Works better in mobile screens</Text>
-      </Box>
-    );
-  }
-
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <TanstackQueryProvider>
