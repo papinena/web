@@ -19,6 +19,8 @@ import { BulletPoint } from "./bullet-point";
 import { useState } from "react";
 import { useAuth } from "~/hooks/useAuth";
 import { Partners } from "./partners";
+import { Faq } from "./faq";
+import { Contact } from "./contact";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -108,16 +110,8 @@ export function AdminHamburguerMenu({
               Ajuda
             </IconMenuItem>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem setOpen={setOpen} to="/faq">
-              FAQ
-            </TextMenuItem>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <TextMenuItem setOpen={setOpen} to="/contact">
-              Fale com o Vizis
-            </TextMenuItem>
-          </DropdownMenuItem>
+          <Faq setOpen={setOpen} />
+          <Contact setOpen={setOpen} />
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
