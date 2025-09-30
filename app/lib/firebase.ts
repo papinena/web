@@ -26,6 +26,7 @@ class FirebaseService {
 
   private app: FirebaseApp;
   private messaging: Messaging | null = null;
+  private initialized = false;
 
   constructor() {
     this.app = initializeApp(FirebaseService.firebaseConfig);
@@ -95,6 +96,7 @@ class FirebaseService {
   }
 
   public async setupForUnauthenticatedUser(): Promise<string | null> {
+    if (this.initialized) return null;
     if (typeof window === "undefined" || !this.messaging) {
       return null;
     }
@@ -114,6 +116,7 @@ class FirebaseService {
         this.saveTokenToLocalStorage(token);
         this.listenForForegroundMessages();
       }
+      this.initialized = true;
       return token;
     } catch (error) {
       console.error("Firebase setup error for unauthenticated user:", error);
@@ -122,6 +125,7 @@ class FirebaseService {
   }
 
   public async setup(): Promise<string | null> {
+    if (this.initialized) return null;
     if (typeof window === "undefined" || !this.messaging) {
       return null;
     }
@@ -142,6 +146,7 @@ class FirebaseService {
         this.listenForForegroundMessages();
       }
 
+      this.initialized = true;
       return token;
     } catch (error) {
       console.error("Firebase setup error:", error);

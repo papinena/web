@@ -16,15 +16,17 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   const isAuthenticated = authUtils.isAuthenticated();
   const authData = authUtils.getAuthData();
 
-  await firebaseService.setupForUnauthenticatedUser();
+  if (isAuthenticated) {
+    await firebaseService.setup();
+  } else {
+    await firebaseService.setupForUnauthenticatedUser();
+  }
 
   if (!isAuthenticated && !isLoginPage && !isRegisterPage) {
     return redirect("/user/login");
   }
 
   if (!isAuthenticated) return null;
-
-  await firebaseService.setup();
 
   const { expiresOn, sasToken, setToken } = useImageTokenStore.getState();
   const isTokenExpired = !expiresOn || new Date() > new Date(expiresOn);
