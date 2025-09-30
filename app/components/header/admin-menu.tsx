@@ -18,6 +18,7 @@ import { PlusIcon } from "lucide-react";
 import { BulletPoint } from "./bullet-point";
 import { useState } from "react";
 import { useAuth } from "~/hooks/useAuth";
+import { Partners } from "./partners";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -101,6 +102,7 @@ export function AdminHamburguerMenu({
               Mural do condomínio
             </IconMenuItem>
           </DropdownMenuItem>
+          <Partners />
           <DropdownMenuItem asChild>
             <IconMenuItem to="/faq" iconSrc="/image 129.svg">
               Ajuda

@@ -19,6 +19,7 @@ import { MenuLink } from "./menu-link";
 import { PlusIcon } from "lucide-react";
 import { Box } from "../ui/box";
 import { BulletPoint } from "./bullet-point";
+import { Partners } from "./partners";
 
 interface HamburgerMenuProps {
   onClick?: () => void;
@@ -88,6 +89,7 @@ export function UserHamburguerMenu({
             Mural do condomínio
           </IconMenuItem>
         </DropdownMenuItem>
+        <Partners />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <IconMenuItem to="/faq" iconSrc="/image 129.svg">
@@ -98,7 +100,7 @@ export function UserHamburguerMenu({
             <TextMenuItem to="/faq">FAQ</TextMenuItem>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <TextMenuItem to="/contact">Fale com o Vizis</TextMenuItem>
+            <TextMenuItem to="/vizis/contact">Fale com o Vizis</TextMenuItem>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
