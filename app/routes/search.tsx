@@ -28,13 +28,22 @@ export default function Search({
   const posts = loaderData?.posts;
   const term = loaderData.term;
 
+  const isTermVizisBenefits = term === "Benefícios Vizis";
+
   return (
     <RouteContainer className="bg-blue-primary">
-      <Box className="bg-white p-4 items-center justify-center rounded-4xl">
-        <Text>
-          Você buscou por: <strong>{term}</strong>
-        </Text>
-      </Box>
+      {isTermVizisBenefits ? (
+        <Box className="bg-white text-left flex-col p-4 justify-center rounded-4xl">
+          <Text variant="title">Parceiros Vizis</Text>
+          <Text>Confira aqui benefícios exclusivos para o seu condomínio!</Text>
+        </Box>
+      ) : (
+        <Box className="bg-white p-4 items-center justify-center rounded-4xl">
+          <Text>
+            Você buscou por: <strong>{term}</strong>
+          </Text>
+        </Box>
+      )}
       {posts?.map((post) => (
         <Post className="bg-white rounded-4xl" key={post.id} post={post}>
           <Box className="w-full flex-col">
