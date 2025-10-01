@@ -9,6 +9,7 @@ export interface ToastMessage {
   description: string;
   variant?: ToastVariant;
   position?: ToastPosition;
+  url?: string;
 }
 
 interface ToastState {

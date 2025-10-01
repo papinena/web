@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useToastStore, type ToastMessage } from "~/stores/toast";
 import {
   Toast,
@@ -53,6 +54,7 @@ export function ToastManager() {
 
 function ToastComponent({ toast }: { toast: ToastMessage }) {
   const { removeToast } = useToastStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,18 +66,30 @@ function ToastComponent({ toast }: { toast: ToastMessage }) {
     };
   }, [toast.id, removeToast]);
 
+  const handleToastClick = () => {
+    if (toast.url) {
+      navigate(toast.url);
+      removeToast(toast.id);
+    }
+  };
+
   return (
-    <ToastProvider
-      onClose={() => removeToast(toast.id)}
-      variant={toast.variant ?? "default"}
+    <div
+      onClick={handleToastClick}
+      style={{ cursor: toast.url ? "pointer" : "default" }}
     >
-      <Toast variant={toast.variant}>
-        <ToastHeader>
-          <ToastTitle>{toast.title}</ToastTitle>
-          <ToastClose />
-        </ToastHeader>
-        <ToastDescription>{toast.description}</ToastDescription>
-      </Toast>
-    </ToastProvider>
+      <ToastProvider
+        onClose={() => removeToast(toast.id)}
+        variant={toast.variant ?? "default"}
+      >
+        <Toast variant={toast.variant}>
+          <ToastHeader>
+            <ToastTitle>{toast.title}</ToastTitle>
+            <ToastClose />
+          </ToastHeader>
+          <ToastDescription>{toast.description}</ToastDescription>
+        </Toast>
+      </ToastProvider>
+    </div>
   );
 }

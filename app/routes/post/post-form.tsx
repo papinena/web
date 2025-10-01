@@ -143,7 +143,7 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
             <ErrorMessage textVariant="legend" show={!!errors.title}>
               {errors.title?.message}
             </ErrorMessage>
-            <Input {...register("title")} />
+            <Input type="text" {...register("title")} />
           </Item>
           <Item>
             <ItemLabel>
@@ -155,7 +155,7 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
             <ErrorMessage textVariant="legend" show={!!errors.resume}>
               {errors.resume?.message}
             </ErrorMessage>
-            <Input {...register("resume")} />
+            <Input type="text" {...register("resume")} />
           </Item>
           <Item>
             <ItemLabel>Mais detalhes da publicação </ItemLabel>
@@ -199,6 +199,7 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
                   <Item className="gap-3 flex-row justify-center items-center w-full">
                     <Label>Outro:</Label>
                     <Input
+                      type="text"
                       onKeyDownCapture={(e) => {
                         if (e.code === "Enter") {
                           e.preventDefault();
@@ -282,11 +283,11 @@ export function PostForm({ onSave, initialValues }: PostFormProps) {
             <Box className="w-full gap-20">
               <Box className="flex-col gap-1.5">
                 <Image src="/instagram.svg" className="size-5" />
-                <Input {...register("instagram")} />
+                <Input type="text" {...register("instagram")} />
               </Box>
               <Box className="flex-col gap-1.5">
                 <Image src="/facebook.svg" className="size-5" />
-                <Input {...register("facebook")} />
+                <Input type="text" {...register("facebook")} />
               </Box>
             </Box>
           </Item>

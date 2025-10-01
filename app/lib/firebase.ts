@@ -85,11 +85,19 @@ class FirebaseService {
     if (!this.messaging) return;
     onMessage(this.messaging, (payload) => {
       console.log("Foreground message received");
-      const { notification } = payload;
+      const { notification, data } = payload;
+
+      let url;
+
+      if (data?.postId) {
+        url = `/post/admin/${data.postId}`;
+      }
+
       if (notification) {
         useToastStore.getState().addToast({
           title: notification.title || "New Notification",
           description: notification.body || "",
+          url,
         });
       }
     });
