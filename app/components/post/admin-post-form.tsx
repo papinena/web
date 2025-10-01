@@ -68,7 +68,7 @@ export function AdminPostForm({ onSave, initialValues }: PostFormProps) {
           </Item>
           <Item>
             <ItemLabel>Título da publicação*</ItemLabel>
-            <Input {...register("title")} />
+            <Input type="text" {...register("title")} />
             <ErrorMessage show={!!errors.title}>
               {errors.title?.message}
             </ErrorMessage>
@@ -80,7 +80,7 @@ export function AdminPostForm({ onSave, initialValues }: PostFormProps) {
                 (informações mais importantes da publicação)
               </strong>
             </ItemLabel>
-            <Input {...register("resume")} />
+            <Input type="text" {...register("resume")} />
             <ErrorMessage show={!!errors.resume}>
               {errors.resume?.message}
             </ErrorMessage>
