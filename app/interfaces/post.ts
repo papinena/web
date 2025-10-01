@@ -13,9 +13,23 @@ export type PostCategoryProps = {
   is_default: boolean;
 };
 
+export type PostCategoryUIProps = {
+  id: number;
+  name: string;
+  is_default: boolean;
+  label: string;
+};
+
 export type PostTypeProps = {
   id: number;
   name: string;
+  is_default: boolean;
+};
+
+export type PostTypeUIProps = {
+  id: number;
+  name: string;
+  label: string;
   is_default: boolean;
 };
 
@@ -37,6 +51,22 @@ export type PostAuthorProps = {
   telephone: string;
 };
 
+export type EmployeePostUIProps = {
+  id: string;
+  title: string;
+  resume: string;
+  description?: string;
+  expiresOn: string;
+  social: string;
+  priority: "LOW" | "NORMAL" | "HIGH";
+  authorId: string;
+  createdAt: string;
+  employee: PostAuthorEmployeeProps;
+  updatedAt: string;
+  types: PostTypeProps[];
+  categories: PostCategoryProps[];
+  photos: PostMediaProps[];
+};
 export type EmployeePostAPIProps = {
   id: string;
   title: string;
@@ -53,6 +83,7 @@ export type EmployeePostAPIProps = {
   categories: PostCategoryProps[];
   media: PostMediaProps[];
 };
+
 export type UserPostAPIProps = {
   id: string;
   title: string;
@@ -67,6 +98,24 @@ export type UserPostAPIProps = {
   updatedAt: string;
   types: PostTypeProps[];
   categories: PostCategoryProps[];
+  media: PostMediaProps[];
+  includeTelephone: boolean;
+};
+
+export type UserPostUIProps = {
+  id: string;
+  title: string;
+  resume: string;
+  description?: string;
+  expiresOn: string;
+  social: string;
+  priority: string;
+  authorId: string;
+  createdAt: string;
+  author: PostAuthorProps;
+  updatedAt: string;
+  types: PostTypeUIProps[];
+  categories: PostCategoryUIProps[];
   media: PostMediaProps[];
   includeTelephone: boolean;
 };

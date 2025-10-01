@@ -5,24 +5,25 @@ import { Spinner } from "~/components/ui/spinner";
 import { Box } from "~/components/ui/box";
 import { Text } from "~/components/ui/text";
 import { PostForm } from "./post-form";
-import { usePost } from "~/hooks/usePost";
 import type { CreatePostType } from "~/parsers/create-post";
 import { useNewPostStore } from "~/stores/new-post";
-import { useImageReadToken } from "~/hooks/useImageReadToken";
 import { RouteContainer } from "~/components/route-container";
+import { UserPostMapper } from "~/mappers/post";
+import { DateFormatter } from "~/utils/date-formatter";
 
 export default function UpdatePost() {
   const { postId } = useParams();
   const navigate = useNavigate();
   const { setPost } = useNewPostStore();
-  const { updatePostMutation } = usePost();
-  const { buildUrl } = useImageReadToken();
   const { data, isLoading, error } = useQuery({
     queryKey: ["post", postId],
-    queryFn: () => getPost(postId as string),
+    queryFn: async () => {
+      const data = await getPost(postId as string);
+      if (!data) throw new Error("data is undefined");
+      return UserPostMapper.toDomain(data.post.data);
+    },
     enabled: !!postId,
   });
-  const post = data?.post;
 
   if (isLoading) {
     return (
@@ -44,7 +45,7 @@ export default function UpdatePost() {
     );
   }
 
-  if (!post) {
+  if (!data) {
     return (
       <RouteContainer>
         <Box className="flex items-center justify-center h-full">
@@ -54,37 +55,23 @@ export default function UpdatePost() {
     );
   }
 
-  const onSave = (data: CreatePostType, files: File[]) => {
-    setPost(data, files);
+  const onSave = (data: CreatePostType) => {
+    setPost(data);
     navigate(`/post/update/${postId}/preview`);
   };
 
   const initialValues = {
-    title: post.data.title ?? "",
-    resume: post.data.resume,
-    description: post.data.description ?? "",
-    categories: post.data.categories.map((c) => ({
-      ...c,
-      label: c.name,
-    })),
-    postTypes: post.data.types.map((t) => ({ ...t, label: t.name })),
-    expiresOn: new Date(post.data.expiresOn),
-    instagram: post.data.social?.split(";")[0],
-    facebook: post.data.social?.split(";")[1],
+    ...data,
+    postTypes: data.types,
+    expiresOn: DateFormatter.differenceInMonths(
+      new Date(data.expiresOn),
+      new Date(data.createdAt)
+    ),
   };
-
-  const previews = post
-    ? post.data.media.map((media) => buildUrl(media.filename))
-    : [];
 
   return (
     <RouteContainer>
-      <PostForm
-        onSave={onSave}
-        initialValues={initialValues}
-        isLoading={updatePostMutation.isPending}
-        previews={previews}
-      />
+      <PostForm onSave={onSave} initialValues={initialValues} />
     </RouteContainer>
   );
 }

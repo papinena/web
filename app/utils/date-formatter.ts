@@ -65,4 +65,10 @@ export class DateFormatter {
       ...options,
     });
   }
+
+  static differenceInMonths(dateLeft: Date, dateRight: Date): number {
+    const yearDiff = dateLeft.getFullYear() - dateRight.getFullYear();
+    const monthDiff = dateLeft.getMonth() - dateRight.getMonth();
+    return yearDiff * 12 + monthDiff;
+  }
 }
