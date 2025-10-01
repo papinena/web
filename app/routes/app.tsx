@@ -60,12 +60,12 @@ export function App() {
   const to = isEmployee ? "/post/admin/create" : "/post/create";
 
   return (
-    <Box className="min-h-dvh max-w-2xl w-full mx-auto relative h-full flex-col">
+    <Box className="min-h-dvh max-w-4xl w-full mx-auto relative h-full flex-col">
       <Header />
       <Box className="flex-1 mb-10 flex flex-col">
         <Outlet />
       </Box>
-      <Box className="bg-white bottom-0 fixed min-h-12 w-full max-w-2xl items-center justify-center">
+      <Box className="bg-white bottom-0 fixed min-h-12 w-full max-w-4xl items-center justify-center">
         {isAuth && (
           <Button
             asChild
