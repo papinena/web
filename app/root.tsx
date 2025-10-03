@@ -66,7 +66,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="google-site-verification"
-          content="mQNDY2fbDg3f9Snl6q8YHyc-vxTlFUMkr22oC2L_nRk"
+          content="CMEig5X-xU0djYftT-1f6lPtFmV1wYUqoZpE6qBSPao"
         />
         <Meta />
         <Links />
