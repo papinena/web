@@ -1,4 +1,5 @@
 import {
+  addMonths as addMonthsFns,
   format as formatFns,
   formatDistanceToNow as formatDistanceToNowFns,
   parse as parseFns,
@@ -70,5 +71,9 @@ export class DateFormatter {
     const yearDiff = dateLeft.getFullYear() - dateRight.getFullYear();
     const monthDiff = dateLeft.getMonth() - dateRight.getMonth();
     return yearDiff * 12 + monthDiff;
+  }
+
+  static addMonths(date: Date, amount: number): Date {
+    return addMonthsFns(date, amount);
   }
 }

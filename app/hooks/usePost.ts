@@ -1,3 +1,4 @@
+import type { UpdatePostType } from "~/interfaces/update-post";
 import {
   useMutation,
   useQueryClient,
@@ -11,8 +12,11 @@ import type { CreatePostType } from "~/parsers/create-post";
 import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
+import { DateFormatter } from "~/utils/date-formatter";
 
-export function usePost() {
+export function usePost({
+  onUpdateSuccess,
+}: { onUpdateSuccess?(): void } = {}) {
   const queryClient = useQueryClient();
 
   const useListPosts = (params?: { limit?: number }) => {
@@ -45,17 +49,16 @@ export function usePost() {
     mutationFn: async ({
       postId,
       data,
-      files,
     }: {
       postId: string;
-      data: CreatePostType;
-      files: File[];
+      data: UpdatePostType;
     }) => {
+      const files = data.files;
       let filenames: { filename: string; type: "IMAGE" | "VIDEO" }[] = [];
       let tokenData: { containerUri: string; sasToken: string } | undefined,
         tokenError: { status: string; message: string } | undefined;
 
-      if (files.length > 0) {
+      if (files && files.length > 0) {
         const sasTokenData = await getSasToken();
         tokenData = sasTokenData.data;
         tokenError = sasTokenData.error;
@@ -73,11 +76,20 @@ export function usePost() {
         }));
       }
 
+      const baseDate = new Date(data.createdAt || new Date());
+      const expiresOn =
+        data.expiresOn === 9999
+          ? new Date("9999-12-31T00:00:00.000Z")
+          : DateFormatter.addMonths(baseDate, data.expiresOn);
+
       const res = await updatePost(postId, {
         ...data,
-        description: data.description ?? null,
+        types: data.postTypes.map((t) => t.id),
+        categories: data.categories.map((t) => t.id),
+        description: data.description,
         media: filenames,
         social: `${data.instagram};${data.facebook}`,
+        expiresOn,
       });
 
       if (res?.status === "success") {
@@ -96,6 +108,11 @@ export function usePost() {
       queryClient.invalidateQueries({ queryKey: ["my-publications"] });
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.resetQueries({ queryKey: ["update-user-post", postId] });
+      queryClient.resetQueries({
+        queryKey: ["update-user-post-images", postId],
+      });
+      onUpdateSuccess?.();
     },
   });
 

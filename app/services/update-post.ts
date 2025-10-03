@@ -1,5 +1,4 @@
 import { api, apiRequest } from "~/utils/api";
-import type { CreatePostType } from "~/parsers/create-post";
 import type { UserPostAPIProps } from "~/interfaces/post";
 
 interface ApiResponse {
@@ -8,7 +7,7 @@ interface ApiResponse {
   data?: UserPostAPIProps;
 }
 
-export async function updatePost(postId: string, data: CreatePostType) {
+export async function updatePost(postId: string, data: any) {
   try {
     const { BASE_URL } = api();
     const url = new URL(`${BASE_URL}/post/${postId}`);

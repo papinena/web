@@ -12,54 +12,49 @@ import { useAuth } from "~/hooks/useAuth";
 import { Image } from "~/components/ui/image";
 import { PostAuthor } from "~/components/post-author";
 import { RouteContainer } from "~/components/route-container";
-
-function PostNetworks({ social }: { social?: string }) {
-  if (!social) return null;
-  const [ig, fb] = social.split(";");
-  return (
-    <Box className="flex-col">
-      <Box className="flex items-center gap-1.5">
-        <Image src="/instagram.svg" className="size-5" />
-        <Text>{ig.split(":")[1]}</Text>
-      </Box>
-      <Box className="flex items-center gap-1.5">
-        <Image src="/facebook.svg" className="size-5" />
-        <Text>{fb.split(":")[1]}</Text>
-      </Box>
-    </Box>
-  );
-}
+import { Post } from "~/components/post";
 
 export default function UpdatePostPreview() {
   const { postId } = useParams();
   const navigate = useNavigate();
-  const { post, files, clear } = useNewPostStore();
-  const { updatePostMutation } = usePost();
+  const { updatedPosts, clear } = useNewPostStore();
+  const { updatePostMutation } = usePost({
+    onUpdateSuccess: () => {
+      clear();
+      navigate(`/post/${postId}`);
+    },
+  });
   const { authData } = useAuth();
 
+  if (!postId) {
+    return (
+      <RouteContainer className="items-center justify-center">
+        <Text>Post não encontrado.</Text>
+      </RouteContainer>
+    );
+  }
+
+  const post = updatedPosts[postId];
+  const files = post?.files ?? [];
+
   if (!post) {
-    return <RouteContainer>No post data found.</RouteContainer>;
+    return (
+      <RouteContainer className="items-center justify-center">
+        <Text>Informações não encontradas.</Text>
+      </RouteContainer>
+    );
   }
 
   const onPublish = () => {
-    if (postId) {
-      updatePostMutation.mutate(
-        { postId, data: post, files },
-        {
-          onSuccess: () => {
-            clear();
-            navigate(`/post/${postId}`);
-          },
-        }
-      );
-    }
+    updatePostMutation.mutate({ postId, data: post });
   };
 
-  const media = files.map((file) => ({
-    id: file.name,
-    filename: URL.createObjectURL(file),
-    type: "IMAGE" as const,
-  }));
+  const media =
+    files.map((file) => ({
+      id: file.name,
+      filename: URL.createObjectURL(file),
+      type: "IMAGE" as const,
+    })) ?? [];
 
   const author =
     authData?.userType === "user" ? authData.user : authData?.employee;
@@ -82,11 +77,15 @@ export default function UpdatePostPreview() {
               <PostAuthor.Block author={author} />
             </Box>
           </PostAuthor>
-          <PostNetworks social={`${post.instagram};${post.facebook}`} />
-          <Box className="flex items-center gap-1.5">
-            <Image src="/wpp-icon.svg" className="size-5" />
-            <Text>{author?.telephone}</Text>
-          </Box>
+          <Post.Networks
+            post={{ social: `${post.instagram};${post.facebook}` }}
+          />
+          {post.includeTelephone && (
+            <Box className="flex items-center gap-1.5">
+              <Image src="/wpp-icon.svg" className="size-5" />
+              <Text>{author?.telephone}</Text>
+            </Box>
+          )}
         </Box>
         <Box className="flex gap-4">
           <Button onClick={() => navigate(-1)}>Voltar</Button>
