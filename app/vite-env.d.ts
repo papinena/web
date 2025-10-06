@@ -11,6 +11,8 @@ interface ImportMetaEnv {
   readonly VITE_ENVIRONMENT: string;
   readonly VITE_GOOGLE_CLIENT_ID: string;
   readonly VITE_GOOGLE_ANALYTICS: string;
+  readonly VITE_APPLE_SERVICE_ID: string;
+  readonly VITE_APPLE_REDIRECT_URI: string;
   // more env variables...
 }
 

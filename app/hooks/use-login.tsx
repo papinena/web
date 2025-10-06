@@ -7,6 +7,7 @@ import { firebaseService } from "~/lib/firebase";
 import { saveFcmToken } from "~/services/save-fcm-token";
 import { useGoogleLogin } from "@react-oauth/google";
 import { socialLogin } from "~/services/social-login";
+import { socialAppleLogin } from "~/services/social-apple-login";
 import { EmployeeMapper } from "~/mappers/employee";
 import { useNavigate } from "react-router";
 import { useAuth } from "./useAuth";
@@ -166,6 +167,37 @@ export function useLogin() {
     },
   });
 
+  const userAppleLoginMutation = useMutation({
+    mutationFn: async (token: string) => {
+      const { error, data } = await socialAppleLogin({ token });
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    onSuccess: async (result: any) => {
+      if (result.error) {
+        setFormError(result.error.message);
+      } else {
+        if (result.isNew) {
+          return navigate("/register/user/social/form", {
+            state: { ...result.profile },
+          });
+        }
+        // Store authentication data in localStorage and update state
+        authLogin(result);
+        const token = await firebaseService.setup();
+
+        if (token) {
+          await saveFcmToken(token);
+        }
+
+        return navigate("/");
+      }
+    },
+    onError: (error) => {
+      setFormError(error.message);
+    },
+  });
+
   const userGoogleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       userSocialLoginMutation.mutate(tokenResponse.access_token);
@@ -174,6 +206,18 @@ export function useLogin() {
       setFormError("Failed to login with Google");
     },
   });
+
+  const userAppleLogin = async () => {
+    try {
+      const token = await firebaseService.signInWithApple();
+      if (token) {
+        userAppleLoginMutation.mutate(token);
+      }
+    } catch (error) {
+      setFormError("Failed to login with Apple");
+    }
+  };
+
   const adminGoogleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       adminSocialLoginMutation.mutate(tokenResponse.access_token);
@@ -191,6 +235,7 @@ export function useLogin() {
   return {
     onUserLoginSubmit,
     userGoogleLogin,
+    userAppleLogin,
     userLoginMutation,
     adminLoginMutation,
     userSocialLoginMutation,

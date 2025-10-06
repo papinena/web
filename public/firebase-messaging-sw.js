@@ -7,13 +7,13 @@ importScripts(
 );
 
 firebase.initializeApp({
-  apiKey: "AIzaSyCI34gVPB1yf9FIchsSNtI3KrukB3l03M0",
-  authDomain: "vizis-90eda.firebaseapp.com",
-  projectId: "vizis-90eda",
-  storageBucket: "vizis-90eda.firebasestorage.app",
-  messagingSenderId: "278745922112",
-  appId: "1:278745922112:web:2a7a12d2dd71639e083da5",
-  measurementId: "G-6CX9H1Z5M8",
+  apiKey: "AIzaSyDuKNBlDUJ3lPtUWsqV3k2vQqfyNOVt1Uk",
+  authDomain: "vizis-bcec0.firebaseapp.com",
+  projectId: "vizis-bcec0",
+  storageBucket: "vizis-bcec0.firebasestorage.app",
+  messagingSenderId: "27581590959",
+  appId: "1:27581590959:web:92d6c6840d2c942c15d35a",
+  measurementId: "G-LTHCZX4THN",
 });
 
 const messaging = firebase.messaging();

@@ -13,10 +13,12 @@ import { BoxWithImage } from "~/components/register/box-with-image";
 import { GoogleIcon } from "~/components/google-icon";
 import { useLogin } from "~/hooks/use-login";
 import { LoginTitle } from "~/components/login/title";
+import { AppleSignInButton } from "~/components/apple-sign-in";
 
 export default function Login() {
   const {
     userGoogleLogin,
+    userAppleLogin,
     userLoginMutation,
     formError,
     methods,
@@ -34,7 +36,7 @@ export default function Login() {
         images={<Image className="w-full" src="/Group 55.svg" />}
       >
         <LoginTitle />
-        <Box className="w-full justify-center">
+        <Box className="w-full justify-center flex gap-4">
           <Button
             type="button"
             variant={"outline"}
@@ -51,6 +53,7 @@ export default function Login() {
               <GoogleIcon />
             )}
           </Button>
+          <AppleSignInButton />
         </Box>
         <form
           onSubmit={handleSubmit(onUserLoginSubmit)}

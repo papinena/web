@@ -6,32 +6,52 @@ import {
   isSupported,
   type Messaging,
 } from "firebase/messaging";
+import {
+  getAuth,
+  signInWithPopup,
+  OAuthProvider,
+  type Auth,
+} from "firebase/auth";
 import { STORAGE_KEYS } from "~/utils/constants";
 import { saveFcmToken } from "~/services/save-fcm-token";
 import { useToastStore } from "~/stores/toast";
 
 class FirebaseService {
   private static readonly VAPID_KEY =
-    "BDdQAP6cPUpoZJPAhwcSOuUnPM_-OoTJjh7tAAeHxfUHbhvOX-FN7YgyAb_biTFI_z0u46PfjrZ6hPGQNnR5NiE";
+    "BPgeQPl7h0B0ACqh78jwzWjoINnw9i2RVW5gsYD4xXKST7MTr8DNvx4WOn_R4ivIxvDzI5xKjdYXCg_kRdwHzs0";
 
   private static readonly firebaseConfig = {
-    apiKey: "AIzaSyCI34gVPB1yf9FIchsSNtI3KrukB3l03M0",
-    authDomain: "vizis-90eda.firebaseapp.com",
-    projectId: "vizis-90eda",
-    storageBucket: "vizis-90eda.firebasestorage.app",
-    messagingSenderId: "278745922112",
-    appId: "1:278745922112:web:2a7a12d2dd71639e083da5",
-    measurementId: "G-6CX9H1Z5M8",
+    apiKey: "AIzaSyDuKNBlDUJ3lPtUWsqV3k2vQqfyNOVt1Uk",
+    authDomain: "vizis-bcec0.firebaseapp.com",
+    projectId: "vizis-bcec0",
+    storageBucket: "vizis-bcec0.firebasestorage.app",
+    messagingSenderId: "27581590959",
+    appId: "1:27581590959:web:92d6c6840d2c942c15d35a",
+    measurementId: "G-LTHCZX4THN",
   };
 
   private app: FirebaseApp;
   private messaging: Messaging | null = null;
+  private auth: Auth;
   private initialized = false;
 
   constructor() {
     this.app = initializeApp(FirebaseService.firebaseConfig);
+    this.auth = getAuth(this.app);
     if (typeof window !== "undefined") {
       this.messaging = getMessaging(this.app);
+    }
+  }
+
+  public async signInWithApple(): Promise<string | null> {
+    const provider = new OAuthProvider("apple.com");
+    try {
+      const result = await signInWithPopup(this.auth, provider);
+      const idToken = await result.user.getIdToken();
+      return idToken;
+    } catch (error) {
+      console.error("Apple sign-in error:", error);
+      return null;
     }
   }
 
@@ -109,7 +129,7 @@ class FirebaseService {
       return null;
     }
 
-    if (!this.isSupported()) {
+    if (!(await this.isSupported())) {
       console.log("Firebase Messaging is not supported in this browser.");
       return null;
     }
@@ -138,7 +158,7 @@ class FirebaseService {
       return null;
     }
 
-    if (!this.isSupported()) {
+    if (!(await this.isSupported())) {
       console.log("Firebase Messaging is not supported in this browser.");
       return null;
     }
