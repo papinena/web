@@ -18,7 +18,7 @@ import { AppleSignInButton } from "~/components/apple-sign-in";
 export default function Login() {
   const {
     userGoogleLogin,
-    userAppleLogin,
+    userAppleLoginMutation,
     userLoginMutation,
     formError,
     methods,
@@ -53,7 +53,7 @@ export default function Login() {
               <GoogleIcon />
             )}
           </Button>
-          <AppleSignInButton />
+          <AppleSignInButton onSuccess={userAppleLoginMutation.mutate} />
         </Box>
         <form
           onSubmit={handleSubmit(onUserLoginSubmit)}

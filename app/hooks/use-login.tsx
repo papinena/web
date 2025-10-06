@@ -169,11 +169,14 @@ export function useLogin() {
 
   const userAppleLoginMutation = useMutation({
     mutationFn: async (token: string) => {
+      console.log("MUTATION", token);
       const { error, data } = await socialAppleLogin({ token });
       if (error) throw new Error(error.message);
       return data;
     },
     onSuccess: async (result: any) => {
+      console.log(result);
+      return;
       if (result.error) {
         setFormError(result.error.message);
       } else {
@@ -207,17 +210,6 @@ export function useLogin() {
     },
   });
 
-  const userAppleLogin = async () => {
-    try {
-      const token = await firebaseService.signInWithApple();
-      if (token) {
-        userAppleLoginMutation.mutate(token);
-      }
-    } catch (error) {
-      setFormError("Failed to login with Apple");
-    }
-  };
-
   const adminGoogleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       adminSocialLoginMutation.mutate(tokenResponse.access_token);
@@ -235,7 +227,7 @@ export function useLogin() {
   return {
     onUserLoginSubmit,
     userGoogleLogin,
-    userAppleLogin,
+    userAppleLoginMutation,
     userLoginMutation,
     adminLoginMutation,
     userSocialLoginMutation,
