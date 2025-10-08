@@ -19,13 +19,12 @@ import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { useAdminForm } from "~/hooks/useAdminForm";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { ErrorMessage } from "~/components/error-message";
-import { Form, useNavigate } from "react-router";
+import { Form } from "react-router";
 import { usePhoto } from "~/hooks/use-photo";
 import { useEmployee } from "~/hooks/use-employee";
 import { Terms } from "~/components/terms-of-use";
 
 export default function AdminForm() {
-  const navigate = useNavigate();
   const { fields, resetLocalStorageFields, setFields } = useAdminForm();
   const { createAdminMutation: mutation } = useEmployee({
     onCreateSuccess() {

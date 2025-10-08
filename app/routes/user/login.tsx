@@ -18,7 +18,7 @@ import { AppleSignInButton } from "~/components/apple-sign-in";
 export default function Login() {
   const {
     userGoogleLogin,
-    userAppleLogin,
+    userAppleLoginMutation,
     userLoginMutation,
     formError,
     methods,
@@ -36,7 +36,8 @@ export default function Login() {
         images={<Image className="w-full" src="/Group 55.svg" />}
       >
         <LoginTitle />
-        <Box className="w-full justify-center flex gap-4">
+        <Box className="w-full justify-center flex gap-1.5">
+          <AppleSignInButton onSuccess={userAppleLoginMutation.mutate} />
           <Button
             type="button"
             variant={"outline"}
@@ -53,7 +54,6 @@ export default function Login() {
               <GoogleIcon />
             )}
           </Button>
-          <AppleSignInButton />
         </Box>
         <form
           onSubmit={handleSubmit(onUserLoginSubmit)}
