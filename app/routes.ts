@@ -68,6 +68,7 @@ export default [
           route("/", "./routes/register/admin/admin.tsx"),
           route("/form", "./routes/register/admin/admin-form.tsx"),
           route("/fulfill", "./routes/register/admin/fulfill-form.tsx"),
+          route("/social/form", "./routes/register/admin/social-form.tsx"),
           route("/submitted", "./routes/register/admin/submitted.tsx"),
         ]),
         route("error", "./routes/register/error.tsx"),

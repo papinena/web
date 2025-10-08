@@ -36,7 +36,8 @@ export default function Login() {
         images={<Image className="w-full" src="/Group 55.svg" />}
       >
         <LoginTitle />
-        <Box className="w-full justify-center flex gap-4">
+        <Box className="w-full justify-center flex gap-1.5">
+          <AppleSignInButton onSuccess={userAppleLoginMutation.mutate} />
           <Button
             type="button"
             variant={"outline"}
@@ -53,7 +54,6 @@ export default function Login() {
               <GoogleIcon />
             )}
           </Button>
-          <AppleSignInButton onSuccess={userAppleLoginMutation.mutate} />
         </Box>
         <form
           onSubmit={handleSubmit(onUserLoginSubmit)}

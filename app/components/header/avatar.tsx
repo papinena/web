@@ -15,7 +15,7 @@ export function Avatar({ onClick, size = 40, className = "" }: AvatarProps) {
   const data =
     authData?.userType === "user" ? authData.user : authData?.employee;
 
-  const avatarUrl = buildUrl(data.avatar);
+  const avatarUrl = data && buildUrl(data.avatar);
 
   return (
     <AvatarUI

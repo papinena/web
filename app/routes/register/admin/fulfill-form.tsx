@@ -32,7 +32,6 @@ export default function AdminFulfillForm() {
     avatar?: string;
   };
 
-  console.log(state.avatar);
   const employee =
     state.employee ?? JSON.parse(searchParams.get("employee") ?? "");
 

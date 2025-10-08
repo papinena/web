@@ -116,13 +116,14 @@ export function useLogin() {
         });
       }
 
-      authLogin(result);
-
       if (result.isNew) {
-        return navigate("/register/user/social/form", {
+        return navigate("/register/admin/social/form", {
           state: { ...result.profile },
         });
       }
+
+      authLogin(result);
+
       // Store authentication data in localStorage and update state
       const token = await firebaseService.setup();
 
@@ -167,6 +168,48 @@ export function useLogin() {
     },
   });
 
+  const adminAppleLoginMutation = useMutation({
+    mutationFn: async (token: string) => {
+      console.log("MUTATION", token);
+      const { error, data } = await socialAppleLogin({
+        token,
+        type: "employee",
+      });
+      if (error) throw new Error(error.message);
+      return data;
+    },
+    onSuccess: async (result: any) => {
+      if (result.error) {
+        return setFormError(result.error.message);
+      }
+
+      if (result.employee && !result.employee.is_register_completed) {
+        return navigate("/register/admin/fulfill", {
+          state: { ...result, employee: EmployeeMapper.toUI(result.employee) },
+        });
+      }
+
+      if (result.isNew) {
+        return navigate("/register/admin/social/form", {
+          state: { ...result.profile },
+        });
+      }
+
+      authLogin(result);
+
+      // Store authentication data in localStorage and update state
+      const token = await firebaseService.setup();
+
+      if (token) {
+        await saveFcmToken(token);
+      }
+
+      return navigate("/admin/dashboard");
+    },
+    onError: (error) => {
+      setFormError(error.message);
+    },
+  });
   const userAppleLoginMutation = useMutation({
     mutationFn: async (token: string) => {
       console.log("MUTATION", token);
@@ -176,25 +219,25 @@ export function useLogin() {
     },
     onSuccess: async (result: any) => {
       console.log(result);
-      return;
       if (result.error) {
-        setFormError(result.error.message);
-      } else {
-        if (result.isNew) {
-          return navigate("/register/user/social/form", {
-            state: { ...result.profile },
-          });
-        }
-        // Store authentication data in localStorage and update state
-        authLogin(result);
-        const token = await firebaseService.setup();
-
-        if (token) {
-          await saveFcmToken(token);
-        }
-
-        return navigate("/");
+        return setFormError(result.error.message);
       }
+
+      if (result.isNew) {
+        return navigate("/register/user/social/form", {
+          state: { ...result.profile },
+        });
+      }
+
+      // Store authentication data in localStorage and update state
+      authLogin(result);
+      const token = await firebaseService.setup();
+
+      if (token) {
+        await saveFcmToken(token);
+      }
+
+      return navigate("/");
     },
     onError: (error) => {
       setFormError(error.message);
@@ -230,6 +273,7 @@ export function useLogin() {
     userAppleLoginMutation,
     userLoginMutation,
     adminLoginMutation,
+    adminAppleLoginMutation,
     userSocialLoginMutation,
     formError,
     methods,
