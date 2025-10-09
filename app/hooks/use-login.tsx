@@ -105,9 +105,9 @@ export function useLogin() {
       if (error) throw new Error(error.message);
       return data;
     },
-    onSuccess: async (result: any) => {
-      if (result.error) {
-        return setFormError(result.error.message);
+    onSuccess: async (result) => {
+      if (!result) {
+        return setFormError("Algo deu errado");
       }
 
       if (result.employee && !result.employee.is_register_completed) {
@@ -118,7 +118,9 @@ export function useLogin() {
 
       if (result.isNew) {
         return navigate("/register/admin/social/form", {
-          state: { ...result.profile },
+          state: {
+            ...result.profile,
+          },
         });
       }
 
@@ -140,28 +142,33 @@ export function useLogin() {
   const userSocialLoginMutation = useMutation({
     mutationFn: async (token: string) => {
       const { error, data } = await socialLogin({ token });
+
       if (error) throw new Error(error.message);
+
       return data;
     },
-    onSuccess: async (result: any) => {
-      if (result.error) {
-        setFormError(result.error.message);
-      } else {
-        if (result.isNew) {
-          return navigate("/register/user/social/form", {
-            state: { ...result.profile },
-          });
-        }
-        // Store authentication data in localStorage and update state
-        authLogin(result);
-        const token = await firebaseService.setup();
-
-        if (token) {
-          await saveFcmToken(token);
-        }
-
-        return navigate("/");
+    onSuccess: async (result) => {
+      if (!result) {
+        return setFormError("algo deu errado");
       }
+
+      if (result.isNew) {
+        return navigate("/register/user/social/form", {
+          state: {
+            ...result.profile,
+          },
+        });
+      }
+      // Store authentication data in localStorage and update state
+      authLogin(result);
+
+      const token = await firebaseService.setup();
+
+      if (token) {
+        await saveFcmToken(token);
+      }
+
+      return navigate("/");
     },
     onError: (error) => {
       setFormError(error.message);
@@ -170,7 +177,6 @@ export function useLogin() {
 
   const adminAppleLoginMutation = useMutation({
     mutationFn: async (token: string) => {
-      console.log("MUTATION", token);
       const { error, data } = await socialAppleLogin({
         token,
         type: "employee",
@@ -178,9 +184,10 @@ export function useLogin() {
       if (error) throw new Error(error.message);
       return data;
     },
-    onSuccess: async (result: any) => {
-      if (result.error) {
-        return setFormError(result.error.message);
+    onSuccess: async (result) => {
+      console.log(result);
+      if (!result) {
+        return setFormError("Algo deu errado");
       }
 
       if (result.employee && !result.employee.is_register_completed) {
@@ -191,7 +198,9 @@ export function useLogin() {
 
       if (result.isNew) {
         return navigate("/register/admin/social/form", {
-          state: { ...result.profile },
+          state: {
+            ...result.profile,
+          },
         });
       }
 
@@ -212,20 +221,20 @@ export function useLogin() {
   });
   const userAppleLoginMutation = useMutation({
     mutationFn: async (token: string) => {
-      console.log("MUTATION", token);
       const { error, data } = await socialAppleLogin({ token });
       if (error) throw new Error(error.message);
       return data;
     },
-    onSuccess: async (result: any) => {
-      console.log(result);
-      if (result.error) {
-        return setFormError(result.error.message);
+    onSuccess: async (result) => {
+      if (!result) {
+        return setFormError("Algo deu errado");
       }
 
       if (result.isNew) {
         return navigate("/register/user/social/form", {
-          state: { ...result.profile },
+          state: {
+            ...result.profile,
+          },
         });
       }
 

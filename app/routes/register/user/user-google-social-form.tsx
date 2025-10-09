@@ -56,8 +56,8 @@ export default function UserGoogleSocialForm() {
     initialValues: {
       name: socialUser?.name,
       email: socialUser?.email,
-      providerId: socialUser.googleId,
-      provider: "google",
+      providerId: socialUser.providerId,
+      provider: socialUser.provider,
     },
   });
   const { data } = useUserRegisterData();

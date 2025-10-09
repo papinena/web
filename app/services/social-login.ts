@@ -1,4 +1,3 @@
-import type { ApiResponse } from "~/interfaces/api-response";
 import { api, apiRequest } from "~/utils/api";
 
 const { BASE_URL } = api();
@@ -9,7 +8,23 @@ export async function socialLogin({
 }: {
   token: string;
   type?: "user" | "employee";
-}) {
+}): Promise<
+  | {
+      data: {
+        isNew: boolean;
+        profile: {
+          name: string | null;
+          lastName?: string;
+          avatar?: string | null;
+          provider: "apple" | "google";
+          providerId: string;
+          email: string;
+        };
+      };
+      error: undefined;
+    }
+  | { error: any; data: undefined }
+> {
   const url = new URL(BASE_URL + "/auth/google");
 
   const body = {
@@ -28,13 +43,10 @@ export async function socialLogin({
 
   if (res.status >= 400 && res.status < 500) {
     const json = (await res.json()) as { status: string; message: string };
-    return { error: json };
+    return { error: json, data: undefined };
   }
 
-  const json: ApiResponse<{
-    isNew: boolean;
-    profile: { email: string; name: string; avatar: string; googleId: string };
-  }> = await res.json();
+  const json = await res.json();
 
-  return { data: json.data };
+  return { data: json.data, error: undefined };
 }
