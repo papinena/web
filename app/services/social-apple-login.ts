@@ -33,7 +33,14 @@ export async function socialAppleLogin({
 
   const json: ApiResponse<{
     isNew: boolean;
-    profile: { email: string; name: string; avatar: string; appleId: string };
+    profile: {
+      name: string | null;
+      lastName?: string;
+      avatar?: string | null;
+      provider: "apple" | "google";
+      providerId: string;
+      email: string;
+    };
   }> = await res.json();
 
   return { data: json.data };
