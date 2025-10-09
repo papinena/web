@@ -7,6 +7,10 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
+  route(
+    "apple-app-site-association",
+    "./routes/apple-app-site-association.tsx"
+  ),
   ...prefix("password", [
     route("forgot", "./routes/password/forgot.tsx"),
     route("reset", "./routes/password/reset.tsx"),
