@@ -12,11 +12,31 @@ import { getSasToken } from "~/services/get-sas-token";
 import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { DateFormatter } from "~/utils/date-formatter";
+import { deleteUser } from "~/services/delete-account";
+import { useAuthStore } from "~/stores/auth";
+import { useNavigate } from "react-router";
 
-export function useUser({ onSuccess }: { onSuccess?: () => void }) {
+export function useUser({ onSuccess }: { onSuccess?: () => void } = {}) {
   const { authData, setAuthUserData } = useAuth();
   const queryClient = useQueryClient();
   const [file, setFile] = useState<File | null>(null);
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const deleteAccountMutation = useMutation({
+    mutationKey: ["DELETE-USER"],
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      setTimeout(() => {
+        queryClient.removeQueries();
+        logout();
+        navigate("/");
+      }, 3000);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const methods = useForm<CreateUserType>({
     resolver: zodResolver(CreateUserSchema),
@@ -123,5 +143,6 @@ export function useUser({ onSuccess }: { onSuccess?: () => void }) {
     handleRemoveImage,
     useUserEditInfo,
     updateUserForm,
+    deleteAccountMutation,
   };
 }

@@ -28,6 +28,7 @@ import { useImageTokenStore } from "~/stores/image-token";
 import { useNavigate } from "react-router";
 import type { CreateSocialAdminType } from "~/parsers/create-social-admin";
 import { createSocialAdmin } from "~/services/create-social-admin";
+import { deleteEmployeeAccount } from "~/services/delete-employee-account";
 
 type Props = {
   onFulFillSuccess?(data: any): void;
@@ -48,6 +49,22 @@ export function useEmployee({
   const queryClient = useQueryClient();
   const setToken = useImageTokenStore((s) => s.setToken);
   const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const deleteEmployeeAccountMutation = useMutation({
+    mutationKey: ["DELETE-EMPLOYEE-ACCOUNT"],
+    mutationFn: deleteEmployeeAccount,
+    onSuccess: () => {
+      setTimeout(() => {
+        queryClient.removeQueries();
+        logout();
+        navigate("/");
+      }, 3000);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const updateEmployeesMutation = useMutation({
     mutationFn: async ({
@@ -403,5 +420,6 @@ export function useEmployee({
     updateEmployeesMutation,
     handleInvalidateQuery,
     createSocialAdminMutation,
+    deleteEmployeeAccountMutation,
   };
 }
