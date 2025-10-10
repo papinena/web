@@ -19,9 +19,9 @@ import {
   CreateSocialAdminSchema,
 } from "~/parsers/create-social-admin";
 import { Terms } from "~/components/terms-of-use";
-import { BasicInformation } from "~/components/admin-form/basic-information";
-import { CondominiumInformation } from "~/components/admin-form/condominium-information";
-import { EmployeesInformation } from "~/components/admin-form/employees-information";
+import { BasicInformation } from "~/components/admin-form/basic-information.v2";
+import { CondominiumInformation } from "~/components/admin-form/condominium-information.v2";
+import { EmployeesInformation } from "~/components/admin-form/employees-information.v2";
 import { Textarea } from "~/components/text-area";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { usePhoto } from "~/hooks/use-photo";
@@ -103,9 +103,47 @@ export default function AdminSocialForm() {
                   </Box>
                 </Box>
               </Box>
-              <BasicInformation />
-              <CondominiumInformation />
-              <EmployeesInformation />
+              <BasicInformation.Container>
+                <BasicInformation.Item>
+                  <BasicInformation.BirthDate />
+                  <BasicInformation.Telephone />
+                </BasicInformation.Item>
+                <BasicInformation.Item>
+                  <BasicInformation.Position />
+                  <BasicInformation.IsResident />
+                </BasicInformation.Item>
+                <BasicInformation.BlockAndApartment />
+                <BasicInformation.Email disabled />
+              </BasicInformation.Container>
+
+              <CondominiumInformation.Container>
+                <CondominiumInformation.Item className="flex-1">
+                  <CondominiumInformation.Name />
+                </CondominiumInformation.Item>
+                <CondominiumInformation.Item>
+                  <CondominiumInformation.AdministratorName />
+                  <CondominiumInformation.AdministratorContact />
+                </CondominiumInformation.Item>
+                <CondominiumInformation.Item className="w-full">
+                  <CondominiumInformation.AdministratorAddress />
+                </CondominiumInformation.Item>
+                <CondominiumInformation.Item>
+                  <CondominiumInformation.AdministratorTelephone />
+                  <CondominiumInformation.AdministratorEmail />
+                </CondominiumInformation.Item>
+                <CondominiumInformation.Item className="w-full">
+                  <CondominiumInformation.Council />
+                </CondominiumInformation.Item>
+                <CondominiumInformation.Item>
+                  <CondominiumInformation.DoorkeeperChief />
+                  <CondominiumInformation.ReceptionTelephone />
+                </CondominiumInformation.Item>
+              </CondominiumInformation.Container>
+
+              <EmployeesInformation.Container>
+                <EmployeesInformation.Fields />
+              </EmployeesInformation.Container>
+
               <SectionContainer>
                 <SectionTitle>
                   Inclua informações úteis para o condomínio
