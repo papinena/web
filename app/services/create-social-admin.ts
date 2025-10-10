@@ -1,30 +1,63 @@
 import { api, apiRequest } from "~/utils/api";
-import type { CreateSocialUserType } from "~/parsers/create-social-user";
 import type { ApiResponse } from "~/interfaces/api-response";
 import type { UserAPIProps } from "~/interfaces/user";
-import { UserMapper } from "~/mappers/user";
+import { EmployeeMapper } from "~/mappers/employee";
+import type { CreateSocialAdminType } from "~/parsers/create-social-admin";
+import type { CondominiumAPIProps } from "~/interfaces/condominium";
+import type { EmployeeAPIProps } from "~/interfaces/employee";
+import type { CondominiumAdministratorAPIProps } from "~/interfaces/condominium-administrator";
+import type { SocialAccountAPIProps } from "~/interfaces/social-account";
 
-export async function createSocialUser(data: {
-  user: CreateSocialUserType;
-  socialAccount: {
-    provider: "google" | "facebook" | "apple";
-    providerId: string;
-  };
-}) {
-  const url = new URL(api().BASE_URL + "/auth/social");
+type CreateSocialAdminData = Omit<CreateSocialAdminType, "employee"> & {
+  employee: Omit<CreateSocialAdminType["employee"], "photo" | "birthDate">;
+};
+
+export async function createSocialAdmin(data: CreateSocialAdminData) {
+  const url = new URL(api().BASE_URL + "/auth/social/admin");
   const res = await apiRequest(url.toString(), {
     method: "POST",
     body: JSON.stringify({
-      user: UserMapper.toAPI({
-        ...data.user,
-        condominiumId: Number(data.user.condominiumId),
-        birthDate: data.user.birthDate ? new Date(data.user.birthDate) : null,
-      }),
-      socialAccount: data.socialAccount,
+      employees: data.employees?.map((e) => ({
+        last_name: "",
+        telephone: "",
+        position: "",
+        is_resident: false,
+        email: e.email,
+        name: e.name,
+        password: "0123456",
+        is_register_completed: false,
+      })),
+      employee: {
+        ...EmployeeMapper.toAPI(data.employee),
+        permission: "ADMIN",
+      },
+      socialAccount: {
+        provider: data.provider,
+        providerId: data.providerId,
+      },
+      condominium: data.condominium,
+      condominiumAdministrator: data.condominiumAdministrator,
     }),
   });
 
-  const json: ApiResponse<UserAPIProps> = await res.json();
+  const json: ApiResponse<{
+    condominium: CondominiumAPIProps;
+    employee: EmployeeAPIProps;
+    token: { token: string; tokenId: string };
+    condominiumAdministrator: CondominiumAdministratorAPIProps;
+    socialAccount: SocialAccountAPIProps;
+  }> = await res.json();
 
-  return json;
+  if (res.status >= 300 && res.status <= 500) {
+    return {
+      data: null,
+      error: { status: "error", message: "Algo deu errado" },
+    };
+  }
+
+  if (json.status === "error") {
+    return { error: json, data: null };
+  }
+
+  return { data: json.data, error: null };
 }

@@ -26,6 +26,8 @@ import { saveFcmToken } from "~/services/save-fcm-token";
 import { getImageReadToken } from "~/services/get-image-read-token";
 import { useImageTokenStore } from "~/stores/image-token";
 import { useNavigate } from "react-router";
+import type { CreateSocialAdminType } from "~/parsers/create-social-admin";
+import { createSocialAdmin } from "~/services/create-social-admin";
 
 type Props = {
   onFulFillSuccess?(data: any): void;
@@ -75,6 +77,95 @@ export function useEmployee({
       addToast({ title: "Sucesso!", description: "Funcionário criado" });
     },
     onError: onCreateEmployeesError,
+  });
+
+  const createSocialAdminMutation = useMutation({
+    mutationKey: ["CREATE-SOCIAL-ADMIN"],
+    mutationFn: async (data: CreateSocialAdminType) => {
+      let filename = "";
+      let tokenData,
+        tokenError: { status: string; message: string } | undefined;
+
+      if (data.employee.photo) {
+        const sasTokenData = await getSasToken();
+        tokenData = sasTokenData.data;
+        tokenError = sasTokenData.error;
+
+        if (tokenError) throw new Error(tokenError.message);
+
+        if (tokenData) {
+          filename = await uploadImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            data.employee.photo
+          );
+        }
+      }
+
+      const dataToSave = {
+        ...data,
+        employee: {
+          ...data.employee,
+          avatar: filename,
+          birthDate: new Date(data.employee.birthDate),
+        },
+        employees: data.employees,
+        condominiumAdministrator: data.condominiumAdministrator,
+        condominium: data.condominium,
+      };
+
+      const res = await createSocialAdmin(dataToSave);
+
+      console.log(res);
+      if (res?.error?.status === "error") {
+        tokenData &&
+          filename &&
+          (await deleteImage(
+            tokenData.containerUri,
+            tokenData.sasToken,
+            filename
+          ));
+        throw new Error(res?.error?.message);
+      }
+      return res.data;
+    },
+    onSuccess: async (data) => {
+      console.log(data);
+      if (!data) return;
+
+      const { employee, token } = data;
+
+      authLogin({ employee, ...token, userType: "employee" });
+
+      const { data: tokenData, error: tokenError } = await getImageReadToken();
+
+      if (tokenError || !tokenData) {
+        console.error("Failed to get image read token:", tokenError);
+      } else {
+        setToken(tokenData);
+      }
+
+      if (employee?.email) {
+        try {
+          const token = await firebaseService.setup();
+
+          if (token) {
+            await saveFcmToken(token);
+          }
+        } catch (error) {
+          console.error(
+            "Failed to setup or save FCM token on registration:",
+            error
+          );
+        }
+      }
+
+      if (onCreateSuccess) {
+        onCreateSuccess(data);
+      }
+
+      return navigate("/admin/dashboard");
+    },
   });
 
   const createAdminMutation = useMutation({
@@ -311,5 +402,6 @@ export function useEmployee({
     getCondominiumEmployeesQuery,
     updateEmployeesMutation,
     handleInvalidateQuery,
+    createSocialAdminMutation,
   };
 }

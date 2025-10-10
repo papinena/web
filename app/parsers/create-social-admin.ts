@@ -9,7 +9,7 @@ export const CreateSocialAdminSchema = z
         name: z.string().min(1, "Mínimo de 4 caracteres"),
         lastName: z.string().min(4, "Mínimo de 4 caracteres"),
         birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
-        photo: z.string().optional(),
+        photo: z.file().optional(),
         telephone: z
           .string()
           .regex(

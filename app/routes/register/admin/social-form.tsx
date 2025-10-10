@@ -6,7 +6,6 @@ import { NameInput } from "~/components/register/name-input";
 import { Item } from "~/components/register/item";
 import { SectionTitle } from "~/components/section-title";
 import { SectionContainer } from "~/components/section-container";
-import { useUserRegisterData } from "~/hooks/useUserRegisterData";
 import { Form, useLocation, useNavigate } from "react-router";
 import { ErrorMessage } from "~/components/error-message";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
@@ -25,11 +24,11 @@ import { EmployeesInformation } from "~/components/admin-form/employees-informat
 import { Textarea } from "~/components/text-area";
 import { UploadPhotoInput } from "~/components/register/upload-photo-input";
 import { usePhoto } from "~/hooks/use-photo";
+import { useEmployee } from "~/hooks/use-employee";
 
 export default function AdminSocialForm() {
   const location = useLocation();
   const socialUser = location.state;
-  const navigate = useNavigate();
 
   const methods = useForm<CreateSocialAdminType>({
     resolver: zodResolver(CreateSocialAdminSchema),
@@ -42,32 +41,15 @@ export default function AdminSocialForm() {
       provider: socialUser.provider,
     },
   });
-
-  const mutation = useMutation({
-    mutationFn: async () => {},
-    onSuccess: async (data) => {
-      if (data) {
-        try {
-          const fcmToken = await firebaseService.setupForUnauthenticatedUser();
-          if (fcmToken) {
-            await saveUnauthenticatedFcmToken(fcmToken, data.email);
-          }
-        } catch (error) {
-          console.error(
-            "Failed to setup or save FCM token on registration:",
-            error
-          );
-        }
-      }
-      navigate("/register/user/submitted");
-    },
+  const { handleFileChange, preview } = usePhoto({
+    onFileChange: (f) => methods.setValue("employee.photo", f),
   });
-  const { file, handleFileChange, preview } = usePhoto();
+  const { createSocialAdminMutation } = useEmployee();
 
   const hasErrors = Object.keys(methods.formState.errors).length > 0;
 
-  function onSave(data: any) {
-    console.log(data);
+  function onSave(data: CreateSocialAdminType) {
+    createSocialAdminMutation.mutate(data);
   }
 
   return (
@@ -83,6 +65,9 @@ export default function AdminSocialForm() {
                     <UploadPhotoInput
                       preview={preview}
                       handleFileChange={handleFileChange}
+                      handleRemoveImage={() =>
+                        methods.setValue("employee.photo", undefined)
+                      }
                     />
                   </Box>
                   <Box className="flex-col max-w-64 flex-1 gap-3">
@@ -177,13 +162,16 @@ export default function AdminSocialForm() {
                   </Text>
                 </Box>
               )}
-              <ErrorMessage className="mx-auto" show={mutation.isError}>
-                {(mutation.error as Error)?.message}
+              <ErrorMessage
+                className="mx-auto"
+                show={createSocialAdminMutation.isError}
+              >
+                {(createSocialAdminMutation.error as Error)?.message}
               </ErrorMessage>
               <ButtonWithSpinner
                 className="bg-blue-primary hover:bg-blue-primary/90"
                 type="submit"
-                loading={mutation.isPending}
+                loading={createSocialAdminMutation.isPending}
               >
                 Enviar
               </ButtonWithSpinner>

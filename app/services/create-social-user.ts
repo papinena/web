@@ -11,7 +11,7 @@ export async function createSocialUser(data: {
     providerId: string;
   };
 }) {
-  const url = new URL(api().BASE_URL + "/auth/social");
+  const url = new URL(api().BASE_URL + "/auth/social/user");
   const res = await apiRequest(url.toString(), {
     method: "POST",
     body: JSON.stringify({
