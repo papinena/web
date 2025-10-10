@@ -1,13 +1,16 @@
 import { useState, type ChangeEvent } from "react";
 
 type Props = {
-  defaultValues: {
+  defaultValues?: {
     preview?: string | null;
     file?: File | null;
   };
+  onFileChange?(f: File): void;
 };
 
-export function usePhoto({ defaultValues }: Props = { defaultValues: {} }) {
+export function usePhoto(
+  { defaultValues, onFileChange }: Props = { defaultValues: {} }
+) {
   const [preview, setPreview] = useState<string | null>(
     defaultValues?.preview ?? null
   );
@@ -22,6 +25,7 @@ export function usePhoto({ defaultValues }: Props = { defaultValues: {} }) {
       };
       reader.readAsDataURL(file);
       setFile(file);
+      onFileChange?.(file);
     }
   };
   return { preview, file, handleFileChange };
