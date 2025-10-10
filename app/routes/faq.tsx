@@ -60,7 +60,7 @@ export function DeleteAccountButton() {
                   </Text>
                 </DialogDescription>
               </DialogHeader>
-              <DialogFooter className="flex justify-center px-20 flex-row">
+              <DialogFooter className="flex justify-center max-w-xs flex-row">
                 <DialogClose asChild>
                   <Button className="flex-1">Desisti de cancelar</Button>
                 </DialogClose>
