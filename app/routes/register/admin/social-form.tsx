@@ -36,6 +36,7 @@ export default function AdminSocialForm() {
       employee: {
         name: socialUser?.name,
         email: socialUser?.email,
+        lastName: socialUser.lastName,
       },
       providerId: socialUser.providerId,
       provider: socialUser.provider,
@@ -72,11 +73,13 @@ export default function AdminSocialForm() {
                   </Box>
                   <Box className="flex-col max-w-64 flex-1 gap-3">
                     <NameInput
+                      disabled={socialUser.name}
                       label="Nome*"
                       {...methods.register("employee.name", { required: true })}
                       error={methods.formState.errors.employee?.name?.message}
                     />
                     <InputWithLabel
+                      disabled={socialUser.lastName}
                       label="Sobrenome*"
                       error={
                         methods.formState.errors.employee?.lastName?.message

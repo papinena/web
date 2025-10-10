@@ -5,16 +5,42 @@ const APPLE_SERVICE_ID = import.meta.env.VITE_APPLE_SERVICE_ID;
 const APPLE_REDIRECT_URI = import.meta.env.VITE_APPLE_REDIRECT_URI;
 
 type Props = {
-  onSuccess(token: string): void;
+  onSuccess({
+    user,
+    token,
+  }: {
+    user?: { email: string; name: string; lastName: string };
+    token: string;
+  }): void;
+};
+
+type SuccessProps = {
+  authorization: {
+    state: string;
+    code: string;
+    id_token: string;
+  };
+  user?: {
+    email: string;
+    name: {
+      firstName: string;
+      lastName: string;
+    };
+  };
 };
 
 export function AppleSignInButton({ onSuccess }: Props) {
-  console.log(APPLE_SERVICE_ID, APPLE_REDIRECT_URI);
-
-  const handleSuccess = (data: { authorization: { id_token: string } }) => {
+  const handleSuccess = (data: SuccessProps) => {
     console.log("HANDLESUCCESS", data);
     const token = data.authorization.id_token;
-    onSuccess(token);
+    onSuccess({
+      user: data.user && {
+        name: data.user?.name.firstName,
+        lastName: data.user?.name.lastName,
+        email: data.user?.email,
+      },
+      token,
+    });
 
     // Here you can send data to your backend service and process the response
     // further based on your requirements

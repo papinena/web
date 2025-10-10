@@ -55,6 +55,7 @@ export default function UserGoogleSocialForm() {
     },
     initialValues: {
       name: socialUser?.name,
+      lastName: socialUser?.lastName,
       email: socialUser?.email,
       providerId: socialUser.providerId,
       provider: socialUser.provider,
@@ -85,11 +86,13 @@ export default function UserGoogleSocialForm() {
                   </Box>
                   <Box className="flex-col max-w-64 flex-1 gap-3">
                     <NameInput
+                      disabled={socialUser.name}
                       label="Nome*"
                       {...methods.register("name", { required: true })}
                       error={methods.formState.errors.name?.message}
                     />
                     <InputWithLabel
+                      disabled={socialUser.lastName}
                       label="Sobrenome"
                       error={methods.formState.errors.lastName?.message}
                       {...methods.register("lastName", { required: true })}

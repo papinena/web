@@ -176,16 +176,19 @@ export function useLogin() {
   });
 
   const adminAppleLoginMutation = useMutation({
-    mutationFn: async (token: string) => {
+    mutationFn: async (payload: {
+      user?: { email: string; name: string; lastName: string };
+      token: string;
+      type: "employee";
+    }) => {
       const { error, data } = await socialAppleLogin({
-        token,
+        ...payload,
         type: "employee",
       });
       if (error) throw new Error(error.message);
       return data;
     },
     onSuccess: async (result) => {
-      console.log(result);
       if (!result) {
         return setFormError("Algo deu errado");
       }
@@ -220,8 +223,11 @@ export function useLogin() {
     },
   });
   const userAppleLoginMutation = useMutation({
-    mutationFn: async (token: string) => {
-      const { error, data } = await socialAppleLogin({ token });
+    mutationFn: async (payload: {
+      user?: { email: string; name: string; lastName: string };
+      token: string;
+    }) => {
+      const { error, data } = await socialAppleLogin(payload);
       if (error) throw new Error(error.message);
       return data;
     },

@@ -4,9 +4,11 @@ import { api, apiRequest } from "~/utils/api";
 const { BASE_URL } = api();
 
 export async function socialAppleLogin({
+  user,
   token,
   type = "user",
 }: {
+  user?: { name: string; lastName: string; email: string };
   token: string;
   type?: "user" | "employee";
 }) {
@@ -15,6 +17,7 @@ export async function socialAppleLogin({
   const body = {
     token,
     type,
+    user,
   };
 
   const res = await apiRequest(
