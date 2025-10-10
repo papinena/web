@@ -11,6 +11,7 @@ export default [
     "apple-app-site-association",
     "./routes/apple-app-site-association.tsx"
   ),
+  route(".well-known/assetlinks.json", "./routes/asset-links.tsx"),
   ...prefix("password", [
     route("forgot", "./routes/password/forgot.tsx"),
     route("reset", "./routes/password/reset.tsx"),
