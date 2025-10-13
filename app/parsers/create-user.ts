@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DateFormatter } from "~/utils/date-formatter";
 
 export const CreateUserSchema = z
   .object({
@@ -6,7 +7,14 @@ export const CreateUserSchema = z
     lastName: z.string().min(1, "Sobrenome é obrigatório"),
     apartment: z.string().min(1, "Apartamento é obrigatório"),
     block: z.string().optional(),
-    birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
+    birthDate: z
+      .string()
+      .min(1, "Data de nascimento é obrigatória")
+      .refine((data) => {
+        const dobDate = DateFormatter.parse(data, "dd/MM/yyyy");
+        const age = DateFormatter.differenceInYears(new Date(), dobDate);
+        return age >= 18;
+      }, "Você deve ter no mínimo 18 anos"),
     photo: z.string().optional(),
     telephone: z.string().min(1, "Telefone é obrigatório"),
     email: z.email("Email inválido").transform((val) => val.toLowerCase()),
@@ -34,21 +42,5 @@ export const CreateUserSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Senhas não conferem",
     path: ["confirmPassword"],
-  })
-  .refine(
-    (data) => {
-      const birthDate = new Date(data.birthDate);
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      return age >= 18;
-    },
-    {
-      message: "Você deve ter no mínimo 18 anos",
-      path: ["birthDate"],
-    }
-  );
+  });
 export type CreateUserType = z.infer<typeof CreateUserSchema>;
