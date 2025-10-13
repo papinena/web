@@ -9,6 +9,8 @@ import { useAuth } from "~/hooks/useAuth";
 import { firebaseService } from "~/lib/firebase";
 import { useImageTokenStore } from "~/stores/image-token";
 import { FIRST_ACCESS_KEY } from "~/utils/constants";
+import { saveFcmToken } from "~/services/save-fcm-token";
+import * as Sentry from "@sentry/react";
 
 export const clientLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -23,8 +25,10 @@ export const clientLoader = async ({ request }: { request: Request }) => {
     return redirect("/register/user");
   }
 
+  let notificationToken = null;
+
   if (isAuthenticated) {
-    await firebaseService.setup();
+    notificationToken = await firebaseService.setup();
   } else {
     await firebaseService.setupForUnauthenticatedUser();
   }
@@ -34,6 +38,13 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   }
 
   if (!isAuthenticated) return null;
+
+  if (!notificationToken) {
+    Sentry.captureMessage("Unable to save notification token");
+    throw new Error("Algo deu errado");
+  }
+
+  await saveFcmToken(notificationToken);
 
   const { expiresOn, sasToken, setToken } = useImageTokenStore.getState();
   const isTokenExpired = !expiresOn || new Date() > new Date(expiresOn);
