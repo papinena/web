@@ -33,7 +33,7 @@ class FirebaseService {
   private app: FirebaseApp;
   private messaging: Messaging | null = null;
   private auth: Auth;
-  private initialized = false;
+  private token: string | null | undefined;
 
   constructor() {
     this.app = initializeApp(FirebaseService.firebaseConfig);
@@ -124,60 +124,83 @@ class FirebaseService {
   }
 
   public async setupForUnauthenticatedUser(): Promise<string | null> {
-    if (this.initialized) return null;
+    if (this.token !== undefined) {
+      return this.token;
+    }
     if (typeof window === "undefined" || !this.messaging) {
+      this.token = null;
       return null;
     }
 
     if (!(await this.isSupported())) {
       console.log("Firebase Messaging is not supported in this browser.");
+      this.token = null;
       return null;
     }
 
     try {
       await this.registerServiceWorker();
       const permissionGranted = await this.requestPermission();
-      if (!permissionGranted) return null;
+      if (!permissionGranted) {
+        this.token = null;
+        return null;
+      }
 
       const token = await this.getFirebaseToken();
-      if (token) {
-        this.saveTokenToLocalStorage(token);
+      this.token = token;
+      if (this.token) {
+        this.saveTokenToLocalStorage(this.token);
         this.listenForForegroundMessages();
       }
-      this.initialized = true;
-      return token;
+
+      console.log("Firebase initialized");
+
+      return this.token;
     } catch (error) {
       console.error("Firebase setup error for unauthenticated user:", error);
+      this.token = null;
       return null;
     }
   }
 
   public async setup(): Promise<string | null> {
-    if (this.initialized) return null;
+    if (this.token !== undefined) {
+      return this.token;
+    }
     if (typeof window === "undefined" || !this.messaging) {
+      this.token = null;
       return null;
     }
 
     if (!(await this.isSupported())) {
       console.log("Firebase Messaging is not supported in this browser.");
+      this.token = null;
       return null;
     }
 
     try {
       await this.registerServiceWorker();
+      console.log("FIREBASE: CHECKING PERMISSIONS");
       const permissionGranted = await this.requestPermission();
-      if (!permissionGranted) return null;
+
+      if (!permissionGranted) {
+        this.token = null;
+        return null;
+      }
 
       const token = await this.getFirebaseToken();
-      if (token) {
-        await this.saveTokenToServer(token);
+      this.token = token;
+      if (this.token) {
+        await this.saveTokenToServer(this.token);
         this.listenForForegroundMessages();
       }
 
-      this.initialized = true;
-      return token;
+      console.log("FIREBASE: INITIALIZED");
+
+      return this.token;
     } catch (error) {
       console.error("Firebase setup error:", error);
+      this.token = null;
       return null;
     }
   }
