@@ -9,12 +9,20 @@ import { useAuth } from "~/hooks/useAuth";
 import { firebaseService } from "~/lib/firebase";
 import { useImageTokenStore } from "~/stores/image-token";
 
+const FIRST_VISIT_KEY = "first-access";
+
 export const clientLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
   const isLoginPage = ["/user/login", "/admin/login"].includes(url.pathname);
   const isRegisterPage = url.pathname.startsWith("/register");
   const isAuthenticated = authUtils.isAuthenticated();
   const authData = authUtils.getAuthData();
+  const hasVisited = localStorage.getItem(FIRST_VISIT_KEY);
+
+  if (!hasVisited) {
+    localStorage.setItem(FIRST_VISIT_KEY, "true");
+    return redirect("/register/user");
+  }
 
   if (isAuthenticated) {
     await firebaseService.setup();
