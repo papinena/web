@@ -8,8 +8,7 @@ import { PlusIcon } from "lucide-react";
 import { useAuth } from "~/hooks/useAuth";
 import { firebaseService } from "~/lib/firebase";
 import { useImageTokenStore } from "~/stores/image-token";
-
-const FIRST_VISIT_KEY = "first-access";
+import { FIRST_ACCESS_KEY } from "~/utils/constants";
 
 export const clientLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -17,10 +16,10 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   const isRegisterPage = url.pathname.startsWith("/register");
   const isAuthenticated = authUtils.isAuthenticated();
   const authData = authUtils.getAuthData();
-  const hasVisited = localStorage.getItem(FIRST_VISIT_KEY);
+  const hasVisited = localStorage.getItem(FIRST_ACCESS_KEY);
 
   if (!hasVisited) {
-    localStorage.setItem(FIRST_VISIT_KEY, "true");
+    localStorage.setItem(FIRST_ACCESS_KEY, "true");
     return redirect("/register/user");
   }
 

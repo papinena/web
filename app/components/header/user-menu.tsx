@@ -17,7 +17,6 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { MenuLink } from "./menu-link";
 import { PlusIcon } from "lucide-react";
-import { Box } from "../ui/box";
 import { BulletPoint } from "./bullet-point";
 import { Partners } from "./partners";
 import { Faq } from "./faq";

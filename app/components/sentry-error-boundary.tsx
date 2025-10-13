@@ -1,4 +1,4 @@
-import { useNavigate, useRouteError } from "react-router";
+import { useRouteError } from "react-router";
 import * as Sentry from "@sentry/react";
 import { useEffect } from "react";
 import { Box } from "~/components/ui/box";
@@ -8,9 +8,7 @@ import { useAuthStore } from "~/stores/auth";
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  const { logout, authData } = useAuthStore();
-  const navigate = useNavigate();
-  const type = authData?.userType ?? "user";
+  const { logout } = useAuthStore();
 
   useEffect(() => {
     Sentry.captureException(error);
@@ -18,7 +16,6 @@ export function ErrorBoundary() {
 
   function onClick() {
     logout();
-    navigate(`/${type === "employee" ? "admin" : "user"}/login`);
   }
 
   console.error(error);

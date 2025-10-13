@@ -8,3 +8,5 @@ export const STORAGE_KEYS = {
   USER: "userInfo",
   EMPLOYEE: "employeeInfo",
 } as const;
+
+export const FIRST_ACCESS_KEY = "first-access";

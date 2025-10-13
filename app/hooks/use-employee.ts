@@ -57,8 +57,7 @@ export function useEmployee({
     onSuccess: () => {
       setTimeout(() => {
         queryClient.removeQueries();
-        logout();
-        navigate("/");
+        logout("/");
       }, 3000);
     },
     onError: (err) => {
