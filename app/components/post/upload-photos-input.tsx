@@ -19,7 +19,9 @@ export function UploadPhotosInput({
 }) {
   const [previews, setPreviews] = useState<string[]>(initialPreviews);
   const [files, setFiles] = useState<File[]>(initialFiles);
-  const [selectedPreview, setSelectedPreview] = useState<string | null>(null);
+  const [selectedPreview, setSelectedPreview] = useState<string | null>(
+    initialPreviews[0] ?? null
+  );
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -71,7 +73,7 @@ export function UploadPhotosInput({
   }
 
   return (
-    <Box className="flex-col gap-2">
+    <Box className="flex-col max-w-md max-h-md gap-2">
       {/* Main Image */}
       {selectedPreview ? (
         <Box className="w-full aspect-square rounded-lg overflow-hidden relative">
