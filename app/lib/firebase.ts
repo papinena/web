@@ -18,9 +18,10 @@ import { useToastStore } from "~/stores/toast";
 
 class FirebaseService {
   private static readonly VAPID_KEY =
-    "BPgeQPl7h0B0ACqh78jwzWjoINnw9i2RVW5gsYD4xXKST7MTr8DNvx4WOn_R4ivIxvDzI5xKjdYXCg_kRdwHzs0";
+    "BLUHIezlVHMW-Sm1Be_Lr9Qo5PAxovbIkApE-y3jHsKSVK838-u5xu4JcsUX6h0s-o499IIoPV4JJy1rCT6RmeQ";
 
   private static readonly firebaseConfig = {
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     apiKey: "AIzaSyDuKNBlDUJ3lPtUWsqV3k2vQqfyNOVt1Uk",
     authDomain: "vizis-bcec0.firebaseapp.com",
     projectId: "vizis-bcec0",
