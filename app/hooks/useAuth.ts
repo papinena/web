@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 import { useAuthStore } from "~/stores/auth";
 
 export function useAuth() {
@@ -13,10 +14,14 @@ export function useAuth() {
     setAuthEmployeeData,
   } = useAuthStore();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  function _logout() {
+  function _logout(url?: string) {
     queryClient.removeQueries();
     logout();
+    const redirectUrl = url ?? isUser() ? "/user/login" : "/admin/login";
+
+    navigate(redirectUrl);
   }
 
   return {

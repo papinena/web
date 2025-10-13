@@ -1,6 +1,6 @@
 import type z from "zod";
 import type { EmployeeSchema } from "~/parsers/login";
-import { STORAGE_KEYS } from "./constants";
+import { FIRST_ACCESS_KEY, STORAGE_KEYS } from "./constants";
 
 export interface AuthData {
   token: string;
@@ -144,7 +144,13 @@ export const authUtils = {
   clearAuth: (): void => {
     if (!authUtils.isClient()) return;
 
+    const firstAccess = localStorage.getItem(FIRST_ACCESS_KEY);
+
     localStorage.clear();
+
+    if (firstAccess) {
+      localStorage.setItem(FIRST_ACCESS_KEY, firstAccess);
+    }
   },
 
   /**
