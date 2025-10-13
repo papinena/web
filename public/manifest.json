@@ -1,6 +1,6 @@
 {
-	"version": "0",
-	"manifest_version": 2,
+"version": "0",
+"manifest_version": 2,
   "name": "Vizis",
   "short_name": "Vizis",
   "description": "A PWA for the Vizis application.",
