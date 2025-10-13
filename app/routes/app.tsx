@@ -41,10 +41,9 @@ export const clientLoader = async ({ request }: { request: Request }) => {
 
   if (!notificationToken) {
     Sentry.captureMessage("Unable to save notification token");
-    throw new Error("Algo deu errado");
+  } else {
+    await saveFcmToken(notificationToken);
   }
-
-  await saveFcmToken(notificationToken);
 
   const { expiresOn, sasToken, setToken } = useImageTokenStore.getState();
   const isTokenExpired = !expiresOn || new Date() > new Date(expiresOn);
