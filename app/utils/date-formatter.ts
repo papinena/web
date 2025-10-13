@@ -6,6 +6,7 @@ import {
   parseISO,
   type FormatDistanceFnOptions,
   isValid,
+  differenceInYears,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -71,6 +72,9 @@ export class DateFormatter {
     const yearDiff = dateLeft.getFullYear() - dateRight.getFullYear();
     const monthDiff = dateLeft.getMonth() - dateRight.getMonth();
     return yearDiff * 12 + monthDiff;
+  }
+  static differenceInYears(laterDate: Date, earlierDate: Date): number {
+    return differenceInYears(laterDate, earlierDate);
   }
 
   static addMonths(date: Date, amount: number): Date {
