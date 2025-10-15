@@ -4,8 +4,8 @@
   "name": "Vizis",
   "short_name": "Vizis",
   "description": "A PWA for the Vizis application.",
-  "start_url": "/",
-  "display": "fullscreen",
+  "start_url": "./",
+  "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#94C56F",
   "icons": [
