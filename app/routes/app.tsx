@@ -11,6 +11,7 @@ import { useImageTokenStore } from "~/stores/image-token";
 import { FIRST_ACCESS_KEY } from "~/utils/constants";
 import { saveFcmToken } from "~/services/save-fcm-token";
 import * as Sentry from "@sentry/react";
+import { sendUserIdToNative } from "~/utils/send-user-id-to-native";
 
 export const clientLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -44,6 +45,8 @@ export const clientLoader = async ({ request }: { request: Request }) => {
   } else {
     await saveFcmToken(notificationToken);
   }
+
+  sendUserIdToNative();
 
   const { expiresOn, sasToken, setToken } = useImageTokenStore.getState();
   const isTokenExpired = !expiresOn || new Date() > new Date(expiresOn);
