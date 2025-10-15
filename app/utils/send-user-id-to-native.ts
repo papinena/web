@@ -7,12 +7,12 @@ export function sendUserIdToNative() {
     if (
       window.webkit &&
       window.webkit.messageHandlers &&
-      window.webkit.messageHandlers.userIdHandler
+      window.webkit.messageHandlers.authHeaderHandler
     ) {
       const authHeader = authUtils.getAuthHeader();
       if (authHeader) {
         console.log("Sending auth header to native:", authHeader);
-        // The name 'userIdHandler' must match what you set in Swift
+        // The name 'authHeaderHandler' must match what you set in Swift
         window.webkit.messageHandlers.authHeaderHandler.postMessage(authHeader);
       } else {
         console.warn("User ID not found in local storage.");
