@@ -15,6 +15,7 @@ import {
 import { STORAGE_KEYS } from "~/utils/constants";
 import { saveFcmToken } from "~/services/save-fcm-token";
 import { useToastStore } from "~/stores/toast";
+import * as Sentry from "@sentry/react";
 
 class FirebaseService {
   private static readonly VAPID_KEY =
@@ -71,7 +72,8 @@ class FirebaseService {
   private async requestPermission(): Promise<boolean> {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
-      console.log("Notification permission denied");
+      console.log("FIREBASE-LIB: Notification permission denied");
+      Sentry.captureMessage("FIREBASE-LIB: Notification permission denied");
       return false;
     }
     return true;
@@ -134,7 +136,12 @@ class FirebaseService {
     }
 
     if (!(await this.isSupported())) {
-      console.log("Firebase Messaging is not supported in this browser.");
+      console.log(
+        "FIREBASE-LIB: Firebase Messaging is not supported in this browser."
+      );
+      Sentry.captureMessage(
+        "FIREBASE-LIB: Firebase Messaging is not supported in this browser."
+      );
       this.token = null;
       return null;
     }
@@ -159,6 +166,7 @@ class FirebaseService {
       return this.token;
     } catch (error) {
       console.error("Firebase setup error for unauthenticated user:", error);
+      Sentry.captureException(error);
       this.token = null;
       return null;
     }
@@ -175,6 +183,9 @@ class FirebaseService {
 
     if (!(await this.isSupported())) {
       console.log("Firebase Messaging is not supported in this browser.");
+      Sentry.captureMessage(
+        "FIREBASE-LIB: Firebase Messaging is not supported in this browser."
+      );
       this.token = null;
       return null;
     }
@@ -201,6 +212,7 @@ class FirebaseService {
       return this.token;
     } catch (error) {
       console.error("Firebase setup error:", error);
+      Sentry.captureException(error);
       this.token = null;
       return null;
     }
