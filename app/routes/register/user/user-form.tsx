@@ -24,7 +24,7 @@ import { BirthDateInput } from "~/components/birth-date-input";
 import type { Condominium } from "~/interfaces/condominium";
 import type { Tag } from "~/interfaces/tag";
 import { ThemeItem } from "~/components/theme-item";
-import { Form, useNavigate } from "react-router";
+import { Form } from "react-router";
 import { ErrorMessage } from "~/components/error-message";
 import { ButtonWithSpinner } from "~/components/button-with-spinner";
 import { useMemo, useRef, useState } from "react";
@@ -34,7 +34,6 @@ import { PageTitle } from "~/components/page-title";
 import { Terms } from "~/components/terms-of-use";
 
 export default function UserForm() {
-  const navigate = useNavigate();
   const {
     methods,
     onSave,
@@ -46,7 +45,6 @@ export default function UserForm() {
     resetLocalStorageFields,
   } = useRegisterUser({
     onSuccess: () => {
-      navigate("/");
       resetLocalStorageFields();
     },
   });

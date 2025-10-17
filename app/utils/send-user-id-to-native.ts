@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/react";
 
 const apiUrl = api().BASE_URL;
 
-export function sendUserIdToNative() {
+export function sendUserIdToNative(header?: string) {
   try {
     // Check if the native message handler is available in the webkit environment
     if (
@@ -12,7 +12,7 @@ export function sendUserIdToNative() {
       window.webkit.messageHandlers &&
       window.webkit.messageHandlers.authHeaderHandler
     ) {
-      const authHeader = authUtils.getAuthHeader();
+      const authHeader = header ?? authUtils.getAuthHeader();
 
       // Ensure both are available before sending
       if (!authHeader || !apiUrl) {

@@ -10,8 +10,10 @@ import { uploadImage } from "~/services/upload-image";
 import { deleteImage } from "~/services/delete-image";
 import { DateFormatter } from "~/utils/date-formatter";
 import { firebaseService } from "~/lib/firebase";
-import { useAuth } from "./useAuth";
 import { saveFcmToken } from "~/services/save-fcm-token";
+import { createNotificationTrigger } from "~/services/create-notification-trigger";
+import { useNavigate } from "react-router";
+import { sendUserIdToNative } from "~/utils/send-user-id-to-native";
 
 type UserFormType = z.infer<typeof CreateUserSchema>;
 
@@ -39,7 +41,7 @@ export function useRegisterUser({
   onSuccess?: () => void;
   initialValues?: Partial<typeof defaultValues>;
 } = {}) {
-  const { login: authLogin } = useAuth();
+  const navigate = useNavigate();
   const [fields, setFields] = useState<UserFormType>(() => {
     if (typeof window === "undefined") return defaultValues;
     const storedValues = localStorage.getItem(STORAGE_KEY);
@@ -119,16 +121,29 @@ export function useRegisterUser({
       return res.data;
     },
     onSuccess: async (data) => {
-      const { token, user } = data;
-      authLogin({ user, ...token, userType: "user" });
+      const { user, token: jwt } = data;
 
-      if (user?.email) {
+      if (user?.email && user?.id) {
         try {
           const token = await firebaseService.setup();
 
           if (token) {
-            await saveFcmToken(token);
+            await saveFcmToken(
+              token,
+              new Headers({ Authorization: "Bearer " + jwt.token })
+            );
+            sendUserIdToNative("Bearer " + jwt.token);
           }
+
+          await createNotificationTrigger(
+            {
+              eventType: "USER-REGISTERED",
+              payload: {
+                userId: user.id,
+              },
+            },
+            new Headers({ Authorization: "Bearer " + jwt.token })
+          );
         } catch (error) {
           console.error(
             "Failed to setup or save FCM token on registration:",
@@ -136,7 +151,9 @@ export function useRegisterUser({
           );
         }
       }
+
       onSuccess?.();
+      navigate("/register/user/submitted");
     },
   });
 
