@@ -4,46 +4,78 @@ import * as Sentry from "@sentry/react";
 
 const apiUrl = api().BASE_URL;
 
-export async function sendUserIdToNative(header?: string) {
-  try {
-    // Check if the native message handler is available in the webkit environment
-    if (
-      window.webkit &&
-      window.webkit.messageHandlers &&
-      window.webkit.messageHandlers.authHeaderHandler
-    ) {
-      const authHeader = header ?? authUtils.getAuthHeader();
+/**
+ * Sends the authorization header and API URL to the native iOS wrapper.
+ * This function returns a promise that resolves only when the native side
+ * confirms that it has successfully completed its asynchronous tasks
+ * (e.g., fetching and sending the FCM token).
+ *
+ * @param header Optional authorization header string.
+ * @returns A promise that resolves when the native process is complete.
+ */
+export function sendUserIdToNative(header?: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      // Check if the app is running within the iOS WKWebView environment
+      if (
+        window.webkit &&
+        window.webkit.messageHandlers &&
+        window.webkit.messageHandlers.authHeaderHandler
+      ) {
+        const authHeader = header ?? authUtils.getAuthHeader();
 
-      // Ensure both are available before sending
-      if (!authHeader || !apiUrl) {
-        console.warn(
-          "Missing Auth Header or API URL. Cannot send config to native."
+        if (!authHeader || !apiUrl) {
+          const errorMessage =
+            "Missing Auth Header or API URL. Cannot send config to native.";
+          console.warn(errorMessage);
+          return reject(new Error(errorMessage));
+        }
+
+        // 1. Create a unique callback function name to avoid collisions.
+        const callbackName = `nativeCallback_${Date.now()}_${Math.random()
+          .toString(36)
+          .substring(2)}`;
+
+        // 2. Set up a timeout to reject the promise if native code doesn't respond.
+        const timeoutId = setTimeout(() => {
+          console.error("Native callback timed out after 5000ms.");
+          // Clean up the callback to prevent memory leaks.
+          delete window[callbackName];
+          reject(new Error("Native callback timed out."));
+        }, 5000); // 5-second timeout
+
+        // 3. Assign the resolver function to the window object.
+        window[callbackName] = () => {
+          console.log(
+            "Native process completed successfully. Resolving promise."
+          );
+          // 5. Clean up the timeout and the window function upon success.
+          clearTimeout(timeoutId);
+          delete window[callbackName];
+          resolve();
+        };
+
+        const payload = {
+          authHeader,
+          apiUrl,
+          callbackName, // 4. Pass the callback name to the native side.
+        };
+
+        console.log(
+          "Sending payload to native and awaiting callback:",
+          payload
         );
-        return;
-      }
-
-      const payload = {
-        authHeader,
-        apiUrl,
-      };
-
-      if (authHeader) {
-        console.log("Sending payload to native:", payload);
-        // The name 'authHeaderHandler' must match what you set in Swift
         window.webkit.messageHandlers.authHeaderHandler.postMessage(payload);
-
-        // HACK: This is a temporary workaround for a race condition.
-        // A proper fix involves a callback from the native side.
-        await new Promise((resolve) => setTimeout(resolve, 250));
       } else {
-        console.warn("User ID not found in local storage.");
+        console.log(
+          "Not running in a native iOS wrapper with messaging capabilities."
+        );
+        // If not in a native environment, resolve immediately.
+        resolve();
       }
-    } else {
-      console.log(
-        "Not running in a native iOS wrapper with messaging capabilities."
-      );
+    } catch (err) {
+      Sentry.captureException(err);
+      reject(err);
     }
-  } catch (err) {
-    Sentry.captureException(err);
-  }
+  });
 }
