@@ -31,6 +31,10 @@ export async function sendUserIdToNative(header?: string) {
         console.log("Sending payload to native:", payload);
         // The name 'authHeaderHandler' must match what you set in Swift
         window.webkit.messageHandlers.authHeaderHandler.postMessage(payload);
+
+        // HACK: This is a temporary workaround for a race condition.
+        // A proper fix involves a callback from the native side.
+        await new Promise((resolve) => setTimeout(resolve, 250));
       } else {
         console.warn("User ID not found in local storage.");
       }
