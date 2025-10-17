@@ -46,7 +46,7 @@ export const clientLoader = async ({ request }: { request: Request }) => {
     await saveFcmToken(notificationToken);
   }
 
-  sendUserIdToNative();
+  await sendUserIdToNative();
 
   const { expiresOn, sasToken, setToken } = useImageTokenStore.getState();
   const isTokenExpired = !expiresOn || new Date() > new Date(expiresOn);

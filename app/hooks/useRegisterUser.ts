@@ -132,7 +132,7 @@ export function useRegisterUser({
             await saveFcmToken(token, new Headers({ Authorization: bearer }));
           }
 
-          sendUserIdToNative(bearer);
+          await sendUserIdToNative(bearer);
 
           await createNotificationTrigger(
             {
