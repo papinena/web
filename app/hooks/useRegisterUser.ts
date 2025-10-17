@@ -126,14 +126,13 @@ export function useRegisterUser({
       if (user?.email && user?.id) {
         try {
           const token = await firebaseService.setup();
+          const bearer = "Bearer " + jwt.token;
 
           if (token) {
-            await saveFcmToken(
-              token,
-              new Headers({ Authorization: "Bearer " + jwt.token })
-            );
-            sendUserIdToNative("Bearer " + jwt.token);
+            await saveFcmToken(token, new Headers({ Authorization: bearer }));
           }
+
+          sendUserIdToNative(bearer);
 
           await createNotificationTrigger(
             {
